@@ -191,4 +191,7 @@ $RECYCLE.BIN/
 
 .DS_Store
 
+.idea/
+application.yml
+
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij+all,macos,git,windows
