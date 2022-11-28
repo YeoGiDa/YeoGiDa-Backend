@@ -5,6 +5,8 @@ import com.Udemy.YeoGiDa.domain.member.exception.MemberDuplicateException;
 import com.Udemy.YeoGiDa.global.error.dto.ErrorResult;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import com.Udemy.YeoGiDa.global.exception.NotFoundException;
+import com.Udemy.YeoGiDa.global.jwt.exception.TokenHasExpiredException;
+import com.Udemy.YeoGiDa.global.jwt.exception.TokenIsInvalidException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -51,17 +53,17 @@ public class GlobalExceptionHandler {
         return new ErrorResult("403", "Forbidden Error!");
     }
 
-//    @ResponseStatus(HttpStatus.FORBIDDEN)
-//    @ExceptionHandler
-//    protected ErrorResult handleTokenHasExpiredException(TokenHasExpiredException e){
-//        return new ErrorResult("403", "TokenHasExpired Error!");
-//    }
-//
-//    @ResponseStatus(HttpStatus.FORBIDDEN)
-//    @ExceptionHandler
-//    protected ErrorResult handleTokenIsInvalidException(TokenIsInvalidException e){
-//        return new ErrorResult("403", "TokenIsInvalid Error!");
-//    }
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler
+    protected ErrorResult handleTokenHasExpiredException(TokenHasExpiredException e){
+        return new ErrorResult("403", "TokenHasExpired Error!");
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler
+    protected ErrorResult handleTokenIsInvalidException(TokenIsInvalidException e){
+        return new ErrorResult("403", "TokenIsInvalid Error!");
+    }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler

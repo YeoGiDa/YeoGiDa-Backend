@@ -44,12 +44,11 @@ public class MemberService {
 
         Token token = jwtProvider.generateToken(member);
 
-        String accessToken = token.getAccessToken();
         String refreshToken = token.getRefreshToken();
 
         member.setRefreshToken(refreshToken);
 
-        return new MemberLoginResponse(accessToken);
+        return new MemberLoginResponse(token);
     }
 
     public MemberJoinResponse join(MemberJoinRequest memberJoinRequest) {

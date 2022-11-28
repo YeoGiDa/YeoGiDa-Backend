@@ -1,5 +1,6 @@
 package com.Udemy.YeoGiDa.domain.member.response;
 
+import com.Udemy.YeoGiDa.global.jwt.Token;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -7,5 +8,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class MemberLoginResponse {
 
-    private String accessToken;
+    private Token token;
 }
