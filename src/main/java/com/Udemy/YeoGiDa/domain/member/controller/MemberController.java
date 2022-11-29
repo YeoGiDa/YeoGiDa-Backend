@@ -14,6 +14,7 @@ import com.Udemy.YeoGiDa.domain.member.service.MemberService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,7 @@ public class MemberController {
     }
 
     @ApiOperation("로그인")
-    @PostMapping("/login")
+    @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity login(@Validated @RequestBody MemberLoginRequest memberLoginRequest) {
         MemberLoginResponse result = memberService.login(memberLoginRequest);
@@ -74,7 +75,7 @@ public class MemberController {
     }
 
     @ApiOperation("회원가입")
-    @PostMapping("/join")
+    @PostMapping(value = "/join", consumes = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity join(@Validated @RequestBody MemberJoinRequest memberJoinRequest) {
         MemberJoinResponse memberJoinResponse = memberService.join(memberJoinRequest);
