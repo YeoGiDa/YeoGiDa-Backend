@@ -17,7 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,7 +40,7 @@ public class TripController {
     @ApiOperation("여행지 상세 조회")
     @GetMapping("/{tripId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity getTripDetail(@RequestParam Long tripId) {
+    public ResponseEntity getTripDetail(@PathVariable Long tripId) {
         TripDetailResponseDto result = tripService.getTripDetail(tripId);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 상세 조회 성공", result), HttpStatus.OK);
@@ -67,8 +69,10 @@ public class TripController {
     })
     public ResponseEntity update(@PathVariable Long tripId,
                                  @RequestBody TripSaveRequestDto tripSaveRequestDto,
-                               @LoginMember Member member) {
-        TripDetailResponseDto result = tripService.update(tripId, tripSaveRequestDto, member);
+                                 @LoginMember Member member) {
+        Long updateId = tripService.update(tripId, tripSaveRequestDto, member);
+        Map<String, Object> result = new HashMap<>();
+        result.put("updateId", updateId);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 수정 성공", result), HttpStatus.OK);
     }
@@ -82,7 +86,9 @@ public class TripController {
     })
     public ResponseEntity delete(@PathVariable Long tripId,
                                  @LoginMember Member member) {
-        Long result = tripService.delete(tripId, member);
+        Long deleteId = tripService.delete(tripId, member);
+        Map<String, Object> result = new HashMap<>();
+        result.put("deleteId", deleteId);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 삭제 성공", result), HttpStatus.OK);
     }

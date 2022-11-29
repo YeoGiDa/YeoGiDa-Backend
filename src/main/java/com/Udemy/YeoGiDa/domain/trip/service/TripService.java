@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 public class TripService {
 
     private final TripRepository tripRepository;
-    private final HeartRepository heartRepository;
 
     @Transactional(readOnly = true)
     public List<TripListResponseDto> getTripList() {
@@ -59,7 +58,7 @@ public class TripService {
         return new TripDetailResponseDto(saveTrip);
     }
 
-    public TripDetailResponseDto update(Long tripId, TripSaveRequestDto tripSaveRequestDto, Member member) {
+    public Long update(Long tripId, TripSaveRequestDto tripSaveRequestDto, Member member) {
         if(member == null) {
             throw new ForbiddenException();
         }
@@ -74,7 +73,7 @@ public class TripService {
         trip.update(tripSaveRequestDto.getRegion(), tripSaveRequestDto.getTitle(),
                 tripSaveRequestDto.getSubTitle(), tripSaveRequestDto.getImgUrl());
 
-        return new TripDetailResponseDto(trip);
+        return trip.getId();
     }
 
     public Long delete(Long tripId, Member member) {
@@ -90,6 +89,6 @@ public class TripService {
         }
 
         tripRepository.delete(trip);
-        return tripId;
+        return trip.getId();
     }
 }

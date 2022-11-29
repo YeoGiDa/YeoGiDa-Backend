@@ -20,8 +20,7 @@ public class Trip extends BaseEntity {
     @Column(name = "trip_id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private Region region;
+    private String region;
 
     private String title;
 
@@ -37,7 +36,7 @@ public class Trip extends BaseEntity {
     private String imgUrl;
 
     @Builder
-    public Trip(Region region, String title, String subTitle, Member member, String imgUrl) {
+    public Trip(String region, String title, String subTitle, Member member, String imgUrl) {
         this.region = region;
         this.title = title;
         this.subTitle = subTitle;
@@ -45,7 +44,7 @@ public class Trip extends BaseEntity {
         this.imgUrl = imgUrl;
     }
 
-    public void update(Region region, String title, String subTitle, String imgUrl) {
+    public void update(String region, String title, String subTitle, String imgUrl) {
         this.region = region;
         this.title = title;
         this.subTitle = subTitle;

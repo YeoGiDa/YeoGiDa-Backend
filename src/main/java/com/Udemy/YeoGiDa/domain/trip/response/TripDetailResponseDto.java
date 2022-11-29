@@ -1,7 +1,6 @@
 package com.Udemy.YeoGiDa.domain.trip.response;
 
 import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
-import com.Udemy.YeoGiDa.domain.trip.entity.Region;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
@@ -16,7 +15,7 @@ import java.time.LocalDateTime;
 public class TripDetailResponseDto {
 
     private Long id;
-    private Region region;
+    private String region;
     private String title;
     private String subTitle;
     private MemberDto member;

@@ -1,6 +1,5 @@
 package com.Udemy.YeoGiDa.domain.trip.request;
 
-import com.Udemy.YeoGiDa.domain.trip.entity.Region;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,13 +10,13 @@ import lombok.Setter;
 @Setter
 public class TripSaveRequestDto {
 
-    private Region region;
+    private String region;
     private String title;
     private String subTitle;
     private String imgUrl;
 
     @Builder
-    public TripSaveRequestDto(Region region, String title, String subTitle, String imgUrl) {
+    public TripSaveRequestDto(String region, String title, String subTitle, String imgUrl) {
         this.region = region;
         this.title = title;
         this.subTitle = subTitle;
