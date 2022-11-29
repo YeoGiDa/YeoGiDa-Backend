@@ -30,6 +30,7 @@ public class MemberService {
     private final JwtProvider jwtProvider;
     private final BCryptPasswordEncoder passwordEncoder;
 
+    @Transactional(readOnly = true)
     public boolean isJoinMember(String email) {
         return memberRepository.existsByEmail(email);
     }
@@ -67,7 +68,6 @@ public class MemberService {
 
         Member savedMember = memberRepository.save(member);
         MemberDto memberDto = new MemberDto(savedMember);
-
         return new MemberJoinResponse(memberDto);
     }
 
@@ -94,6 +94,7 @@ public class MemberService {
         return member.getId();
     }
 
+    @Transactional(readOnly = true)
     public List<Member> memberList() {
         return memberRepository.findAll();
     }
@@ -102,6 +103,13 @@ public class MemberService {
         if(memberRepository.existsByEmail(member.getEmail()) == true) {
             throw new MemberDuplicateException();
         }
+    }
+
+    public MemberDto memberDetail(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberNotFoundException());
+
+        return new MemberDto(member);
     }
 
     private void isValidateDuplicateNickname(Member member) {

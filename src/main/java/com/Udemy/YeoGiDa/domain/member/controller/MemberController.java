@@ -1,6 +1,7 @@
 package com.Udemy.YeoGiDa.domain.member.controller;
 
 import com.Udemy.YeoGiDa.domain.member.request.MemberLoginRequest;
+import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
 import com.Udemy.YeoGiDa.domain.member.response.MemberLoginResponse;
 import com.Udemy.YeoGiDa.global.response.DefaultResult;
 import com.Udemy.YeoGiDa.global.response.ResponseMessage;
@@ -17,7 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,7 +34,9 @@ public class MemberController {
     @GetMapping("/checkMember")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity isJoinMember(@RequestParam String email) {
-        boolean result = memberService.isJoinMember(email);
+        boolean isMember = memberService.isJoinMember(email);
+        Map<String, Object> result = new HashMap<>();
+        result.put("isMember", isMember);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 ResponseMessage.READ_SUCCESS, result), HttpStatus.OK);
     }
@@ -53,11 +59,30 @@ public class MemberController {
                 "회원 목록 조회 성공", result), HttpStatus.OK);
     }
 
+    @ApiOperation("회원상세")
+    @GetMapping("/{memberId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity memberList(@PathVariable Long memberId) {
+        MemberDto memberDto = memberService.memberDetail(memberId);
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("id", memberDto.getId());
+        result.put("email", memberDto.getEmail());
+        result.put("nickname", memberDto.getNickname());
+        result.put("imgUrl", memberDto.getImgUrl());
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "회원 상세 조회 성공", result), HttpStatus.OK);
+    }
+
     @ApiOperation("회원가입")
     @PostMapping("/join")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity join(@Validated @RequestBody MemberJoinRequest memberJoinRequest) {
-        MemberJoinResponse result = memberService.join(memberJoinRequest);
+        MemberJoinResponse memberJoinResponse = memberService.join(memberJoinRequest);
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("id", memberJoinResponse.getMemberDto().getId());
+        result.put("email", memberJoinResponse.getMemberDto().getEmail());
+        result.put("nickname", memberJoinResponse.getMemberDto().getNickname());
+        result.put("imgUrl", memberJoinResponse.getMemberDto().getImgUrl());
         return new ResponseEntity(DefaultResult.res(StatusCode.CREATED,
                 ResponseMessage.CREATED_USER, result), HttpStatus.CREATED);
     }
@@ -67,7 +92,9 @@ public class MemberController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity update(@PathVariable Long memberId, @RequestBody MemberUpdateRequest memberUpdateRequest) {
 
-        Long result = memberService.update(memberId, memberUpdateRequest);
+        Long updateId = memberService.update(memberId, memberUpdateRequest);
+        Map<String, Object> result = new HashMap<>();
+        result.put("update memberId", updateId);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 ResponseMessage.UPDATE_USER, result), HttpStatus.OK);
     }
@@ -77,7 +104,9 @@ public class MemberController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity delete(@PathVariable Long memberId) {
 
-        Long result =  memberService.delete(memberId);
+        Long deleteId =  memberService.delete(memberId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("delete memberId", deleteId);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 ResponseMessage.DELETE_USER, result), HttpStatus.OK);
     }
