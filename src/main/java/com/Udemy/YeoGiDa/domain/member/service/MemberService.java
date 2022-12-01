@@ -76,7 +76,8 @@ public class MemberService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException());
 
-        if(memberRepository.existsByNickname(memberUpdateRequest.getNickname()) == true) {
+        if(memberRepository.existsByNickname(memberUpdateRequest.getNickname()) == true &&
+            member.getNickname() != memberUpdateRequest.getNickname()) {
             throw new AlreadyExistsNicknameException();
         }
 

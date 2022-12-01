@@ -43,10 +43,13 @@ public class MemberController {
     }
 
     @ApiOperation("로그인")
-    @PostMapping(value = "/login", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "/login")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity login(@Validated @RequestBody MemberLoginRequest memberLoginRequest) {
-        MemberLoginResponse result = memberService.login(memberLoginRequest);
+        MemberLoginResponse memberLoginResponse = memberService.login(memberLoginRequest);
+        Map<String, Object> result = new HashMap<>();
+        result.put("accessToken", memberLoginResponse.getToken().getAccessToken());
+        result.put("refreshToken", memberLoginResponse.getToken().getRefreshToken());
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 ResponseMessage.LOGIN_SUCCESS, result), HttpStatus.OK);
     }
@@ -75,7 +78,7 @@ public class MemberController {
     }
 
     @ApiOperation("회원가입")
-    @PostMapping(value = "/join", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "/join")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity join(@Validated @RequestBody MemberJoinRequest memberJoinRequest) {
         MemberJoinResponse memberJoinResponse = memberService.join(memberJoinRequest);
