@@ -1,7 +1,11 @@
 package com.Udemy.YeoGiDa.domain.trip.service;
 
+import com.Udemy.YeoGiDa.domain.heart.entity.Heart;
+import com.Udemy.YeoGiDa.domain.heart.exception.AlreadyHeartException;
+import com.Udemy.YeoGiDa.domain.heart.exception.HeartNotFoundException;
 import com.Udemy.YeoGiDa.domain.heart.repository.HeartRepository;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
+import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
 import com.Udemy.YeoGiDa.domain.trip.repository.TripRepository;
@@ -23,6 +27,7 @@ import java.util.stream.Collectors;
 public class TripService {
 
     private final TripRepository tripRepository;
+    private final HeartRepository heartRepository;
 
     @Transactional(readOnly = true)
     public List<TripListResponseDto> getTripList() {
@@ -42,7 +47,7 @@ public class TripService {
 
     public TripDetailResponseDto save(TripSaveRequestDto tripSaveRequestDto, Member member) {
         if(member == null) {
-            throw new ForbiddenException();
+            throw new MemberNotFoundException();
         }
 
         Trip trip = Trip.builder()
@@ -60,7 +65,7 @@ public class TripService {
 
     public Long update(Long tripId, TripSaveRequestDto tripSaveRequestDto, Member member) {
         if(member == null) {
-            throw new ForbiddenException();
+            throw new MemberNotFoundException();
         }
 
         Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
@@ -90,5 +95,51 @@ public class TripService {
 
         tripRepository.delete(trip);
         return trip.getId();
+    }
+
+    public void heart(Long tripId, Member member) {
+        if(member == null) {
+            throw new MemberNotFoundException();
+        }
+
+        Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
+                .orElseThrow(() -> new TripNotFoundException())).get();
+
+        trip.plusHeartCount();
+        trip.plusChangeHeartCount();
+
+        heartRepository.findByMemberAndTrip(member, trip).ifPresent(it -> {
+            throw new AlreadyHeartException();
+        });
+
+        heartRepository.save(Heart.builder()
+                .member(member)
+                .trip(trip)
+                .build());
+    }
+
+    @Transactional(readOnly = true)
+    public int countHeart(Long tripId) {
+        Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
+                .orElseThrow(() -> new TripNotFoundException())).get();
+
+        return heartRepository.findAllByTrip(trip).size();
+    }
+
+    public void deleteHeart(Long tripId, Member member) {
+        if(member == null) {
+            throw new MemberNotFoundException();
+        }
+
+        Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
+                .orElseThrow(() -> new TripNotFoundException())).get();
+
+        trip.minusHeartCount();
+        trip.minusChangeHeartCount();
+
+        Heart heart = heartRepository.findByMemberAndTrip(member, trip)
+                .orElseThrow(() -> new HeartNotFoundException());
+
+        heartRepository.delete(heart);
     }
 }

@@ -4,6 +4,7 @@ import com.Udemy.YeoGiDa.domain.common.entity.BaseEntity;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -29,4 +30,10 @@ public class Heart extends BaseEntity {
     @JoinColumn(name = "trip_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Trip trip;
+
+    @Builder
+    public Heart(Member member, Trip trip) {
+        this.member = member;
+        this.trip = trip;
+    }
 }

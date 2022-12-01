@@ -26,7 +26,11 @@ public class Trip extends BaseEntity {
 
     private String subTitle;
 
-    private Integer changeNum = 0;
+    private Integer heartCount = 0;
+
+    private Integer placeCount = 0;
+
+    private Integer changeHeartCount = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -49,5 +53,25 @@ public class Trip extends BaseEntity {
         this.title = title;
         this.subTitle = subTitle;
         this.imgUrl = imgUrl;
+    }
+
+    public void plusHeartCount() {
+        this.heartCount++;
+    }
+
+    public void minusHeartCount() {
+        this.heartCount--;
+    }
+
+    public void plusChangeHeartCount() {
+        this.changeHeartCount++;
+    }
+
+    public void minusChangeHeartCount() {
+        this.changeHeartCount--;
+    }
+
+    public void initChangeHeartCount() {
+        this.changeHeartCount = 0;
     }
 }
