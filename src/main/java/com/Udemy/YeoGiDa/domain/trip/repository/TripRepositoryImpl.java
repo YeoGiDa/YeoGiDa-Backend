@@ -22,4 +22,34 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
                 .leftJoin(trip.member, member).fetchJoin()
                 .fetch();
     }
+
+    @Override
+    public List<Trip> findAllOrderByHeartCount() {
+        return queryFactory.selectFrom(trip)
+                .orderBy(trip.heartCount.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<Trip> findAllOrderByChangeHeartCount() {
+        return queryFactory.selectFrom(trip)
+                .orderBy(trip.changeHeartCount.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<Trip> findAllByRegionDesc(String region) {
+        return queryFactory.selectFrom(trip)
+                .where(trip.region.eq(region))
+                .orderBy(trip.id.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<Trip> findAllByRegionOrderByHeartCount(String region) {
+        return queryFactory.selectFrom(trip)
+                .where(trip.region.eq(region))
+                .orderBy(trip.heartCount.desc())
+                .fetch();
+    }
 }
