@@ -9,7 +9,6 @@ import com.Udemy.YeoGiDa.global.response.DefaultResult;
 import com.Udemy.YeoGiDa.global.response.StatusCode;
 import com.Udemy.YeoGiDa.global.security.annotation.LoginMember;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,9 +49,7 @@ public class TripController {
     @ApiOperation("여행지 작성")
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true)
-    })
+    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
     public ResponseEntity save(@RequestBody TripSaveRequestDto tripSaveRequestDto,
                                @LoginMember Member member) {
         TripDetailResponseDto result = tripService.save(tripSaveRequestDto, member);
@@ -64,9 +61,7 @@ public class TripController {
     @ApiOperation("여행지 수정")
     @PutMapping("/{tripId}")
     @ResponseStatus(HttpStatus.OK)
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true)
-    })
+    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
     public ResponseEntity update(@PathVariable Long tripId,
                                  @RequestBody TripSaveRequestDto tripSaveRequestDto,
                                  @LoginMember Member member) {
@@ -81,9 +76,7 @@ public class TripController {
     @ApiOperation("여행지 삭제")
     @DeleteMapping("/{tripId}")
     @ResponseStatus(HttpStatus.OK)
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true)
-    })
+    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
     public ResponseEntity delete(@PathVariable Long tripId,
                                  @LoginMember Member member) {
         Long deleteId = tripService.delete(tripId, member);
@@ -91,5 +84,40 @@ public class TripController {
         result.put("deleteId", deleteId);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 삭제 성공", result), HttpStatus.OK);
+    }
+
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @ApiOperation("여행지 좋아요 누르기")
+    @PostMapping("/{tripId}/heart")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
+    public ResponseEntity heart(@PathVariable Long tripId,
+                               @LoginMember Member member) {
+        tripService.heart(tripId, member);
+        return new ResponseEntity(DefaultResult.res(StatusCode.CREATED,
+                "여행지 좋아요 성공"), HttpStatus.CREATED);
+    }
+
+    @ApiOperation("여행지 좋아요 개수")
+    @GetMapping("/{tripId}/heartCount")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity countHeart(@PathVariable Long tripId) {
+        int heartCount = tripService.countHeart(tripId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("heartCount", heartCount);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "여행지 좋아요 개수 세기 성공", result), HttpStatus.OK);
+    }
+
+    @Secured({"ROLE_ADMIN", "ROLE_USER"})
+    @ApiOperation("여행지 좋아요 취소하기")
+    @DeleteMapping("/{tripId}/heart")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
+    public ResponseEntity deleteHeart(@PathVariable Long tripId,
+                                @LoginMember Member member) {
+        tripService.deleteHeart(tripId, member);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "여행지 좋아요 취소 성공"), HttpStatus.OK);
     }
 }

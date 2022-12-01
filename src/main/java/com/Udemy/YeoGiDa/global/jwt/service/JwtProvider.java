@@ -23,6 +23,10 @@ public class JwtProvider {
 
     private Key key;
 
+//    long tokenPeriod = 1000L * 60L * 100L; //100분
+    long tokenPeriod = 1000L * 30L; //30초
+    long refreshPeriod = 1000L * 60L * 60L * 24L * 30L * 3L; //3달
+
     public JwtProvider(
             @Value("${jwt.secret}") String secret) {
         this.secret = secret;
@@ -35,23 +39,30 @@ public class JwtProvider {
     }
 
     public Token generateToken(Member member) {
-        long tokenPeriod = 1000L * 60L * 10L;
-        long refreshPeriod = 1000L * 60L * 60L * 24L * 30L * 3L;
 
+        Claims claims = Jwts.claims().setSubject(member.getEmail());
+        claims.put("roles", member.getRole());
         Date now = new Date();
-        return new Token(
-                Jwts.builder()
-                        .setSubject(member.getEmail())
+
+        String accessToken = Jwts.builder()
+                        .setClaims(claims)
                         .setIssuedAt(now)
                         .setExpiration(new Date(now.getTime() + tokenPeriod))
                         .signWith(key)
-                        .compact(),
-                Jwts.builder()
-                        .setSubject(member.getEmail())
+                        .compact();
+
+        String refreshToken = Jwts.builder()
+                        .setClaims(claims)
                         .setIssuedAt(now)
                         .setExpiration(new Date(now.getTime() + refreshPeriod))
                         .signWith(key)
-                        .compact());
+                        .compact();
+
+        return Token.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .key(member.getEmail())
+                .build();
     }
 
     public String getEmailFromAccessToken(String accessToken){
@@ -77,26 +88,55 @@ public class JwtProvider {
 //        }
 //    }
 
-    public boolean isValidateToken(String accessToken) throws TokenIsInvalidException {
+    public boolean validateAccessToken(String accessToken) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
             return true;
-//        } catch (SignatureException ex) {
-//            log.error("Invalid JWT signature");
-//            throw new TokenIsInvalidException();
         } catch (MalformedJwtException ex) {
             log.error("Invalid JWT token");
-            throw new TokenIsInvalidException();
+            return false;
         } catch (ExpiredJwtException ex) {
             log.error("Expired JWT token");
-            throw new TokenHasExpiredException();
+            return false;
         } catch (UnsupportedJwtException ex) {
             log.error("Unsupported JWT token");
-            throw new TokenIsInvalidException();
+            return false;
         } catch (IllegalArgumentException ex) {
             log.error("JWT claims string is empty.");
-            throw new TokenIsInvalidException();
+            return false;
         }
+    }
+
+    public String validateRefreshTokenAndReissueAccessToken(String refreshToken) {
+
+        try {
+            //검증
+            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(refreshToken);
+
+            //refresh 토큰의 만료시간이 지나지 않았을 경우, 새로운 access 토큰을 생성합니다.
+            if(!claims.getBody().getExpiration().before(new Date())) {
+                return recreationAccessToken(claims.getBody().get("sub").toString(), claims.getBody().get("roles"));
+            }
+        } catch (Exception e){
+            throw new TokenHasExpiredException();
+        }
+        return null;
+    }
+
+    public String recreationAccessToken(String email, Object roles) {
+        Claims claims = Jwts.claims().setSubject(email);
+        claims.put("roles", roles);
+        Date now = new Date();
+
+        //AccessToken
+        String accessToken = Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + tokenPeriod))
+                .signWith(key)
+                .compact();
+
+        return accessToken;
     }
 
 }

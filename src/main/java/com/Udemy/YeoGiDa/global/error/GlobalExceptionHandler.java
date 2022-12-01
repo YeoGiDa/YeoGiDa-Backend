@@ -1,5 +1,6 @@
 package com.Udemy.YeoGiDa.global.error;
 
+import com.Udemy.YeoGiDa.domain.heart.exception.AlreadyHeartException;
 import com.Udemy.YeoGiDa.domain.member.exception.AlreadyExistsNicknameException;
 import com.Udemy.YeoGiDa.domain.member.exception.MemberDuplicateException;
 import com.Udemy.YeoGiDa.global.error.dto.ErrorResult;
@@ -20,61 +21,67 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     protected ErrorResult handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        return new ErrorResult("400", "Validation Error!", e.getBindingResult());
+        return new ErrorResult(400, "Validation Error!");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     protected ErrorResult MethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e){
-        return new ErrorResult("400", "TypeMismatch Error!");
+        return new ErrorResult(400, "TypeMismatch Error!");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     protected ErrorResult handleIllegalArgumentException(IllegalArgumentException e) {
-        return new ErrorResult("400", "IllegalArgument Error!");
+        return new ErrorResult(400, "IllegalArgument Error!");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     protected ErrorResult handleMemberDuplicateException(MemberDuplicateException e){
-        return new ErrorResult("400", "MemberDuplicate Error!");
+        return new ErrorResult(400, "MemberDuplicate Error!");
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
     protected ErrorResult handleAlreadyExistsNicknameException(AlreadyExistsNicknameException e){
-        return new ErrorResult("400", "AlreadyExistsNickname Error!");
+        return new ErrorResult(400, "AlreadyExistsNickname Error!");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler
+    protected ErrorResult handleAlreadyLikedException(AlreadyHeartException e) {
+        return new ErrorResult(400, "AlreadyLiked Error!");
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler
     protected ErrorResult handleForbiddenException(ForbiddenException e){
-        return new ErrorResult("403", "Forbidden Error!");
+        return new ErrorResult(403, "Forbidden Error!");
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler
     protected ErrorResult handleTokenHasExpiredException(TokenHasExpiredException e){
-        return new ErrorResult("403", "TokenHasExpired Error!");
+        return new ErrorResult(403, "TokenHasExpired Error!");
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler
     protected ErrorResult handleTokenIsInvalidException(TokenIsInvalidException e){
-        return new ErrorResult("403", "TokenIsInvalid Error!");
+        return new ErrorResult(403, "TokenIsInvalid Error!");
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler
     protected ErrorResult handleNotFoundException(NotFoundException e){
-        return new ErrorResult("404", "NotFound Error!");
+        return new ErrorResult(404, "NotFound Error!");
     }
 
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler
     protected ErrorResult handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e){
-        return new ErrorResult("405", "HttpMethod Error!");
+        return new ErrorResult(405, "HttpMethod Error!");
     }
 
 //    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
