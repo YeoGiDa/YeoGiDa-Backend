@@ -3,7 +3,6 @@ package com.Udemy.YeoGiDa.global.jwt.service;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.global.jwt.Token;
 import com.Udemy.YeoGiDa.global.jwt.exception.TokenHasExpiredException;
-import com.Udemy.YeoGiDa.global.jwt.exception.TokenIsInvalidException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -23,8 +22,7 @@ public class JwtProvider {
 
     private Key key;
 
-//    long tokenPeriod = 1000L * 60L * 100L; //100분
-    long tokenPeriod = 1000L * 30L; //30초
+    long tokenPeriod = 1000L * 60L * 100L; //100분
     long refreshPeriod = 1000L * 60L * 60L * 24L * 30L * 3L; //3달
 
     public JwtProvider(

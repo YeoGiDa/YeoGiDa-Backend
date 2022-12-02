@@ -40,11 +40,13 @@ public class TokenController {
             return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                     "유효한 accessToken 입니다."), HttpStatus.OK);
         } else {
+            log.info("isAccessTokenValid = {}", isAccessTokenValid);
             String refreshToken = bodyJson.get("refreshToken");
             String newAccessToken = jwtProvider.validateRefreshTokenAndReissueAccessToken(refreshToken);
             Map<String, Object> result = new HashMap<>();
             result.put("newAccessToken", newAccessToken);
             result.put("refreshToken", refreshToken);
+            log.info("새로운 accessToken = {}", newAccessToken);
 
             return new ResponseEntity(DefaultResult.res(StatusCode.CREATED,
                     "새로운 accessToken 발행 성공", result), HttpStatus.CREATED);
