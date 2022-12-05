@@ -142,4 +142,12 @@ public class TripService {
 
         heartRepository.delete(heart);
     }
+
+    //@Scheduler에서 매달 1일마다 하트 변화량을 0으로 수정
+    public void initTripChangeHeartCount() {
+        List<Trip> tripList = tripRepository.findAll();
+        for (Trip trip : tripList) {
+            trip.initChangeHeartCount();
+        }
+    }
 }
