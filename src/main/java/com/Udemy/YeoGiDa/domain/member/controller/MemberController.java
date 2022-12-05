@@ -93,7 +93,9 @@ public class MemberController {
     @ApiOperation("회원가입")
     @ApiResponses({
             @ApiResponse(code = 201, message = "가입 완료"),
-            @ApiResponse(code = 400, message = "가입 실패 - 자세한 내용 message")
+            @ApiResponse(code = 400, message = "가입 실패" +
+                    "닉네임 중복 - AlreadyExistEmail," +
+                    "회원 중복 - MemberDuplicated")
     })
     @PostMapping(value = "/join")
     @ResponseStatus(HttpStatus.CREATED)

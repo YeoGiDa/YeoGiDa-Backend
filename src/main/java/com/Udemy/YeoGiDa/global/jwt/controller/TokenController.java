@@ -27,7 +27,7 @@ public class TokenController {
 
     private final JwtProvider jwtProvider;
 
-    @ApiOperation("토큰 유효성 검사 (access, refresh 모두")
+    @ApiOperation("토큰 유효성 검사 (accessToken, refreshToken) Json에 보내주세요.")
     @PostMapping("/validate")
     public ResponseEntity validateToken(@RequestBody HashMap<String, String> bodyJson) throws TokenIsInvalidException {
         log.info("refresh controller 실행");
