@@ -11,10 +11,10 @@ import com.Udemy.YeoGiDa.domain.member.request.MemberJoinRequest;
 import com.Udemy.YeoGiDa.domain.member.request.MemberUpdateRequest;
 import com.Udemy.YeoGiDa.domain.member.response.MemberJoinResponse;
 import com.Udemy.YeoGiDa.domain.member.service.MemberService;
-import io.swagger.annotations.ApiOperation;
+import com.Udemy.YeoGiDa.global.security.annotation.LoginMember;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +31,8 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @ApiOperation("이메일로 회원가입된 유저인지 확인")
+    @ApiOperation("이메일로 회원가입된 유저인지 확인 (ADMIN용)")
+    @ApiResponse(code = 200, message = "조회 완료")
     @GetMapping("/checkMember")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity isJoinMember(@RequestParam String email) {
@@ -43,6 +44,11 @@ public class MemberController {
     }
 
     @ApiOperation("로그인")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "로그인 성공"),
+            @ApiResponse(code = 403, message = "비밀번호(kakoId) 불일치"),
+            @ApiResponse(code = 404, message = "가입되지 않은 멤버")
+    })
     @PostMapping(value = "/login")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity login(@Validated @RequestBody MemberLoginRequest memberLoginRequest) {
@@ -54,7 +60,8 @@ public class MemberController {
                 ResponseMessage.LOGIN_SUCCESS, result), HttpStatus.OK);
     }
 
-    @ApiOperation("회원목록")
+    @ApiOperation("회원목록 (ADMIN용)")
+    @ApiResponse(code = 200, message = "조회 완료")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity memberList() {
@@ -63,11 +70,17 @@ public class MemberController {
                 "회원 목록 조회 성공", result), HttpStatus.OK);
     }
 
-    @ApiOperation("회원상세")
-    @GetMapping("/{memberId}")
+    @ApiOperation("회원상세 (ADMIN용)")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "회원 상세 조회 완료"),
+            @ApiResponse(code = 403, message = "권한 없음"),
+            @ApiResponse(code = 404, message = "존재하지 않는 회원")
+    })
+    @GetMapping("/detail")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity memberList(@PathVariable Long memberId) {
-        MemberDto memberDto = memberService.memberDetail(memberId);
+//    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
+    public ResponseEntity memberList(@LoginMember Member member) {
+        MemberDto memberDto = memberService.memberDetail(member);
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("id", memberDto.getId());
         result.put("email", memberDto.getEmail());
@@ -78,6 +91,10 @@ public class MemberController {
     }
 
     @ApiOperation("회원가입")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "가입 완료"),
+            @ApiResponse(code = 400, message = "가입 실패 - 자세한 내용 message")
+    })
     @PostMapping(value = "/join")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity join(@Validated @RequestBody MemberJoinRequest memberJoinRequest) {
@@ -92,26 +109,35 @@ public class MemberController {
     }
 
     @ApiOperation("회원수정")
-    @PutMapping("/{memberId}")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "수정 성공"),
+            @ApiResponse(code = 400, message = "이미 존재하는 닉네임"),
+            @ApiResponse(code = 403, message = "권한 없음"),
+            @ApiResponse(code = 404, message = "존재하지않는 회원")
+    })
+    @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity update(@PathVariable Long memberId, @RequestBody MemberUpdateRequest memberUpdateRequest) {
+//    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
+    public ResponseEntity update(@LoginMember Member member, @RequestBody MemberUpdateRequest memberUpdateRequest) {
 
-        Long updateId = memberService.update(memberId, memberUpdateRequest);
-        Map<String, Object> result = new HashMap<>();
-        result.put("update memberId", updateId);
+        memberService.update(member, memberUpdateRequest);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                ResponseMessage.UPDATE_USER, result), HttpStatus.OK);
+                ResponseMessage.UPDATE_USER), HttpStatus.OK);
     }
 
     @ApiOperation("회원탈퇴")
-    @DeleteMapping("/{memberId}")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "탈퇴 성공"),
+            @ApiResponse(code = 403, message = "권한 없음"),
+            @ApiResponse(code = 404, message = "존재하지않는 회원")
+    })
+    @DeleteMapping("/delete")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity delete(@PathVariable Long memberId) {
+//    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
+    public ResponseEntity delete(@LoginMember Member member) {
 
-        Long deleteId =  memberService.delete(memberId);
-        Map<String, Object> result = new HashMap<>();
-        result.put("delete memberId", deleteId);
+        memberService.delete(member);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                ResponseMessage.DELETE_USER, result), HttpStatus.OK);
+                ResponseMessage.DELETE_USER), HttpStatus.OK);
     }
 }
