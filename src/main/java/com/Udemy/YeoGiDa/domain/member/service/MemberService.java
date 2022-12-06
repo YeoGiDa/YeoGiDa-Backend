@@ -71,10 +71,11 @@ public class MemberService {
         return new MemberJoinResponse(memberDto);
     }
 
-    public Long update(Long memberId, MemberUpdateRequest memberUpdateRequest) {
+    public void update(Member member, MemberUpdateRequest memberUpdateRequest) {
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException());
+        if(member == null) {
+            throw new MemberNotFoundException();
+        }
 
         if(memberRepository.existsByNickname(memberUpdateRequest.getNickname()) == true &&
             member.getNickname() != memberUpdateRequest.getNickname()) {
@@ -82,17 +83,15 @@ public class MemberService {
         }
 
         member.update(memberUpdateRequest.getNickname(), memberUpdateRequest.getImgUrl());
-
-        return member.getId();
     }
 
-    public Long delete(Long memberId) {
+    public void delete(Member member) {
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException());
+        if(member == null) {
+            throw new MemberNotFoundException();
+        }
 
         memberRepository.delete(member);
-        return member.getId();
     }
 
     @Transactional(readOnly = true)
@@ -106,9 +105,10 @@ public class MemberService {
         }
     }
 
-    public MemberDto memberDetail(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException());
+    public MemberDto memberDetail(Member member) {
+        if(member == null) {
+            throw new MemberNotFoundException();
+        }
 
         return new MemberDto(member);
     }
