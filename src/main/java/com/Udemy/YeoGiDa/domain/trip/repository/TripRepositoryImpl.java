@@ -1,15 +1,13 @@
 package com.Udemy.YeoGiDa.domain.trip.repository;
 
-import com.Udemy.YeoGiDa.domain.member.entity.QMember;
-import com.Udemy.YeoGiDa.domain.trip.entity.QTrip;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.Udemy.YeoGiDa.domain.member.entity.QMember.*;
-import static com.Udemy.YeoGiDa.domain.trip.entity.QTrip.*;
+import static com.Udemy.YeoGiDa.domain.member.entity.QMember.member;
+import static com.Udemy.YeoGiDa.domain.trip.entity.QTrip.trip;
 
 @RequiredArgsConstructor
 public class TripRepositoryImpl implements TripRepositoryCustom {
