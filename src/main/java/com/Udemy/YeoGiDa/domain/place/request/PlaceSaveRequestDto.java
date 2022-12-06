@@ -1,6 +1,7 @@
 package com.Udemy.YeoGiDa.domain.place.request;
 
-import com.Udemy.YeoGiDa.domain.place.entity.Img;
+
+import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,16 +17,18 @@ public class PlaceSaveRequestDto {
     private String title;
     private String address;
     private Double star;
-    private List<Img> imgUrl;
     private String content;
+    private String imgUrl;
 
+    private Trip trip;
 
     @Builder
-    public PlaceSaveRequestDto(String title, String address, List<Img> imgUrl, String content, Double star) {
+    public PlaceSaveRequestDto(String title, String address, String content, Double star,Trip trip, String imgUrl) {
         this.title = title;
         this.address = address;
-        this.imgUrl = imgUrl;
         this.content = content;
         this.star = star;
+        this.trip = trip;
+        this.imgUrl=imgUrl;
     }
 }

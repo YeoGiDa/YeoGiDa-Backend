@@ -69,7 +69,8 @@ public class PlaceController {
     @PostMapping("{tripId}/places/save")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity save(@RequestBody PlaceSaveRequestDto placeSaveRequestDto,
-                               Trip trip) {
+                               Trip trip,
+                               @LoginMember Member member) {
         PlaceDetailResponseDto result = placeService.save(placeSaveRequestDto, trip);
         return new ResponseEntity(DefaultResult.res(StatusCode.CREATED,
                 "장소 작성 성공", result), HttpStatus.CREATED);
@@ -81,7 +82,8 @@ public class PlaceController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity update(@PathVariable Long placeId,
                                  @RequestBody PlaceSaveRequestDto placeSaveRequestDto,
-                                 Trip trip) {
+                                 Trip trip,
+                                 @LoginMember Member member) {
         Long updateId = placeService.update(placeId, placeSaveRequestDto, trip);
         Map<String, Object> result = new HashMap<>();
         result.put("updateId", updateId);
@@ -89,11 +91,12 @@ public class PlaceController {
                 "여행지 수정 성공", result), HttpStatus.OK);
     }
 
-    @ApiOperation("여행지 삭제")
+    @ApiOperation("장소 삭제")
     @DeleteMapping("/{tripId}/places/{placeId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity delete(@PathVariable Long placeId,
-                                 Trip trip) {
+                                 Trip trip,
+                                 @LoginMember Member member) {
         Long deleteId = placeService.delete(placeId, trip);
         Map<String, Object> result = new HashMap<>();
         result.put("deleteId", deleteId);

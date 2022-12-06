@@ -28,8 +28,7 @@ public class Place extends BaseEntity {
 
     private String content;
 
-    @Transient //영속 대상 제외 어노테이션, 사용 이유 조사
-    private List<Img> imgList = new ArrayList<>();
+    private String imgUrl;
 
     private String address;
 
@@ -43,21 +42,21 @@ public class Place extends BaseEntity {
 
 
     @Builder
-    public Place(String title, String content, String address, Double star, Trip trip, List<Img> imgList ) {
+    public Place(String title, String content, String address, Double star, Trip trip, String imgUrl ) {
         this.title = title;
         this.content = content;
         this.address = address;
         this.star = star;
         this.trip = trip;
-        this.imgList = imgList;
+        this.imgUrl = imgUrl;
     }
 
-    public void update(String title, String content, String address, Double star, List<Img> imgList){
+    public void update(String title, String content, String address, Double star,  String imgUrl){
         this.title = title;
         this.content=content;
         this.address=address;
         this.star = star;
-        this.imgList = imgList;
+        this.imgUrl=imgUrl;
     }
 
 

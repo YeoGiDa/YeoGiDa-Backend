@@ -1,6 +1,6 @@
 package com.Udemy.YeoGiDa.domain.place.response;
 
-import com.Udemy.YeoGiDa.domain.place.entity.Img;
+
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,8 @@ import java.util.List;
 public class PlaceListResponseDto {
 
     private String title;
-    private List<Img> imgUrl;
+
+    private String imgUrl;
     private Double star;
 
 //    private Integer commentCount;
@@ -22,7 +23,7 @@ public class PlaceListResponseDto {
     public PlaceListResponseDto(Place place){
 
         this.title = place.getTitle();
-        this.imgUrl = place.getImgList();
+        this.imgUrl = place.getImgUrl();
         this.star = place.getStar();
 
     }
