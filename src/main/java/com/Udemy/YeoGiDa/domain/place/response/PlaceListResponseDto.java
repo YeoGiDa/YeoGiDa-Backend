@@ -14,9 +14,10 @@ import java.util.List;
 public class PlaceListResponseDto {
 
     private String title;
-
     private String imgUrl;
     private Double star;
+
+
 
 //    private Integer commentCount;
 

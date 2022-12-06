@@ -10,6 +10,7 @@ import com.Udemy.YeoGiDa.domain.place.response.PlaceDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceListResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
+import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,9 +47,11 @@ public class PlaceService {
     @Transactional(readOnly = true)
     public PlaceDetailResponseDto getPlaceDetail(Long placeId) {
         Place place = Optional.ofNullable(placeRepository.findById(placeId)
-                .orElseThrow(() -> new TripNotFoundException())).get();
+                .orElseThrow(() -> new PlaceNotFoundException())).get();
+
         return new PlaceDetailResponseDto(place);
     }
+
 
     public PlaceDetailResponseDto save(PlaceSaveRequestDto placeSaveRequestDto, Trip trip) {
         if(trip == null) {

@@ -31,8 +31,9 @@ public class SwaggerConfig {
     private ApiInfo swaggerInfo(){
         return new ApiInfoBuilder()
                 .title("YeoGiDa API")
-                .description("API Docs")
-                .build();
+
+                .description("API Docs").build();
+
     }
 
     @Bean

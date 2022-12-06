@@ -18,17 +18,11 @@ import java.util.List;
 public class PlaceDetailResponseDto {
 
     private Long id;
-
     private String title;
-
     private String address;
-
     private Double star;
-
     private Trip trip;
-
     private String imgUrl;
-
     private String content;
 
 //    private TripDto trip;
@@ -44,7 +38,7 @@ public class PlaceDetailResponseDto {
         this.address = place.getAddress();
         this.title = place.getTitle();
         this.star = place.getStar();
-        this.trip = place.getTrip();
+//        this.trip = place.getTrip().getId();
         this.content = place.getContent();
         this.imgUrl = place.getImgUrl();
         this.createdTime = place.getCreatedTime();

@@ -1,6 +1,5 @@
 package com.Udemy.YeoGiDa.domain.place.request;
 
-
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +18,6 @@ public class PlaceSaveRequestDto {
     private Double star;
     private String content;
     private String imgUrl;
-
     private Trip trip;
 
     @Builder

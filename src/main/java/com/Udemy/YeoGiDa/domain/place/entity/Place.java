@@ -23,23 +23,16 @@ public class Place extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "place_id")
     private Long id;
-
     private String title;
-
     private String content;
-
     private String imgUrl;
-
     private String address;
-
     private double star = 0.0;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trip_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Trip trip;
-
-
 
     @Builder
     public Place(String title, String content, String address, Double star, Trip trip, String imgUrl ) {
@@ -51,12 +44,12 @@ public class Place extends BaseEntity {
         this.imgUrl = imgUrl;
     }
 
-    public void update(String title, String content, String address, Double star,  String imgUrl){
+    public void update(String title, String content, String address, Double star, String imgUrl){
         this.title = title;
         this.content=content;
         this.address=address;
         this.star = star;
-        this.imgUrl=imgUrl;
+        this.imgUrl = imgUrl;
     }
 
 
