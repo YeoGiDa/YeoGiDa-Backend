@@ -1,6 +1,7 @@
 package com.Udemy.YeoGiDa;
 
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
+import com.Udemy.YeoGiDa.domain.place.entity.Place;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -74,6 +75,43 @@ public class InitDb {
             em.persist(trip1);
             em.persist(trip2);
             em.persist(trip3);
+
+            Place place1 = Place.builder()
+                    .title("MyJuice")
+                    .content("뷰 좋음")
+                    .star(5D)
+                    .address("서울시 종로구 34-1")
+                    .trip(trip1)
+                    .build();
+
+            Place place2 = Place.builder()
+                    .title("MyJuice2")
+                    .content("뷰 좋음 22")
+                    .star(4D)
+                    .address("서울시 종로구 34-1")
+                    .trip(trip1)
+                    .build();
+
+            Place place3 = Place.builder()
+                    .title("MyJuice3")
+                    .content("뷰 좋음 222")
+                    .star(4D)
+                    .address("서울시 종로구 34-1")
+                    .trip(trip2)
+                    .build();
+
+            Place place4 = Place.builder()
+                    .title("MyJuice4")
+                    .content("뷰 좋음 444")
+                    .star(4D)
+                    .address("서울시 종로구 34-1")
+                    .trip(trip2)
+                    .build();
+
+            em.persist(place1);
+            em.persist(place2);
+            em.persist(place3);
+            em.persist(place4);
         }
 
     }
