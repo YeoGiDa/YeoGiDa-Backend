@@ -33,7 +33,6 @@ public class InitDb {
                     .email("test@test")
                     .password("$2a$10$zWBZQWdpSIB77Aq4mJGJgexR/SbIRto5Bo8PR2577YUkEmPbbLN9O") //123456789
                     .nickname("ppirae1")
-                    .imgUrl("imgUrl.com")
                     .role("ROLE_USER")
                     .build();
 
@@ -41,7 +40,6 @@ public class InitDb {
                     .email("test2@test2")
                     .password("$2a$10$quylBG2vlHIzcxb9zjqKZOlZ7S0ioHKxy2L85U6hXTjS1/RyOmk/O") //12345678
                     .nickname("ppirae2")
-                    .imgUrl("imgUrl2.com")
                     .role("ROLE_USER")
                     .build();
 
@@ -53,7 +51,6 @@ public class InitDb {
                     .title("공기맑은 제주")
                     .subTitle("제주도 혼저옵서예")
                     .member(member1)
-                    .imgUrl("jejuUrl.com")
                     .build();
 
             Trip trip2 = Trip.builder()
@@ -61,7 +58,6 @@ public class InitDb {
                     .title("강남")
                     .subTitle("강남의 맛집은 여기")
                     .member(member1)
-                    .imgUrl("gangnamUrl.com")
                     .build();
 
             Trip trip3 = Trip.builder()
@@ -69,7 +65,6 @@ public class InitDb {
                     .title("목동")
                     .subTitle("여기는 우리집")
                     .member(member2)
-                    .imgUrl("mockdongUrl.com")
                     .build();
 
             em.persist(trip1);

@@ -1,5 +1,6 @@
 package com.Udemy.YeoGiDa.domain.trip.service;
 
+import com.Udemy.YeoGiDa.domain.common.exception.ImgNotFoundException;
 import com.Udemy.YeoGiDa.domain.heart.entity.Heart;
 import com.Udemy.YeoGiDa.domain.heart.exception.AlreadyHeartException;
 import com.Udemy.YeoGiDa.domain.heart.exception.HeartNotFoundException;
@@ -7,7 +8,9 @@ import com.Udemy.YeoGiDa.domain.heart.repository.HeartRepository;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
+import com.Udemy.YeoGiDa.domain.trip.entity.TripImg;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
+import com.Udemy.YeoGiDa.domain.trip.repository.TripImgRepository;
 import com.Udemy.YeoGiDa.domain.trip.repository.TripRepository;
 import com.Udemy.YeoGiDa.domain.trip.request.TripSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
@@ -27,6 +30,7 @@ import java.util.stream.Collectors;
 public class TripService {
 
     private final TripRepository tripRepository;
+    private final TripImgRepository tripImgRepository;
     private final HeartRepository heartRepository;
 
     @Transactional(readOnly = true)
@@ -45,25 +49,31 @@ public class TripService {
         return new TripDetailResponseDto(trip);
     }
 
-    public TripDetailResponseDto save(TripSaveRequestDto tripSaveRequestDto, Member member) {
+    public TripDetailResponseDto save(TripSaveRequestDto tripSaveRequestDto, Member member, String imgPath) {
         if(member == null) {
             throw new MemberNotFoundException();
         }
 
+        //여행지 저장 로직
         Trip trip = Trip.builder()
                 .region(tripSaveRequestDto.getRegion())
                 .title(tripSaveRequestDto.getTitle())
                 .subTitle(tripSaveRequestDto.getSubTitle())
                 .member(member)
-                .imgUrl(tripSaveRequestDto.getImgUrl())
                 .build();
 
         Trip saveTrip = tripRepository.save(trip);
 
-        return new TripDetailResponseDto(saveTrip);
+        //여행지 이미지 저장 로직
+        TripImg tripImg = new TripImg(imgPath, trip);
+        if(imgPath == null) {
+            throw new ImgNotFoundException();
+        }
+        tripImgRepository.save(tripImg);
+        return new TripDetailResponseDto(trip);
     }
 
-    public Long update(Long tripId, TripSaveRequestDto tripSaveRequestDto, Member member) {
+    public Long update(Long tripId, TripSaveRequestDto tripSaveRequestDto, Member member, String imgPath) {
         if(member == null) {
             throw new MemberNotFoundException();
         }
@@ -75,8 +85,17 @@ public class TripService {
             throw new ForbiddenException();
         }
 
+        //여행지 이미지 수정 로직
+        TripImg findTripImg = tripImgRepository.findTripImgByTrip(trip);
+        tripImgRepository.delete(findTripImg);
+        TripImg tripImg = new TripImg(imgPath, trip);
+        if(imgPath == null) {
+            throw new ImgNotFoundException();
+        }
+        tripImgRepository.save(tripImg);
+
         trip.update(tripSaveRequestDto.getRegion(), tripSaveRequestDto.getTitle(),
-                tripSaveRequestDto.getSubTitle(), tripSaveRequestDto.getImgUrl());
+                tripSaveRequestDto.getSubTitle());
 
         return trip.getId();
     }
@@ -95,6 +114,10 @@ public class TripService {
 
         tripRepository.delete(trip);
         return trip.getId();
+    }
+
+    public Trip findById(Long tripId) {
+        return findById(tripId);
     }
 
     public void heart(Long tripId, Member member) {

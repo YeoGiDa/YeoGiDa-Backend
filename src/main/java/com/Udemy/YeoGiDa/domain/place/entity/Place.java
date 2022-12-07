@@ -25,7 +25,6 @@ public class Place extends BaseEntity {
     private Long id;
     private String title;
     private String content;
-    private String imgUrl;
     private String address;
     private double star = 0.0;
 
@@ -34,22 +33,23 @@ public class Place extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Trip trip;
 
+    @Transient
+    private List<PlaceImg> imgs = new ArrayList<>();
+
     @Builder
-    public Place(String title, String content, String address, Double star, Trip trip, String imgUrl ) {
+    public Place(String title, String content, String address, Double star, Trip trip) {
         this.title = title;
         this.content = content;
         this.address = address;
         this.star = star;
         this.trip = trip;
-        this.imgUrl = imgUrl;
     }
 
-    public void update(String title, String content, String address, Double star, String imgUrl){
+    public void update(String title, String content, String address, Double star){
         this.title = title;
         this.content=content;
         this.address=address;
         this.star = star;
-        this.imgUrl = imgUrl;
     }
 
 

@@ -1,6 +1,8 @@
 package com.Udemy.YeoGiDa.domain.place.controller;
 
+import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
+import com.Udemy.YeoGiDa.domain.place.repository.PlaceImgRepository;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceListResponseDto;
@@ -21,8 +23,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +38,8 @@ import java.util.Map;
 public class PlaceController {
 
     private final PlaceService placeService;
+    private final PlaceImgRepository placeImgRepository;
+    private final S3Service s3Service;
 
 
     @ApiOperation("여행지 별 장소 목록 조회 - 최신순")
@@ -81,10 +87,21 @@ public class PlaceController {
     @ApiOperation("장소 작성")
     @PostMapping("/places/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity save(@RequestBody PlaceSaveRequestDto placeSaveRequestDto,
+    public ResponseEntity save(@ModelAttribute PlaceSaveRequestDto placeSaveRequestDto,
+                               @RequestPart(name = "imgUrl") List<MultipartFile> multipartFiles,
                                Trip trip,
                                @LoginMember Member member) {
-        PlaceDetailResponseDto result = placeService.save(placeSaveRequestDto, trip);
+        if(multipartFiles == null) {
+            throw new RuntimeException();
+        }
+
+        List<String> imgPaths = new ArrayList<>();
+        for (MultipartFile multipartFile : multipartFiles) {
+            String imgPath = s3Service.upload(multipartFile);
+            imgPaths.add(imgPath);
+        }
+
+        PlaceDetailResponseDto result = placeService.save(placeSaveRequestDto, trip, imgPaths);
         return new ResponseEntity(DefaultResult.res(StatusCode.CREATED,
                 "장소 작성 성공", result), HttpStatus.CREATED);
     }
@@ -94,10 +111,22 @@ public class PlaceController {
     @PutMapping("/places/{placeId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity update(@PathVariable Long placeId,
-                                 @RequestBody PlaceSaveRequestDto placeSaveRequestDto,
+                                 @ModelAttribute PlaceSaveRequestDto placeSaveRequestDto,
+                                 @RequestPart List<MultipartFile> multipartFiles,
                                  Trip trip,
                                  @LoginMember Member member) {
-        Long updateId = placeService.update(placeId, placeSaveRequestDto, trip);
+        if(multipartFiles == null) {
+            throw new RuntimeException();
+        }
+
+        List<String> imgPaths = new ArrayList<>();
+        for (MultipartFile multipartFile : multipartFiles) {
+            String imgPath = s3Service.upload(multipartFile);
+            imgPaths.add(imgPath);
+        }
+
+        //TODO: 수정해야함
+        Long updateId = placeService.update(placeId, placeSaveRequestDto, trip, imgPaths);
         Map<String, Object> result = new HashMap<>();
         result.put("updateId", updateId);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,

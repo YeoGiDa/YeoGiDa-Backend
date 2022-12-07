@@ -1,6 +1,8 @@
 package com.Udemy.YeoGiDa.domain.trip.controller;
 
+import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
+import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.Udemy.YeoGiDa.domain.trip.request.TripSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripListResponseDto;
@@ -17,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +31,7 @@ import java.util.Map;
 public class TripController {
 
     private final TripService tripService;
+    private final S3Service s3Service;
 
     @ApiOperation("여행지 전체 조회 - 최신순")
     @ApiResponse(code = 200, message = "조회 완료")
@@ -62,9 +66,15 @@ public class TripController {
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
 //    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
-    public ResponseEntity save(@RequestBody TripSaveRequestDto tripSaveRequestDto,
+    public ResponseEntity save(@ModelAttribute TripSaveRequestDto tripSaveRequestDto,
+                               @RequestPart(name = "imgUrl") MultipartFile multipartFile,
                                @LoginMember Member member) {
-        TripDetailResponseDto result = tripService.save(tripSaveRequestDto, member);
+        if(multipartFile == null) {
+            throw new RuntimeException();
+        }
+
+        String imgPath = s3Service.upload(multipartFile);
+        TripDetailResponseDto result = tripService.save(tripSaveRequestDto, member, imgPath);
         return new ResponseEntity(DefaultResult.res(StatusCode.CREATED,
                 "여행지 작성 성공", result), HttpStatus.CREATED);
     }
@@ -82,9 +92,16 @@ public class TripController {
     @ResponseStatus(HttpStatus.OK)
 //    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
     public ResponseEntity update(@PathVariable Long tripId,
-                                 @RequestBody TripSaveRequestDto tripSaveRequestDto,
+                                 @ModelAttribute TripSaveRequestDto tripSaveRequestDto,
+                                 @RequestPart(name = "imgUrl") MultipartFile multipartFile,
                                  @LoginMember Member member) {
-        Long updateId = tripService.update(tripId, tripSaveRequestDto, member);
+        Trip findTrip = tripService.findById(tripId);
+        s3Service.deleteFile(findTrip.getTripImg().getImgUrl());
+        if(multipartFile == null) {
+            throw new RuntimeException();
+        }
+        String imgPath = s3Service.upload(multipartFile);
+        Long updateId = tripService.update(tripId, tripSaveRequestDto, member, imgPath);
         Map<String, Object> result = new HashMap<>();
         result.put("updateId", updateId);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
@@ -105,6 +122,8 @@ public class TripController {
 //    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
     public ResponseEntity delete(@PathVariable Long tripId,
                                  @LoginMember Member member) {
+        Trip findTrip = tripService.findById(tripId);
+        s3Service.deleteFile(findTrip.getTripImg().getImgUrl());
         Long deleteId = tripService.delete(tripId, member);
         Map<String, Object> result = new HashMap<>();
         result.put("deleteId", deleteId);

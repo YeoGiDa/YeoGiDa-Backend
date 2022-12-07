@@ -13,7 +13,4 @@ public class MemberUpdateRequest {
 
     @ApiModelProperty(example = "ppirae4")
     private String nickname;
-
-    @ApiModelProperty(example = "imgUrl4.com")
-    private String imgUrl;
 }
