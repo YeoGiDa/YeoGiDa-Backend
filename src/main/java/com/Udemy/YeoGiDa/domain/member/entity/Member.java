@@ -25,24 +25,23 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     private String nickname;
 
-    private String imgUrl;
+    @Transient
+    private MemberImg img = new MemberImg();
 
     private String role;
 
     private String refreshToken;
 
     @Builder
-    public Member(String email, String password, String nickname, String imgUrl, String role) {
+    public Member(String email, String password, String nickname, String role) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.imgUrl = imgUrl;
         this.role = role;
     }
 
-    public void update(String nickname, String imgUrl) {
+    public void update(String nickname) {
         this.nickname = nickname;
-        this.imgUrl = imgUrl;
     }
 
     public void setRefreshToken(String refreshToken) {
