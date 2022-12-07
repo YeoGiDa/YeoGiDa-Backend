@@ -220,7 +220,6 @@ gradle-app.setting
 .idea/*
 
 .idea
-*.gradle
 *.imi
 
 application.yml
