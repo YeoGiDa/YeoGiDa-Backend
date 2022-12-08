@@ -1,5 +1,6 @@
 package com.Udemy.YeoGiDa.domain.member.controller;
 
+import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.member.request.MemberLoginRequest;
 import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
 import com.Udemy.YeoGiDa.domain.member.response.MemberLoginResponse;
@@ -14,10 +15,13 @@ import com.Udemy.YeoGiDa.domain.member.service.MemberService;
 import com.Udemy.YeoGiDa.global.security.annotation.LoginMember;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -27,9 +31,11 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/members")
+@Slf4j
 public class MemberController {
 
     private final MemberService memberService;
+    private final S3Service s3Service;
 
     @ApiOperation("이메일로 회원가입된 유저인지 확인 (ADMIN용)")
     @ApiResponse(code = 200, message = "조회 완료")
@@ -99,8 +105,19 @@ public class MemberController {
     })
     @PostMapping(value = "/join")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity join(@Validated @RequestBody MemberJoinRequest memberJoinRequest) {
-        MemberJoinResponse memberJoinResponse = memberService.join(memberJoinRequest);
+    public ResponseEntity join(@Validated @ModelAttribute MemberJoinRequest memberJoinRequest,
+                               @RequestPart(name = "imgUrl", required = false) MultipartFile multipartFile) {
+
+        String imgPath = "";
+        log.info("multipart={}", multipartFile);
+        if(multipartFile == null) {
+            imgPath = "https://s3.ap-northeast-2.amazonaws.com/yeogida-bucket/image/default_member_img.png";
+            log.info("imgpath={}", imgPath);
+        }
+        else {
+            imgPath = s3Service.upload(multipartFile);
+        }
+        MemberJoinResponse memberJoinResponse = memberService.join(memberJoinRequest, imgPath);
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("id", memberJoinResponse.getMemberDto().getId());
         result.put("email", memberJoinResponse.getMemberDto().getEmail());
@@ -120,9 +137,17 @@ public class MemberController {
     @PutMapping("/update")
     @ResponseStatus(HttpStatus.OK)
 //    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
-    public ResponseEntity update(@LoginMember Member member, @RequestBody MemberUpdateRequest memberUpdateRequest) {
-
-        memberService.update(member, memberUpdateRequest);
+    public ResponseEntity update(@ModelAttribute MemberUpdateRequest memberUpdateRequest,
+                                 @RequestPart(name = "imgUrl", required = false) MultipartFile multipartFile,
+                                 @LoginMember Member member) {
+        String imgPath = "";
+        if(multipartFile == null) {
+            imgPath = "https://s3.ap-northeast-2.amazonaws.com/yeogida-bucket/image/default_member_img.png";
+        }
+        else {
+            imgPath = s3Service.upload(multipartFile);
+        }
+        memberService.update(member, memberUpdateRequest, imgPath);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 ResponseMessage.UPDATE_USER), HttpStatus.OK);
     }

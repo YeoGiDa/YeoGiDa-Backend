@@ -2,6 +2,7 @@ package com.Udemy.YeoGiDa.domain.trip.response;
 
 import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
+import com.Udemy.YeoGiDa.domain.trip.entity.TripImg;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +32,7 @@ public class TripDetailResponseDto {
         this.title = trip.getTitle();
         this.subTitle = trip.getSubTitle();
         this.member = new MemberDto(trip.getMember());
-        this.imgUrl = trip.getImgUrl();
+        this.imgUrl = trip.getTripImg().getImgUrl();
         this.createdTime = trip.getCreatedTime();
         this.modifiedTime = trip.getModifiedTime();
     }

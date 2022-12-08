@@ -26,7 +26,4 @@ public class MemberJoinRequest {
     @NotEmpty
     @ApiModelProperty(example = "ppirae3")
     private String nickname;
-
-    @ApiModelProperty(example = "imgUrl3.com")
-    private String imgUrl;
 }

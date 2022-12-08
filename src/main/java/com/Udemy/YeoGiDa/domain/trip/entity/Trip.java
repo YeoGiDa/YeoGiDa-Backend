@@ -37,22 +37,21 @@ public class Trip extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
-    private String imgUrl;
+    @Transient
+    private TripImg tripImg = new TripImg();
 
     @Builder
-    public Trip(String region, String title, String subTitle, Member member, String imgUrl) {
+    public Trip(String region, String title, String subTitle, Member member) {
         this.region = region;
         this.title = title;
         this.subTitle = subTitle;
         this.member = member;
-        this.imgUrl = imgUrl;
     }
 
-    public void update(String region, String title, String subTitle, String imgUrl) {
+    public void update(String region, String title, String subTitle) {
         this.region = region;
         this.title = title;
         this.subTitle = subTitle;
-        this.imgUrl = imgUrl;
     }
 
     public void plusHeartCount() {

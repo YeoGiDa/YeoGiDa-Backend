@@ -15,6 +15,13 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
+    public List<Trip> findAllOrderByIdDesc() {
+        return queryFactory.selectFrom(trip)
+                .orderBy(trip.id.desc())
+                .fetch();
+    }
+
+    @Override
     public List<Trip> findAllByMemberFetch() {
         return queryFactory.selectFrom(trip)
                 .leftJoin(trip.member, member).fetchJoin()

@@ -2,7 +2,6 @@ package com.Udemy.YeoGiDa.domain.place.response;
 
 
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
-import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -31,6 +29,5 @@ public class PlaceDetailResponseDto {
         this.star = place.getStar();
         this.content = place.getContent();
         this.createdTime = place.getCreatedTime();
-
     }
 }

@@ -9,12 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface TripRepository extends JpaRepository<Trip, Long> {
-
-    //모든 여행지 목록 - 최신순
-    @Query("SELECT t FROM Trip t ORDER BY t.id DESC")
-    List<Trip> findAllDesc();
-
+public interface TripRepository extends JpaRepository<Trip, Long>, TripRepositoryCustom {
 
     Optional<Trip> findById(Long tripId);
 }

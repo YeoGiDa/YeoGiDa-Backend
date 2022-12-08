@@ -8,6 +8,9 @@ import java.util.List;
 @Repository
 public interface TripRepositoryCustom {
 
+    //모든 여행지 목록 최신순
+    List<Trip> findAllOrderByIdDesc();
+    
     //내가 작성한 글 목록
     List<Trip> findAllByMemberFetch();
 

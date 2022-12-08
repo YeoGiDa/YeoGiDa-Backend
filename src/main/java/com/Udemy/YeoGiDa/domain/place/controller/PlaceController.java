@@ -7,9 +7,6 @@ import com.Udemy.YeoGiDa.domain.place.response.PlaceDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceListResponseDto;
 import com.Udemy.YeoGiDa.domain.place.service.PlaceService;
 
-import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
-
-import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
 import com.Udemy.YeoGiDa.global.response.DefaultResult;
 import com.Udemy.YeoGiDa.global.response.StatusCode;
 import com.Udemy.YeoGiDa.global.security.annotation.LoginMember;
@@ -23,10 +20,7 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -109,7 +103,4 @@ public class PlaceController {
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "장소 삭제 성공"), HttpStatus.OK);
     }
-
-
-
 }

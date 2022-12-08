@@ -56,7 +56,6 @@ public class PlaceService {
         return new PlaceDetailResponseDto(place);
     }
 
-
     public PlaceDetailResponseDto save(PlaceSaveRequestDto placeSaveRequestDto, Long tripId, Member member) {
 
         Trip trip = tripRepository.findById(tripId)
@@ -84,6 +83,7 @@ public class PlaceService {
 
         return new PlaceDetailResponseDto(savePlace);
     }
+
     public void update(PlaceUpdateRequestDto placeUpdateRequestDto,Long placeId, Member member) {
 
         Place place = Optional.ofNullable(placeRepository.findById(placeId)
@@ -116,9 +116,5 @@ public class PlaceService {
         }
 
         placeRepository.delete(place);
-
     }
-
-
-
 }
