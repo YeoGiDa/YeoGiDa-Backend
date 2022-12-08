@@ -2,6 +2,7 @@ package com.Udemy.YeoGiDa.domain.place.controller;
 
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceSaveRequestDto;
+import com.Udemy.YeoGiDa.domain.place.request.PlaceUpdateRequestDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceListResponseDto;
 import com.Udemy.YeoGiDa.domain.place.service.PlaceService;
@@ -94,10 +95,10 @@ public class PlaceController {
     @PutMapping("/places/{placeId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity update(@PathVariable Long placeId,
-                                 @RequestBody PlaceSaveRequestDto placeSaveRequestDto,
+                                 @RequestBody PlaceUpdateRequestDto placeUpdateRequestDto,
                                  Trip trip,
                                  @LoginMember Member member) {
-        Long updateId = placeService.update(placeId, placeSaveRequestDto, trip);
+        Long updateId = placeService.update(placeId, placeUpdateRequestDto);
         Map<String, Object> result = new HashMap<>();
         result.put("updateId", updateId);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,

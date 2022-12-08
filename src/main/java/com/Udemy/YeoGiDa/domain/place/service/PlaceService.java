@@ -6,11 +6,11 @@ import com.Udemy.YeoGiDa.domain.place.entity.Place;
 import com.Udemy.YeoGiDa.domain.place.exception.PlaceNotFoundException;
 import com.Udemy.YeoGiDa.domain.place.repository.PlaceRepository;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceSaveRequestDto;
+import com.Udemy.YeoGiDa.domain.place.request.PlaceUpdateRequestDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceListResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
-import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -85,17 +85,16 @@ public class PlaceService {
         return place.getId();
     }
 
-    public Long update(Long placeId, PlaceSaveRequestDto placeSaveRequestDto, Trip trip ) {
-        if(trip == null) {
-            throw new TripNotFoundException();
-        }
+    public Long update(Long placeId, PlaceUpdateRequestDto placeUpdateRequestDto) {
+
+
 
         Place place = Optional.ofNullable(placeRepository.findById(placeId)
                 .orElseThrow(() -> new PlaceNotFoundException())).get();
 
 
-        place.update(placeSaveRequestDto.getTitle(), placeSaveRequestDto.getAddress(),
-                placeSaveRequestDto.getContent(),placeSaveRequestDto.getStar(),placeSaveRequestDto.getImgUrl());
+        place.update(placeUpdateRequestDto.getTitle(), placeUpdateRequestDto.getAddress(),
+                placeUpdateRequestDto.getContent(),placeUpdateRequestDto.getStar(),placeUpdateRequestDto.getImgUrl());
 
         return place.getId();
     }
