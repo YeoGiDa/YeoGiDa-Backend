@@ -72,8 +72,9 @@ public class PlaceService {
         Place place = Place.builder()
                 .title(placeSaveRequestDto.getTitle())
                 .address(placeSaveRequestDto.getAddress())
+                .longitude(placeSaveRequestDto.getLongitude())
+                .latitude(placeSaveRequestDto.getLatitude())
                 .content(placeSaveRequestDto.getContent())
-                .location(placeSaveRequestDto.getLocation())
                 .star(placeSaveRequestDto.getStar())
                 .trip(trip)
                 .tag(placeSaveRequestDto.getTag())
@@ -98,8 +99,9 @@ public class PlaceService {
         }
 
         place.update(placeUpdateRequestDto.getTitle(), placeUpdateRequestDto.getAddress(),
-                placeUpdateRequestDto.getContent(), placeUpdateRequestDto.getLocation(),
-                placeUpdateRequestDto.getStar(), placeUpdateRequestDto.getTag());
+                placeUpdateRequestDto.getContent(),placeUpdateRequestDto.getLongitude(),
+                placeUpdateRequestDto.getLatitude(), placeUpdateRequestDto.getStar(),
+                placeUpdateRequestDto.getTag());
     }
 
     public void delete(Long placeId,Member member) {
