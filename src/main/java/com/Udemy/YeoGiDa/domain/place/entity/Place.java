@@ -27,10 +27,9 @@ public class Place extends BaseEntity {
     private String title;
     private String content;
     private String address;
-    @Column(nullable = false, columnDefinition = "GEOMETRY")
-    private Point location;
+    private Double longitude;
+    private Double latitude;
     private double star = 0.0;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trip_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -38,21 +37,23 @@ public class Place extends BaseEntity {
 
     private String tag;
     @Builder
-    public Place(String title, String content, String address, Double star, Trip trip,Point location, String tag ) {
+    public Place(String title, String content, String address, Double longitude, Double latitude, Double star, Trip trip, String tag ) {
         this.title = title;
         this.content = content;
         this.address = address;
-        this.location = location;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.star = star;
         this.trip = trip;
         this.tag = tag;
     }
 
-    public void update(String title, String content, String address, Point location,Double star,String tag){
+    public void update(String title, String content, String address, Double longitude, Double latitude ,Double star,String tag){
         this.title = title;
         this.content=content;
         this.address=address;
-        this.location=location;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.star = star;
         this.tag = tag;
     }
