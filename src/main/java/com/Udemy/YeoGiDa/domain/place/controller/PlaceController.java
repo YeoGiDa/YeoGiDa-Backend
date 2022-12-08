@@ -51,8 +51,6 @@ public class PlaceController {
                 "장소 목록 조회 성공 - 최신순", result), HttpStatus.OK);
     }
 
-
-
     @ApiOperation("여행지 별 장소 목록 조회 - 별점순")
     @ApiResponses({
             @ApiResponse(code = 200, message = "조회 성공"),
@@ -80,12 +78,12 @@ public class PlaceController {
     }
 
     @ApiOperation("장소 작성")
-    @PostMapping("/places/save")
+    @PostMapping("/{tripId}/places/save")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity save(@RequestBody PlaceSaveRequestDto placeSaveRequestDto,
-                               Trip trip,
+                               @PathVariable Long tripId,
                                @LoginMember Member member) {
-        PlaceDetailResponseDto result = placeService.save(placeSaveRequestDto, trip);
+        PlaceDetailResponseDto result = placeService.save(placeSaveRequestDto,tripId, member);
         return new ResponseEntity(DefaultResult.res(StatusCode.CREATED,
                 "장소 작성 성공", result), HttpStatus.CREATED);
     }
@@ -94,28 +92,22 @@ public class PlaceController {
     @ApiOperation("장소 수정")
     @PutMapping("/places/{placeId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity update(@PathVariable Long placeId,
-                                 @RequestBody PlaceUpdateRequestDto placeUpdateRequestDto,
-                                 Trip trip,
+    public ResponseEntity update(@RequestBody PlaceUpdateRequestDto placeUpdateRequestDto,
+                                 @PathVariable Long placeId,
                                  @LoginMember Member member) {
-        Long updateId = placeService.update(placeId, placeUpdateRequestDto);
-        Map<String, Object> result = new HashMap<>();
-        result.put("updateId", updateId);
+        placeService.update(placeUpdateRequestDto, placeId, member);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "여행지 수정 성공", result), HttpStatus.OK);
+                "여행지 수정 성공"), HttpStatus.OK);
     }
 
     @ApiOperation("장소 삭제")
     @DeleteMapping("/places/{placeId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity delete(@PathVariable Long placeId,
-                                 Trip trip,
                                  @LoginMember Member member) {
-        Long deleteId = placeService.delete(placeId, trip);
-        Map<String, Object> result = new HashMap<>();
-        result.put("deleteId", deleteId);
+        placeService.delete(placeId, member);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "장소 삭제 성공", result), HttpStatus.OK);
+                "장소 삭제 성공"), HttpStatus.OK);
     }
 
 
