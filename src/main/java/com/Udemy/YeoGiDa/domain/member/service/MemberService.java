@@ -77,10 +77,10 @@ public class MemberService {
         Member savedMember = memberRepository.save(member);
 
         //회원 이미지 저장 로직
-        MemberImg memberImg = new MemberImg(imgPath, savedMember);
         if(imgPath == null) {
-             throw new ImgNotFoundException();
+            imgPath = "https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/default_member.png";
         }
+        MemberImg memberImg = new MemberImg(imgPath, savedMember);
         memberImgRepository.save(memberImg);
 
         MemberDto memberDto = new MemberDto(savedMember);
@@ -101,15 +101,21 @@ public class MemberService {
         //회원 이미지 로직
         MemberImg findMemberImg = memberImgRepository.findMemberImgByMember(member);
         String fileName = findMemberImg.getImgUrl().split("/")[3];
-        if(fileName != "default_member.png") {
+        //원래 default_image일 때
+        if(fileName == "default_member.png") {
+            memberImgRepository.delete(findMemberImg);
+            if(imgPath == null) {
+                throw new ImgNotFoundException();
+            }
+        }
+        else {
             s3Service.deleteFile(fileName);
+            memberImgRepository.delete(findMemberImg);
         }
-        memberImgRepository.delete(findMemberImg);
-        MemberImg memberImg = new MemberImg(imgPath, member);
-
         if(imgPath == null) {
-            throw new ImgNotFoundException();
+            imgPath = "https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/default_member.png";
         }
+        MemberImg memberImg = new MemberImg(imgPath, member);
         memberImgRepository.save(memberImg);
 
         member.update(memberUpdateRequest.getNickname());
