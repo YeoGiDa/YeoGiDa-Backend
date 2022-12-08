@@ -1,6 +1,7 @@
 package com.Udemy.YeoGiDa.domain.trip.service;
 
 import com.Udemy.YeoGiDa.domain.common.exception.ImgNotFoundException;
+import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.heart.entity.Heart;
 import com.Udemy.YeoGiDa.domain.heart.exception.AlreadyHeartException;
 import com.Udemy.YeoGiDa.domain.heart.exception.HeartNotFoundException;
@@ -31,11 +32,12 @@ public class TripService {
 
     private final TripRepository tripRepository;
     private final TripImgRepository tripImgRepository;
+    private final S3Service s3Service;
     private final HeartRepository heartRepository;
 
     @Transactional(readOnly = true)
     public List<TripListResponseDto> getTripList() {
-        return tripRepository.findAllDesc()
+        return tripRepository.findAllOrderByIdDesc()
                 .stream()
                 .map(TripListResponseDto::new)
                 .collect(Collectors.toList());
@@ -70,10 +72,10 @@ public class TripService {
             throw new ImgNotFoundException();
         }
         tripImgRepository.save(tripImg);
-        return new TripDetailResponseDto(trip);
+        return new TripDetailResponseDto(saveTrip);
     }
 
-    public Long update(Long tripId, TripSaveRequestDto tripSaveRequestDto, Member member, String imgPath) {
+    public void update(Long tripId, TripSaveRequestDto tripSaveRequestDto, Member member, String imgPath) {
         if(member == null) {
             throw new MemberNotFoundException();
         }
@@ -87,6 +89,8 @@ public class TripService {
 
         //여행지 이미지 수정 로직
         TripImg findTripImg = tripImgRepository.findTripImgByTrip(trip);
+        String fileName = findTripImg.getImgUrl().split("/")[3];
+        s3Service.deleteFile(fileName);
         tripImgRepository.delete(findTripImg);
         TripImg tripImg = new TripImg(imgPath, trip);
         if(imgPath == null) {
@@ -96,11 +100,9 @@ public class TripService {
 
         trip.update(tripSaveRequestDto.getRegion(), tripSaveRequestDto.getTitle(),
                 tripSaveRequestDto.getSubTitle());
-
-        return trip.getId();
     }
 
-    public Long delete(Long tripId, Member member) {
+    public void delete(Long tripId, Member member) {
         if(member == null) {
             throw new ForbiddenException();
         }
@@ -112,8 +114,12 @@ public class TripService {
             throw new ForbiddenException();
         }
 
+        TripImg findTripImg = tripImgRepository.findTripImgByTrip(trip);
+        String fileName = findTripImg.getImgUrl().split("/")[3];
+        s3Service.deleteFile(fileName);
+        tripImgRepository.delete(findTripImg);
+
         tripRepository.delete(trip);
-        return trip.getId();
     }
 
     public Trip findById(Long tripId) {

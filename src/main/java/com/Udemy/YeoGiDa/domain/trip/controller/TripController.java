@@ -67,7 +67,7 @@ public class TripController {
     @ResponseStatus(HttpStatus.CREATED)
 //    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
     public ResponseEntity save(@ModelAttribute TripSaveRequestDto tripSaveRequestDto,
-                               @RequestPart(name = "imgUrl") MultipartFile multipartFile,
+                               @RequestPart(name = "imgUrl", required = true) MultipartFile multipartFile,
                                @LoginMember Member member) {
         if(multipartFile == null) {
             throw new RuntimeException();
@@ -93,19 +93,12 @@ public class TripController {
 //    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
     public ResponseEntity update(@PathVariable Long tripId,
                                  @ModelAttribute TripSaveRequestDto tripSaveRequestDto,
-                                 @RequestPart(name = "imgUrl") MultipartFile multipartFile,
+                                 @RequestPart(name = "imgUrl", required = true) MultipartFile multipartFile,
                                  @LoginMember Member member) {
-        Trip findTrip = tripService.findById(tripId);
-        s3Service.deleteFile(findTrip.getTripImg().getImgUrl());
-        if(multipartFile == null) {
-            throw new RuntimeException();
-        }
         String imgPath = s3Service.upload(multipartFile);
-        Long updateId = tripService.update(tripId, tripSaveRequestDto, member, imgPath);
-        Map<String, Object> result = new HashMap<>();
-        result.put("updateId", updateId);
+        tripService.update(tripId, tripSaveRequestDto, member, imgPath);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "여행지 수정 성공", result), HttpStatus.OK);
+                "여행지 수정 성공"), HttpStatus.OK);
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
@@ -122,13 +115,9 @@ public class TripController {
 //    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
     public ResponseEntity delete(@PathVariable Long tripId,
                                  @LoginMember Member member) {
-        Trip findTrip = tripService.findById(tripId);
-        s3Service.deleteFile(findTrip.getTripImg().getImgUrl());
-        Long deleteId = tripService.delete(tripId, member);
-        Map<String, Object> result = new HashMap<>();
-        result.put("deleteId", deleteId);
+        tripService.delete(tripId, member);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "여행지 삭제 성공", result), HttpStatus.OK);
+                "여행지 삭제 성공"), HttpStatus.OK);
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_USER"})

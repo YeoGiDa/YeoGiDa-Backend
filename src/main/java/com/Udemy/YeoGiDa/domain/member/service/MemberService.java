@@ -1,6 +1,7 @@
 package com.Udemy.YeoGiDa.domain.member.service;
 
 import com.Udemy.YeoGiDa.domain.common.exception.ImgNotFoundException;
+import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.entity.MemberImg;
 import com.Udemy.YeoGiDa.domain.member.exception.AlreadyExistsNicknameException;
@@ -18,6 +19,7 @@ import com.Udemy.YeoGiDa.domain.member.response.MemberLoginResponse;
 import com.Udemy.YeoGiDa.global.jwt.Token;
 import com.Udemy.YeoGiDa.global.jwt.service.JwtProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,10 +29,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
     private final MemberImgRepository memberImgRepository;
+    private final S3Service s3Service;
     private final JwtProvider jwtProvider;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -96,8 +100,13 @@ public class MemberService {
 
         //회원 이미지 로직
         MemberImg findMemberImg = memberImgRepository.findMemberImgByMember(member);
+        String fileName = findMemberImg.getImgUrl().split("/")[3];
+        if(fileName != "default_member.png") {
+            s3Service.deleteFile(fileName);
+        }
         memberImgRepository.delete(findMemberImg);
         MemberImg memberImg = new MemberImg(imgPath, member);
+
         if(imgPath == null) {
             throw new ImgNotFoundException();
         }
@@ -111,6 +120,11 @@ public class MemberService {
         if(member == null) {
             throw new MemberNotFoundException();
         }
+
+        MemberImg findMemberImg = memberImgRepository.findMemberImgByMember(member);
+        String fileName = findMemberImg.getImgUrl().split("/")[3];
+        s3Service.deleteFile(fileName);
+        memberImgRepository.delete(findMemberImg);
 
         memberRepository.delete(member);
     }
