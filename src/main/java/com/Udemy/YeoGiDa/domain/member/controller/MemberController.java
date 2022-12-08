@@ -23,10 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -109,10 +106,8 @@ public class MemberController {
                                @RequestPart(name = "imgUrl", required = false) MultipartFile multipartFile) {
 
         String imgPath = "";
-        log.info("multipart={}", multipartFile);
         if(multipartFile == null) {
-            imgPath = "https://s3.ap-northeast-2.amazonaws.com/yeogida-bucket/image/default_member_img.png";
-            log.info("imgpath={}", imgPath);
+            imgPath = null;
         }
         else {
             imgPath = s3Service.upload(multipartFile);
@@ -142,7 +137,7 @@ public class MemberController {
                                  @LoginMember Member member) {
         String imgPath = "";
         if(multipartFile == null) {
-            imgPath = "https://s3.ap-northeast-2.amazonaws.com/yeogida-bucket/image/default_member_img.png";
+            imgPath = null;
         }
         else {
             imgPath = s3Service.upload(multipartFile);
