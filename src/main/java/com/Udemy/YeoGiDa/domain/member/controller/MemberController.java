@@ -15,6 +15,7 @@ import com.Udemy.YeoGiDa.domain.member.service.MemberService;
 import com.Udemy.YeoGiDa.global.security.annotation.LoginMember;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/members")
+@Slf4j
 public class MemberController {
 
     private final MemberService memberService;
@@ -104,13 +106,17 @@ public class MemberController {
     @PostMapping(value = "/join")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity join(@Validated @ModelAttribute MemberJoinRequest memberJoinRequest,
-                               @RequestPart(name = "imgUrl") MultipartFile multipartFile) {
-        //TODO: defaultImg 설정
-//        if(multipartFile == null) {
-//
-//        }
+                               @RequestPart(name = "imgUrl", required = false) MultipartFile multipartFile) {
 
-        String imgPath = s3Service.upload(multipartFile);
+        String imgPath = "";
+        log.info("multipart={}", multipartFile);
+        if(multipartFile == null) {
+            imgPath = "https://s3.ap-northeast-2.amazonaws.com/yeogida-bucket/image/default_member_img.png";
+            log.info("imgpath={}", imgPath);
+        }
+        else {
+            imgPath = s3Service.upload(multipartFile);
+        }
         MemberJoinResponse memberJoinResponse = memberService.join(memberJoinRequest, imgPath);
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("id", memberJoinResponse.getMemberDto().getId());
@@ -132,15 +138,15 @@ public class MemberController {
     @ResponseStatus(HttpStatus.OK)
 //    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
     public ResponseEntity update(@ModelAttribute MemberUpdateRequest memberUpdateRequest,
-                                 @RequestPart(name = "imgUrl") MultipartFile multipartFile,
+                                 @RequestPart(name = "imgUrl", required = false) MultipartFile multipartFile,
                                  @LoginMember Member member) {
-        s3Service.deleteFile(member.getImg().getImgUrl());
-
-        //TODO: defaultImg 설정
-//        if(multipartFile == null) {
-//
-//        }
-        String imgPath = s3Service.upload(multipartFile);
+        String imgPath = "";
+        if(multipartFile == null) {
+            imgPath = "https://s3.ap-northeast-2.amazonaws.com/yeogida-bucket/image/default_member_img.png";
+        }
+        else {
+            imgPath = s3Service.upload(multipartFile);
+        }
         memberService.update(member, memberUpdateRequest, imgPath);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 ResponseMessage.UPDATE_USER), HttpStatus.OK);
@@ -157,7 +163,6 @@ public class MemberController {
 //    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
     public ResponseEntity delete(@LoginMember Member member) {
 
-        s3Service.deleteFile(member.getImg().getImgUrl());
         memberService.delete(member);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 ResponseMessage.DELETE_USER), HttpStatus.OK);

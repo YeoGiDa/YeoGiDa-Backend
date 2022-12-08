@@ -60,9 +60,9 @@ public class S3Service {
         String imgPath = "";
 
         try(InputStream inputStream = multipartFile.getInputStream()) {
-            s3Client.putObject(new PutObjectRequest(bucket+"/image", fileName, inputStream, objectMetadata)
+            s3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
-            imgPath = s3Client.getUrl(bucket+"/image", fileName).toString();
+            imgPath = s3Client.getUrl(bucket, fileName).toString();
         } catch(IOException e) {
             throw new WrongImgFormatException();
         }
@@ -80,9 +80,9 @@ public class S3Service {
             objectMetadata.setContentType(file.getContentType());
 
             try(InputStream inputStream = file.getInputStream()) {
-                s3Client.putObject(new PutObjectRequest(bucket+"/image", fileName, inputStream, objectMetadata)
+                s3Client.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
                         .withCannedAcl(CannedAccessControlList.PublicRead));
-                imgUrlList.add(s3Client.getUrl(bucket+"/image", fileName).toString());
+                imgUrlList.add(s3Client.getUrl(bucket, fileName).toString());
             } catch(IOException e) {
                 throw new WrongImgFormatException();
             }
@@ -116,7 +116,8 @@ public class S3Service {
 
     // DeleteObject를 통해 S3 파일 삭제
     public void deleteFile(String fileName){
-        DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, fileName);
-        s3Client.deleteObject(deleteObjectRequest);
+        DeleteObjectRequest request = new DeleteObjectRequest(bucket, fileName);
+        s3Client.deleteObject(request);
+        System.out.println("삭제 성공");
     }
 }
