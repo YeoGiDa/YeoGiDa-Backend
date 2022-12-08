@@ -1,12 +1,15 @@
 package com.Udemy.YeoGiDa.global.jwt.service;
 
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
+import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
+import com.Udemy.YeoGiDa.domain.member.repository.MemberRepository;
 import com.Udemy.YeoGiDa.global.jwt.Token;
 import com.Udemy.YeoGiDa.global.jwt.exception.TokenHasExpiredException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +22,19 @@ import java.util.Date;
 public class JwtProvider {
 
     private final String secret;
+    private final MemberRepository memberRepository;
 
     private Key key;
 
     long tokenPeriod = 1000L * 60L * 100L; //100분
     long refreshPeriod = 1000L * 60L * 60L * 24L * 30L * 3L; //3달
 
+    @Autowired
     public JwtProvider(
-            @Value("${jwt.secret}") String secret) {
+            @Value("${jwt.secret}") String secret,
+            MemberRepository memberRepository) {
         this.secret = secret;
+        this.memberRepository = memberRepository;
     }
 
     @PostConstruct
@@ -73,21 +80,13 @@ public class JwtProvider {
         return claims.getSubject();
     }
 
-//    public boolean verifyToken(String accessToken) {
-//        try {
-//            Jws<Claims> claims =  Jwts.parserBuilder()
-//                    .setSigningKey(key).build()
-//                    .parseClaimsJws(accessToken);
-//            return claims.getBody()
-//                    .getExpiration()
-//                    .after(new Date());
-//        } catch (Exception e) {
-//            return false;
-//        }
-//    }
-
     public boolean validateAccessToken(String accessToken) {
         try {
+            String email = getEmailFromAccessToken(accessToken);
+            boolean existMember = memberRepository.existsByEmail(email);
+            if(existMember == false) {
+                throw new MemberNotFoundException();
+            }
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
             return true;
         } catch (MalformedJwtException ex) {
@@ -136,5 +135,4 @@ public class JwtProvider {
 
         return accessToken;
     }
-
 }
