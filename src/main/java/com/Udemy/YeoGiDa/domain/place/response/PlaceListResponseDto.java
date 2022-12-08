@@ -6,21 +6,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @NoArgsConstructor
 @Getter
 @Setter
 public class PlaceListResponseDto {
 
     private String title;
-    private String imgUrl;
     private Double star;
+
 //    private Integer commentCount;
 
     public PlaceListResponseDto(Place place){
         this.title = place.getTitle();
-        this.imgUrl = place.getImgs().get(0).getImgUrl();
         this.star = place.getStar();
     }
 

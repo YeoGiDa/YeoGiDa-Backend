@@ -1,16 +1,12 @@
 package com.Udemy.YeoGiDa.domain.place.controller;
 
-import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
-import com.Udemy.YeoGiDa.domain.place.repository.PlaceImgRepository;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceSaveRequestDto;
+import com.Udemy.YeoGiDa.domain.place.request.PlaceUpdateRequestDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceListResponseDto;
 import com.Udemy.YeoGiDa.domain.place.service.PlaceService;
 
-import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
-
-import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
 import com.Udemy.YeoGiDa.global.response.DefaultResult;
 import com.Udemy.YeoGiDa.global.response.StatusCode;
 import com.Udemy.YeoGiDa.global.security.annotation.LoginMember;
@@ -23,13 +19,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,8 +29,6 @@ import java.util.Map;
 public class PlaceController {
 
     private final PlaceService placeService;
-    private final PlaceImgRepository placeImgRepository;
-    private final S3Service s3Service;
 
 
     @ApiOperation("여행지 별 장소 목록 조회 - 최신순")
@@ -55,8 +44,6 @@ public class PlaceController {
            return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "장소 목록 조회 성공 - 최신순", result), HttpStatus.OK);
     }
-
-
 
     @ApiOperation("여행지 별 장소 목록 조회 - 별점순")
     @ApiResponses({
@@ -85,23 +72,12 @@ public class PlaceController {
     }
 
     @ApiOperation("장소 작성")
-    @PostMapping("/places/save")
+    @PostMapping("/{tripId}/places/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity save(@ModelAttribute PlaceSaveRequestDto placeSaveRequestDto,
-                               @RequestPart(name = "imgUrl") List<MultipartFile> multipartFiles,
-                               Trip trip,
+    public ResponseEntity save(@RequestBody PlaceSaveRequestDto placeSaveRequestDto,
+                               @PathVariable Long tripId,
                                @LoginMember Member member) {
-        if(multipartFiles == null) {
-            throw new RuntimeException();
-        }
-
-        List<String> imgPaths = new ArrayList<>();
-        for (MultipartFile multipartFile : multipartFiles) {
-            String imgPath = s3Service.upload(multipartFile);
-            imgPaths.add(imgPath);
-        }
-
-        PlaceDetailResponseDto result = placeService.save(placeSaveRequestDto, trip, imgPaths);
+        PlaceDetailResponseDto result = placeService.save(placeSaveRequestDto,tripId, member);
         return new ResponseEntity(DefaultResult.res(StatusCode.CREATED,
                 "장소 작성 성공", result), HttpStatus.CREATED);
     }
@@ -110,42 +86,21 @@ public class PlaceController {
     @ApiOperation("장소 수정")
     @PutMapping("/places/{placeId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity update(@PathVariable Long placeId,
-                                 @ModelAttribute PlaceSaveRequestDto placeSaveRequestDto,
-                                 @RequestPart List<MultipartFile> multipartFiles,
-                                 Trip trip,
+    public ResponseEntity update(@RequestBody PlaceUpdateRequestDto placeUpdateRequestDto,
+                                 @PathVariable Long placeId,
                                  @LoginMember Member member) {
-        if(multipartFiles == null) {
-            throw new RuntimeException();
-        }
-
-        List<String> imgPaths = new ArrayList<>();
-        for (MultipartFile multipartFile : multipartFiles) {
-            String imgPath = s3Service.upload(multipartFile);
-            imgPaths.add(imgPath);
-        }
-
-        //TODO: 수정해야함
-        Long updateId = placeService.update(placeId, placeSaveRequestDto, trip, imgPaths);
-        Map<String, Object> result = new HashMap<>();
-        result.put("updateId", updateId);
+        placeService.update(placeUpdateRequestDto, placeId, member);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "여행지 수정 성공", result), HttpStatus.OK);
+                "여행지 수정 성공"), HttpStatus.OK);
     }
 
     @ApiOperation("장소 삭제")
     @DeleteMapping("/places/{placeId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity delete(@PathVariable Long placeId,
-                                 Trip trip,
                                  @LoginMember Member member) {
-        Long deleteId = placeService.delete(placeId, trip);
-        Map<String, Object> result = new HashMap<>();
-        result.put("deleteId", deleteId);
+        placeService.delete(placeId, member);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "장소 삭제 성공", result), HttpStatus.OK);
+                "장소 삭제 성공"), HttpStatus.OK);
     }
-
-
-
 }

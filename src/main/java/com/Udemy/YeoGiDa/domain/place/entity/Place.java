@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.geo.Point;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class Place extends BaseEntity {
     private String title;
     private String content;
     private String address;
+    @Column(nullable = false, columnDefinition = "GEOMETRY")
+    private Point location;
     private double star = 0.0;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,23 +36,25 @@ public class Place extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Trip trip;
 
-    @Transient
-    private List<PlaceImg> imgs = new ArrayList<>();
-
+    private String tag;
     @Builder
-    public Place(String title, String content, String address, Double star, Trip trip) {
+    public Place(String title, String content, String address, Double star, Trip trip,Point location, String tag ) {
         this.title = title;
         this.content = content;
         this.address = address;
+        this.location = location;
         this.star = star;
         this.trip = trip;
+        this.tag = tag;
     }
 
-    public void update(String title, String content, String address, Double star){
+    public void update(String title, String content, String address, Point location,Double star,String tag){
         this.title = title;
         this.content=content;
         this.address=address;
+        this.location=location;
         this.star = star;
+        this.tag = tag;
     }
 
 
