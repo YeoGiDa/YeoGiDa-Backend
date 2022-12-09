@@ -76,6 +76,9 @@ public class InitDb {
                     .content("뷰 좋음")
                     .star(5D)
                     .address("서울시 종로구 34-1")
+                    .latitude(123.312D)
+                    .longitude(213.2131D)
+                    .tag("카페")
                     .trip(trip1)
                     .build();
 
@@ -84,6 +87,9 @@ public class InitDb {
                     .content("뷰 좋음 22")
                     .star(4D)
                     .address("서울시 종로구 34-1")
+                    .latitude(123.312D)
+                    .longitude(213.2131D)
+                    .tag("카페")
                     .trip(trip1)
                     .build();
 
@@ -92,6 +98,9 @@ public class InitDb {
                     .content("뷰 좋음 222")
                     .star(4D)
                     .address("서울시 종로구 34-1")
+                    .latitude(123.312D)
+                    .longitude(213.2131D)
+                    .tag("카페")
                     .trip(trip2)
                     .build();
 
@@ -100,6 +109,9 @@ public class InitDb {
                     .content("뷰 좋음 444")
                     .star(4D)
                     .address("서울시 종로구 34-1")
+                    .latitude(123.312D)
+                    .longitude(213.2131D)
+                    .tag("카페")
                     .trip(trip2)
                     .build();
 

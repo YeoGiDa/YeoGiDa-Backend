@@ -39,10 +39,17 @@ public class PlaceService {
                 .collect(Collectors.toList());
     }
 
-
     @Transactional(readOnly = true)
     public List<PlaceListResponseDto> getPlaceListOrderByStar(Long tripId){
         return placeRepository.findAllByTripIdOrderByStar(tripId)
+                .stream()
+                .map(PlaceListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PlaceListResponseDto> getPlaceListByTagDesc(String tag){
+        return placeRepository.findAllByTag(tag)
                 .stream()
                 .map(PlaceListResponseDto::new)
                 .collect(Collectors.toList());
