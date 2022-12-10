@@ -80,7 +80,7 @@ public class PlaceService {
             throw new MemberNotFoundException();
         }
 
-        if(trip.getMember() != member){
+        if(trip.getMember().getId() != member.getId()){
             throw new ForbiddenException();
         }
 
@@ -124,7 +124,7 @@ public class PlaceService {
             throw new MemberNotFoundException();
         }
 
-        if(place.getTrip().getMember() != member){
+        if(place.getTrip().getMember().getId() != member.getId()){
             throw new ForbiddenException();
         }
 
@@ -174,23 +174,23 @@ public class PlaceService {
             throw new MemberNotFoundException();
         }
 
-        if(place.getTrip().getMember() != member){
+        if(place.getTrip().getMember().getId() != member.getId()){
             throw new ForbiddenException();
         }
 
-        List<PlaceImg> findPlaceImgs = placeImgRepository.findPlaceImgsByPlace(place);
-        //default 이미지 한장일때
-        String s3FileName = findPlaceImgs.get(0).getImgUrl().split("/")[3];
-        if((findPlaceImgs.size() == 1) && (s3FileName.equals("default_place.png"))) {
-            placeImgRepository.delete(findPlaceImgs.get(0));
-        }
-        else {
-            for (PlaceImg findPlaceImg : findPlaceImgs) {
-                String fileName = findPlaceImg.getImgUrl().split("/")[3];
-                s3Service.deleteFile(fileName);
-                placeImgRepository.delete(findPlaceImg);
-            }
-        }
+//        List<PlaceImg> findPlaceImgs = placeImgRepository.findPlaceImgsByPlace(place);
+//        //default 이미지 한장일때
+//        String s3FileName = findPlaceImgs.get(0).getImgUrl().split("/")[3];
+//        if((findPlaceImgs.size() == 1) && (s3FileName.equals("default_place.png"))) {
+//            placeImgRepository.delete(findPlaceImgs.get(0));
+//        }
+//        else {
+//            for (PlaceImg findPlaceImg : findPlaceImgs) {
+//                String fileName = findPlaceImg.getImgUrl().split("/")[3];
+//                s3Service.deleteFile(fileName);
+//                placeImgRepository.delete(findPlaceImg);
+//            }
+//        }
 
         placeRepository.delete(place);
     }
