@@ -55,9 +55,7 @@ public class CommentService {
             throw new MemberNotFoundException();
         }
 
-        if(place.getTrip().getMember() != member){
-            throw new ForbiddenException();
-        }
+
 
         Comment comment = Comment.builder() 
                 .content(commentSaveRequestDto.getContent())
@@ -85,9 +83,7 @@ public class CommentService {
             throw new PlaceNotFoundException();
         }
 
-        if(place.getTrip().getMember() != member){
-            throw new ForbiddenException();
-        }
+
 
         commentRepository.delete(comment);
 

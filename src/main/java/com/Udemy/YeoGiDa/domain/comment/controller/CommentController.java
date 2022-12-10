@@ -73,7 +73,7 @@ public class CommentController {
         result.put("createdTime", commentListResponseDto.getCreatedTime());
         result.put("content", commentListResponseDto.getContent());
         return new ResponseEntity(DefaultResult.res(StatusCode.CREATED,
-                "장소 작성 성공",commentListResponseDto), HttpStatus.CREATED);
+                "댓글 작성 성공",commentListResponseDto), HttpStatus.CREATED);
     }
 
     @ApiOperation("댓글 삭제")
