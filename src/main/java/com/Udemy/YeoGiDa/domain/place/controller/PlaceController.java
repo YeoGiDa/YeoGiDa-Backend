@@ -1,5 +1,6 @@
 package com.Udemy.YeoGiDa.domain.place.controller;
 
+import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceUpdateRequestDto;
@@ -19,7 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,6 +32,7 @@ import java.util.List;
 public class PlaceController {
 
     private final PlaceService placeService;
+    private final S3Service s3Service;
 
 
     @ApiOperation("여행지 별 장소 목록 조회 - 최신순")
@@ -86,8 +90,20 @@ public class PlaceController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity save(@RequestBody PlaceSaveRequestDto placeSaveRequestDto,
                                @PathVariable Long tripId,
+                               @RequestPart(name = "imgUrls", required = false) List<MultipartFile> multipartFiles,
                                @LoginMember Member member) {
-        PlaceDetailResponseDto result = placeService.save(placeSaveRequestDto,tripId, member);
+
+        ArrayList<String> imgPaths = new ArrayList<>();
+        if(multipartFiles == null) {
+            imgPaths = null;
+        }
+        else {
+            for (MultipartFile multipartFile : multipartFiles) {
+                imgPaths.add(s3Service.upload(multipartFile));
+            }
+        }
+
+        PlaceDetailResponseDto result = placeService.save(placeSaveRequestDto,tripId, member, imgPaths);
         return new ResponseEntity(DefaultResult.res(StatusCode.CREATED,
                 "장소 작성 성공", result), HttpStatus.CREATED);
     }
@@ -96,10 +112,20 @@ public class PlaceController {
     @ApiOperation("장소 수정")
     @PutMapping("/places/{placeId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity update(@RequestBody PlaceUpdateRequestDto placeUpdateRequestDto,
+    public ResponseEntity update(@ModelAttribute PlaceUpdateRequestDto placeUpdateRequestDto,
                                  @PathVariable Long placeId,
+                                 @RequestPart(name = "imgUrls", required = false) List<MultipartFile> multipartFiles,
                                  @LoginMember Member member) {
-        placeService.update(placeUpdateRequestDto, placeId, member);
+        ArrayList<String> imgPaths = new ArrayList<>();
+        if(multipartFiles == null) {
+            imgPaths = null;
+        }
+        else {
+            for (MultipartFile multipartFile : multipartFiles) {
+                imgPaths.add(s3Service.upload(multipartFile));
+            }
+        }
+        placeService.update(placeUpdateRequestDto, placeId, member, imgPaths);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 수정 성공"), HttpStatus.OK);
     }
