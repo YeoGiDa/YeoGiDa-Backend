@@ -10,19 +10,20 @@ public class PlaceUpdateRequestDto {
 
     private String title;
     private String address;
+    private Double longitude;
+    private Double latitude;
     private String content;
     private Double star;
-
     private Point location;
-
     private String tag;
 
     @Builder
-    public PlaceUpdateRequestDto(String title, String address, String content, Double star,Point location, String tag) {
+    public PlaceUpdateRequestDto(String title, String address, String content, Double star, String tag) {
         this.title = title;
         this.address = address;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.content = content;
-        this.location = location;
         this.star = star;
         this.tag = tag;
     }
