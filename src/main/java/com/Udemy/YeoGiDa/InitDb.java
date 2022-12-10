@@ -81,6 +81,7 @@ public class InitDb {
                     .longitude(12.2323)
                     .star(5D)
                     .trip(trip1)
+                    .tag("카페")
                     .build();
 
             Place place2 = Place.builder()
@@ -91,6 +92,7 @@ public class InitDb {
                     .longitude(12.2323)
                     .star(4D)
                     .trip(trip1)
+                    .tag("카페")
                     .build();
 
             Place place3 = Place.builder()
@@ -101,6 +103,7 @@ public class InitDb {
                     .longitude(12.2323)
                     .star(4D)
                     .trip(trip2)
+                    .tag("카페")
                     .build();
 
             Place place4 = Place.builder()
@@ -111,6 +114,7 @@ public class InitDb {
                     .longitude(12.2323)
                     .star(4D)
                     .trip(trip2)
+                    .tag("카페")
                     .build();
 
             em.persist(place1);
