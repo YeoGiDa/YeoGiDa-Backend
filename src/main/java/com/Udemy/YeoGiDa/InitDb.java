@@ -1,5 +1,6 @@
 package com.Udemy.YeoGiDa;
 
+import com.Udemy.YeoGiDa.domain.comment.entity.Comment;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
@@ -117,6 +118,21 @@ public class InitDb {
             em.persist(place2);
             em.persist(place3);
             em.persist(place4);
+
+            Comment comment1 = Comment.builder()
+                    .content("좋습니다.")
+                    .member(member1)
+                    .place(place1)
+                    .build();
+
+            Comment comment2 = Comment.builder()
+                    .content("좋습니다.")
+                    .member(member2)
+                    .place(place1)
+                    .build();
+
+            em.persist(comment1);
+            em.persist(comment2);
         }
 
     }
