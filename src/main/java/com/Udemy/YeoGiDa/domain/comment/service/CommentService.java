@@ -12,6 +12,8 @@ import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
 import com.Udemy.YeoGiDa.domain.place.exception.PlaceNotFoundException;
 import com.Udemy.YeoGiDa.domain.place.repository.PlaceRepository;
+import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
+import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -76,6 +78,10 @@ public class CommentService {
 
         Comment comment = Optional.ofNullable(commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException())).get();
+
+        if(comment.getMember().getId() != member.getId()) {
+            throw new ForbiddenException();
+        }
 
         Place place = comment.getPlace();
 
