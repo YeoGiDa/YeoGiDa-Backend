@@ -37,7 +37,7 @@ public class Trip extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
-    @Transient
+    @OneToOne(mappedBy = "trip", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private TripImg tripImg = new TripImg();
 
     @Builder

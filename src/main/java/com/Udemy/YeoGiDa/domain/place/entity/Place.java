@@ -35,10 +35,8 @@ public class Place extends BaseEntity {
     @JoinColumn(name = "trip_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Trip trip;
-
-    private Double placeCount = 0.0;
-
-    @Transient
+    
+    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
     List<PlaceImg> placeImgs = new ArrayList<>();
 
     private String tag;

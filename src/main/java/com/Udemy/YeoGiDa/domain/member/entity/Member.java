@@ -25,7 +25,7 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     private String nickname;
 
-    @Transient
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private MemberImg memberImg = new MemberImg();
 
     private String role;

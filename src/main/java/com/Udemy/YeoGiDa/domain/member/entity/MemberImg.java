@@ -1,6 +1,7 @@
 package com.Udemy.YeoGiDa.domain.member.entity;
 
 import com.Udemy.YeoGiDa.domain.common.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -20,8 +21,9 @@ public class MemberImg extends BaseEntity {
     private String imgUrl;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private Member member;
 
     public MemberImg(String imgUrl, Member member) {

@@ -20,6 +20,7 @@ import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
 import com.Udemy.YeoGiDa.domain.trip.repository.TripRepository;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class PlaceService {
 
     private final PlaceRepository placeRepository;
@@ -71,7 +73,47 @@ public class PlaceService {
         return new PlaceDetailResponseDto(place);
     }
 
-    public PlaceDetailResponseDto save(PlaceSaveRequestDto placeSaveRequestDto,
+    public PlaceDetailResponseDto saveNoPicture(PlaceSaveRequestDto placeSaveRequestDto,
+                                       Long tripId, Member member) {
+
+        Trip trip = tripRepository.findById(tripId)
+                .orElseThrow(() -> new TripNotFoundException());
+
+        if(member == null){
+            throw new MemberNotFoundException();
+        }
+
+        if(trip.getMember().getId() != member.getId()){
+            throw new ForbiddenException();
+        }
+
+        Place place = Place.builder()
+                .title(placeSaveRequestDto.getTitle())
+                .address(placeSaveRequestDto.getAddress())
+                .longitude(placeSaveRequestDto.getLongitude())
+                .latitude(placeSaveRequestDto.getLatitude())
+                .content(placeSaveRequestDto.getContent())
+                .star(placeSaveRequestDto.getStar())
+                .trip(trip)
+                .tag(placeSaveRequestDto.getTag())
+                .build();
+
+        Place savePlace = placeRepository.save(place);
+
+        //장소 이미지 저장 로직
+        String defaultImgPath = "https://s3.ap-northeast-2.amazonaws.com/yeogida-bucket/default_place_img.png";
+        PlaceImg placeImg = new PlaceImg(defaultImgPath, savePlace);
+        placeImgRepository.save(placeImg);
+        ArrayList<PlaceImg> placeImgs = new ArrayList<>();
+        placeImgs.add(placeImg);
+        savePlace.setPlaceImgs(placeImgs);
+
+        PlaceDetailResponseDto placeDetailResponseDto = new PlaceDetailResponseDto(savePlace);
+        placeDetailResponseDto.setPlaceImgs(placeImgs);
+        return placeDetailResponseDto;
+    }
+
+    public PlaceDetailResponseDto saveWithPictures(PlaceSaveRequestDto placeSaveRequestDto,
                                        Long tripId, Member member, List<String> imgPaths) {
 
         Trip trip = tripRepository.findById(tripId)
@@ -98,26 +140,18 @@ public class PlaceService {
 
         Place savePlace = placeRepository.save(place);
 
-        String defaultImgPath = "";
         ArrayList<PlaceImg> placeImgs = new ArrayList<>();
         //장소 이미지 저장 로직
-        if(imgPaths.isEmpty()) {
-            defaultImgPath = "https://s3.ap-northeast-2.amazonaws.com/yeogida-bucket/default_place_img.png";
-            PlaceImg placeImg = new PlaceImg(defaultImgPath, place);
+        for (String imgPath : imgPaths) {
+            PlaceImg placeImg = new PlaceImg(imgPath, savePlace);
             placeImgRepository.save(placeImg);
             placeImgs.add(placeImg);
-            savePlace.setPlaceImgs(placeImgs);
         }
-        else {
-            for (String imgPath : imgPaths) {
-                PlaceImg placeImg = new PlaceImg(imgPath, place);
-                placeImgRepository.save(placeImg);
-                placeImgs.add(placeImg);
-            }
-            savePlace.setPlaceImgs(placeImgs);
-        }
+        savePlace.setPlaceImgs(placeImgs);
 
-        return new PlaceDetailResponseDto(savePlace);
+        PlaceDetailResponseDto placeDetailResponseDto = new PlaceDetailResponseDto(savePlace);
+        placeDetailResponseDto.setPlaceImgs(placeImgs);
+        return placeDetailResponseDto;
     }
 
     public void update(PlaceUpdateRequestDto placeUpdateRequestDto,
@@ -153,16 +187,21 @@ public class PlaceService {
         }
 
         //수정된 사진이 default일 때
+        ArrayList<PlaceImg> placeImgs = new ArrayList<>();
         if(imgPaths == null) {
             String imgPath = "https://s3.ap-northeast-2.amazonaws.com/yeogida-bucket/image/default_place_img.png";
             PlaceImg placeImg = new PlaceImg(imgPath, place);
             placeImgRepository.save(placeImg);
+            placeImgs.add(placeImg);
+            place.setPlaceImgs(placeImgs);
         }
         else {
             for (String imgPath : imgPaths) {
                 PlaceImg placeImg = new PlaceImg(imgPath, place);
                 placeImgRepository.save(placeImg);
+                placeImgs.add(placeImg);
             }
+            place.setPlaceImgs(placeImgs);
         }
 
         place.update(placeUpdateRequestDto.getTitle(), placeUpdateRequestDto.getAddress(),

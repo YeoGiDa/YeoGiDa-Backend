@@ -1,6 +1,7 @@
 package com.Udemy.YeoGiDa.domain.place.entity;
 
 import com.Udemy.YeoGiDa.domain.common.entity.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -22,6 +23,7 @@ public class PlaceImg extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private Place place;
 
     public PlaceImg(String imgUrl, Place place) {
