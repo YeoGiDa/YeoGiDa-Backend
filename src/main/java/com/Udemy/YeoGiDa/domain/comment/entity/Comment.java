@@ -5,6 +5,7 @@ import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -33,14 +34,14 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "place_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Place place;
-
-    @Column(length = 100, nullable = false)
     private String content;
 
-    @JsonFormat(pattern = "yyyy년 MM월 dd일")
-    private LocalDateTime createdTime;
 
+    @Builder
+    public Comment(Member member, Place place, String content) {
+        this.member = member;
+        this.place = place;
+        this.content = content;
 
-
-
+    }
 }

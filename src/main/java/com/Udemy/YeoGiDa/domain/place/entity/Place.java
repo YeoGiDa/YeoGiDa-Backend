@@ -35,7 +35,7 @@ public class Place extends BaseEntity {
     @JoinColumn(name = "trip_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Trip trip;
-
+    
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
     List<PlaceImg> placeImgs = new ArrayList<>();
 

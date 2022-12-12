@@ -8,12 +8,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment,Long> {
+public interface CommentRepository extends JpaRepository<Comment,Long>,CommentRepositoryCustom {
 
-    @Query("SELECT c FROM Comment c GROUP BY c.place ORDER BY c.id DESC")
-    List<Comment> CommentAllDesc();
-
+    @Override
+    Optional<Comment> findById(Long commentId);
 }
 
