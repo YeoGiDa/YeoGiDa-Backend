@@ -73,15 +73,13 @@ public class PlaceService {
             throw new MemberNotFoundException();
         }
 
-        if(trip.getMember() != member){
+        if(trip.getMember().getId() != member.getId()){
             throw new ForbiddenException();
         }
 
         Place place = Place.builder()
                 .title(placeSaveRequestDto.getTitle())
                 .address(placeSaveRequestDto.getAddress())
-                .longitude(placeSaveRequestDto.getLongitude())
-                .latitude(placeSaveRequestDto.getLatitude())
                 .content(placeSaveRequestDto.getContent())
                 .star(placeSaveRequestDto.getStar())
                 .trip(trip)
@@ -117,7 +115,7 @@ public class PlaceService {
             throw new MemberNotFoundException();
         }
 
-        if(place.getTrip().getMember() != member){
+        if(place.getTrip().getMember().getId() != member.getId()){
             throw new ForbiddenException();
         }
 
@@ -167,7 +165,7 @@ public class PlaceService {
             throw new MemberNotFoundException();
         }
 
-        if(place.getTrip().getMember() != member){
+        if(place.getTrip().getMember().getId() != member.getId()){
             throw new ForbiddenException();
         }
 

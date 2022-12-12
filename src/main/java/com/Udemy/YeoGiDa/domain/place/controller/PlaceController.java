@@ -78,7 +78,7 @@ public class PlaceController {
     @ApiOperation("장소 작성")
     @PostMapping("/{tripId}/places/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity save(@RequestBody PlaceSaveRequestDto placeSaveRequestDto,
+    public ResponseEntity save(PlaceSaveRequestDto placeSaveRequestDto,
                                @PathVariable Long tripId,
                                @RequestPart(name = "imgUrls", required = false) List<MultipartFile> multipartFiles,
                                @LoginMember Member member) {
