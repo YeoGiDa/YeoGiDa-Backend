@@ -36,7 +36,7 @@ public class Place extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Trip trip;
 
-    @Transient
+    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
     List<PlaceImg> placeImgs = new ArrayList<>();
 
     private String tag;

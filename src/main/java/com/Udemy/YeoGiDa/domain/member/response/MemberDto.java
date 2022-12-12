@@ -20,6 +20,10 @@ public class MemberDto {
         this.id = member.getId();
         this.email = member.getEmail();
         this.nickname = member.getNickname();
-        this.imgUrl = member.getMemberImg().getImgUrl();
+        if(member.getMemberImg() == null) {
+            imgUrl = null;
+        } else {
+            this.imgUrl = member.getMemberImg().getImgUrl();
+        }
     }
 }
