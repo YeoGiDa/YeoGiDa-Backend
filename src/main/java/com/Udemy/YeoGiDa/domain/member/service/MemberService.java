@@ -82,6 +82,7 @@ public class MemberService {
         }
         MemberImg memberImg = new MemberImg(imgPath, savedMember);
         memberImgRepository.save(memberImg);
+        savedMember.setMemberImg(memberImg);
 
         MemberDto memberDto = new MemberDto(savedMember);
         return new MemberJoinResponse(memberDto);
@@ -102,7 +103,7 @@ public class MemberService {
         MemberImg findMemberImg = memberImgRepository.findMemberImgByMember(member);
         String fileName = findMemberImg.getImgUrl().split("/")[3];
         //원래 default_image일 때
-        if(fileName == "default_member.png") {
+        if(fileName.equals("default_member.png")) {
             memberImgRepository.delete(findMemberImg);
             if(imgPath == null) {
                 throw new ImgNotFoundException();
@@ -117,6 +118,7 @@ public class MemberService {
         }
         MemberImg memberImg = new MemberImg(imgPath, member);
         memberImgRepository.save(memberImg);
+        member.setMemberImg(memberImg);
 
         member.update(memberUpdateRequest.getNickname());
     }
@@ -127,9 +129,16 @@ public class MemberService {
             throw new MemberNotFoundException();
         }
 
+        log.info("membeIdr={}", member.getId());
+        log.info("memberEmail={}", member.getEmail());
         MemberImg findMemberImg = memberImgRepository.findMemberImgByMember(member);
+        log.info("memberImgMember={}", findMemberImg.getMember());
+        log.info("memberImgImgUrl={}", findMemberImg.getImgUrl());
         String fileName = findMemberImg.getImgUrl().split("/")[3];
-        s3Service.deleteFile(fileName);
+        //이미지가 기본 이미지가 아닐때만
+        if(!fileName.equals("default_member.png")) {
+            s3Service.deleteFile(fileName);
+        }
         memberImgRepository.delete(findMemberImg);
 
         memberRepository.delete(member);

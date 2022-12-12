@@ -5,9 +5,11 @@ import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
 import com.Udemy.YeoGiDa.domain.member.repository.MemberRepository;
 import com.Udemy.YeoGiDa.global.jwt.Token;
 import com.Udemy.YeoGiDa.global.jwt.exception.TokenHasExpiredException;
+import com.Udemy.YeoGiDa.global.jwt.exception.TokenIsInvalidException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -84,22 +86,30 @@ public class JwtProvider {
         try {
             String email = getEmailFromAccessToken(accessToken);
             boolean existMember = memberRepository.existsByEmail(email);
-            if(existMember == false) {
+            if (existMember == false) {
                 throw new MemberNotFoundException();
             }
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
             return true;
+        } catch (SignatureException ex) {
+            log.error("Invalid JWT signature");
+            log.error("Token is Invalid");
+            return false;
         } catch (MalformedJwtException ex) {
             log.error("Invalid JWT token");
+            log.error("Token is Invalid");
             return false;
         } catch (ExpiredJwtException ex) {
             log.error("Expired JWT token");
+            log.error("Token Has Expired");
             return false;
         } catch (UnsupportedJwtException ex) {
             log.error("Unsupported JWT token");
+            log.error("Token is Invalid");
             return false;
         } catch (IllegalArgumentException ex) {
             log.error("JWT claims string is empty.");
+            log.error("Token is Invalid");
             return false;
         }
     }
