@@ -1,5 +1,6 @@
 package com.Udemy.YeoGiDa.domain.member.controller;
 
+import com.Udemy.YeoGiDa.domain.common.exception.WrongImgFormatException;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.member.request.MemberLoginRequest;
 import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
@@ -103,10 +104,9 @@ public class MemberController {
     @PostMapping(value = "/join")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity join(@Validated @ModelAttribute MemberJoinRequest memberJoinRequest,
-                               @RequestPart(name = "imgUrl", required = false) MultipartFile multipartFile) {
-
+                               @RequestPart(name = "imgUrl", required = false) MultipartFile multipartFile) throws WrongImgFormatException {
         String imgPath = "";
-        if(multipartFile == null) {
+        if(multipartFile.isEmpty()) {
             imgPath = null;
         }
         else {
@@ -134,9 +134,9 @@ public class MemberController {
 //    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
     public ResponseEntity update(@ModelAttribute MemberUpdateRequest memberUpdateRequest,
                                  @RequestPart(name = "imgUrl", required = false) MultipartFile multipartFile,
-                                 @LoginMember Member member) {
+                                 @LoginMember Member member) throws WrongImgFormatException {
         String imgPath = "";
-        if(multipartFile == null) {
+        if(multipartFile.isEmpty()) {
             imgPath = null;
         }
         else {

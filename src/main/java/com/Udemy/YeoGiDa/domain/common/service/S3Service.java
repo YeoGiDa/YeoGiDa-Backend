@@ -50,7 +50,7 @@ public class S3Service {
                 .build();
     }
 
-    public String upload(MultipartFile multipartFile) {
+    public String upload(MultipartFile multipartFile) throws WrongImgFormatException {
 
         String fileName = createFileName(multipartFile.getOriginalFilename());
         ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -91,12 +91,12 @@ public class S3Service {
     }
 
     // 이미지파일명 중복 방지
-    private String createFileName(String fileName) {
+    private String createFileName(String fileName) throws WrongImgFormatException {
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));
     }
 
     // 파일 유효성 검사
-    private String getFileExtension(String fileName) {
+    private String getFileExtension(String fileName) throws WrongImgFormatException {
         if (fileName.length() == 0) {
             throw new WrongImgFormatException();
         }

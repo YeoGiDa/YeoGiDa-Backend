@@ -8,14 +8,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class TripSaveRequestDto {
+public class TripUpdateRequestDto {
 
     private String region;
     private String title;
     private String subTitle;
 
     @Builder
-    public TripSaveRequestDto(String region, String title, String subTitle) {
+    public TripUpdateRequestDto(String region, String title, String subTitle) {
         this.region = region;
         this.title = title;
         this.subTitle = subTitle;

@@ -26,7 +26,7 @@ public class Member extends BaseEntity {
     private String nickname;
 
     @Transient
-    private MemberImg img = new MemberImg();
+    private MemberImg memberImg = new MemberImg();
 
     private String role;
 
@@ -46,5 +46,9 @@ public class Member extends BaseEntity {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public void setMemberImg(MemberImg memberImg) {
+        this.memberImg = memberImg;
     }
 }
