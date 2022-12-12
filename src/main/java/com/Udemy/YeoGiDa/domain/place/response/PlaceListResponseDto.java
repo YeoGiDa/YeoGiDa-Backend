@@ -14,14 +14,14 @@ public class PlaceListResponseDto {
 
     private String title;
     private Double star;
-    private PlaceImg placeImg;
+//    private PlaceImg placeImg;
 
 //    private Integer commentCount;
 
     public PlaceListResponseDto(Place place){
         this.title = place.getTitle();
         this.star = place.getStar();
-        this.placeImg = place.getPlaceImgs().get(0);
+//        this.placeImg = place.getPlaceImgs().get(0);
     }
 
 

@@ -36,6 +36,8 @@ public class Place extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Trip trip;
 
+    private Double placeCount = 0.0;
+
     @Transient
     List<PlaceImg> placeImgs = new ArrayList<>();
 

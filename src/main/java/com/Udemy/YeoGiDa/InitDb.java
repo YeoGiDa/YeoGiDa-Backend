@@ -1,14 +1,11 @@
 package com.Udemy.YeoGiDa;
 
-import com.Udemy.YeoGiDa.domain.comment.entity.Comment;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.entity.MemberImg;
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.Udemy.YeoGiDa.domain.trip.entity.TripImg;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.geo.Point;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,40 +83,44 @@ public class InitDb {
             Place place1 = Place.builder()
                     .title("MyJuice")
                     .content("뷰 좋음")
-                    .address("서울시 종로구 34-1")
-                    .latitude(12.3203)
-                    .longitude(12.2323)
                     .star(5D)
+                    .address("서울시 종로구 34-1")
+                    .latitude(123.312D)
+                    .longitude(213.2131D)
+                    .tag("카페")
                     .trip(trip1)
                     .build();
 
             Place place2 = Place.builder()
                     .title("MyJuice2")
                     .content("뷰 좋음 22")
-                    .address("서울시 종로구 34-1")
-                    .latitude(12.3203)
-                    .longitude(12.2323)
                     .star(4D)
+                    .address("서울시 종로구 34-1")
+                    .latitude(123.312D)
+                    .longitude(213.2131D)
+                    .tag("카페")
                     .trip(trip1)
                     .build();
 
             Place place3 = Place.builder()
                     .title("MyJuice3")
                     .content("뷰 좋음 222")
-                    .address("서울시 종로구 34-1")
-                    .latitude(12.3203)
-                    .longitude(12.2323)
                     .star(4D)
+                    .address("서울시 종로구 34-1")
+                    .latitude(123.312D)
+                    .longitude(213.2131D)
+                    .tag("카페")
                     .trip(trip2)
                     .build();
 
             Place place4 = Place.builder()
                     .title("MyJuice4")
                     .content("뷰 좋음 444")
-                    .address("서울시 종로구 34-1")
-                    .latitude(12.3203)
-                    .longitude(12.2323)
                     .star(4D)
+                    .address("서울시 종로구 34-1")
+                    .latitude(123.312D)
+                    .longitude(213.2131D)
+                    .tag("카페")
                     .trip(trip2)
                     .build();
 
@@ -127,21 +128,6 @@ public class InitDb {
             em.persist(place2);
             em.persist(place3);
             em.persist(place4);
-
-            Comment comment1 = Comment.builder()
-                    .content("좋습니다.")
-                    .member(member1)
-                    .place(place1)
-                    .build();
-
-            Comment comment2 = Comment.builder()
-                    .content("좋습니다.")
-                    .member(member2)
-                    .place(place1)
-                    .build();
-
-            em.persist(comment1);
-            em.persist(comment2);
         }
 
     }
