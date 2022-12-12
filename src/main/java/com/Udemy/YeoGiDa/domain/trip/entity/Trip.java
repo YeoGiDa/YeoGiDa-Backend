@@ -73,4 +73,8 @@ public class Trip extends BaseEntity {
     public void initChangeHeartCount() {
         this.changeHeartCount = 0;
     }
+
+    public void setTripImg(TripImg tripImg) {
+        this.tripImg = tripImg;
+    }
 }

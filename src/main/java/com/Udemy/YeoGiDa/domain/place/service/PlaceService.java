@@ -24,6 +24,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -98,17 +99,22 @@ public class PlaceService {
         Place savePlace = placeRepository.save(place);
 
         String defaultImgPath = "";
+        ArrayList<PlaceImg> placeImgs = new ArrayList<>();
         //장소 이미지 저장 로직
-        if(imgPaths == null) {
-            defaultImgPath = "https://s3.ap-northeast-2.amazonaws.com/yeogida-bucket/image/default_place_img.png";
+        if(imgPaths.isEmpty()) {
+            defaultImgPath = "https://s3.ap-northeast-2.amazonaws.com/yeogida-bucket/default_place_img.png";
             PlaceImg placeImg = new PlaceImg(defaultImgPath, place);
             placeImgRepository.save(placeImg);
+            placeImgs.add(placeImg);
+            savePlace.setPlaceImgs(placeImgs);
         }
         else {
             for (String imgPath : imgPaths) {
                 PlaceImg placeImg = new PlaceImg(imgPath, place);
                 placeImgRepository.save(placeImg);
+                placeImgs.add(placeImg);
             }
+            savePlace.setPlaceImgs(placeImgs);
         }
 
         return new PlaceDetailResponseDto(savePlace);

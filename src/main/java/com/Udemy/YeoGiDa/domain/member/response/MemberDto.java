@@ -1,7 +1,6 @@
 package com.Udemy.YeoGiDa.domain.member.response;
 
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
-import com.Udemy.YeoGiDa.domain.member.entity.MemberImg;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +20,6 @@ public class MemberDto {
         this.id = member.getId();
         this.email = member.getEmail();
         this.nickname = member.getNickname();
-        this.imgUrl = member.getImg().getImgUrl();
+        this.imgUrl = member.getMemberImg().getImgUrl();
     }
 }

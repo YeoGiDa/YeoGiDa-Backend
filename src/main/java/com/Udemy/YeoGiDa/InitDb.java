@@ -1,8 +1,10 @@
 package com.Udemy.YeoGiDa;
 
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
+import com.Udemy.YeoGiDa.domain.member.entity.MemberImg;
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
+import com.Udemy.YeoGiDa.domain.trip.entity.TripImg;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +45,9 @@ public class InitDb {
                     .role("ROLE_USER")
                     .build();
 
+            member1.setMemberImg(new MemberImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/default_member.png", member1));
+            member1.setMemberImg(new MemberImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/default_member.png", member2));
+
             em.persist(member1);
             em.persist(member2);
 
@@ -66,6 +71,10 @@ public class InitDb {
                     .subTitle("여기는 우리집")
                     .member(member2)
                     .build();
+
+            trip1.setTripImg(new TripImg("Trip1 img Url(필수)", trip1));
+            trip1.setTripImg(new TripImg("Trip2 img Url(필수)", trip2));
+            trip1.setTripImg(new TripImg("Trip3 img Url(필수)", trip2));
 
             em.persist(trip1);
             em.persist(trip2);

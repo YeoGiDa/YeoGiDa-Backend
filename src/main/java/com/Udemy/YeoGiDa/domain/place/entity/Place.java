@@ -4,6 +4,7 @@ package com.Udemy.YeoGiDa.domain.place.entity;
 import com.Udemy.YeoGiDa.domain.common.entity.BaseEntity;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -61,5 +62,9 @@ public class Place extends BaseEntity {
         this.latitude = latitude;
         this.star = star;
         this.tag = tag;
+    }
+
+    public void setPlaceImgs(List<PlaceImg> placeImgs) {
+        this.placeImgs = placeImgs;
     }
 }
