@@ -14,15 +14,17 @@ public class PlaceListResponseDto {
 
     private String title;
     private Double star;
-    private PlaceImg placeImg;
+    private String imgUrl;
 
 //    private Integer commentCount;
 
-    public PlaceListResponseDto(Place place){
+    public PlaceListResponseDto(Place place) {
         this.title = place.getTitle();
         this.star = place.getStar();
-        this.placeImg = place.getPlaceImgs().get(0);
+        if(place.getPlaceImgs().size() > 0) {
+            this.imgUrl = place.getPlaceImgs().get(0).getImgUrl();
+        } else {
+            this.imgUrl = null;
+        }
     }
-
-
 }

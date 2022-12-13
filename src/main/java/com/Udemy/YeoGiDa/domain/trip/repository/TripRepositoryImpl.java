@@ -1,5 +1,6 @@
 package com.Udemy.YeoGiDa.domain.trip.repository;
 
+import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -22,23 +23,9 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
     }
 
     @Override
-    public List<Trip> findAllByMemberFetch() {
-        return queryFactory.selectFrom(trip)
-                .leftJoin(trip.member, member).fetchJoin()
-                .fetch();
-    }
-
-    @Override
     public List<Trip> findAllOrderByHeartCount() {
         return queryFactory.selectFrom(trip)
-                .orderBy(trip.heartCount.desc())
-                .fetch();
-    }
-
-    @Override
-    public List<Trip> findAllOrderByChangeHeartCount() {
-        return queryFactory.selectFrom(trip)
-                .orderBy(trip.changeHeartCount.desc())
+                .orderBy(trip.heartCount.desc(), trip.id.desc())
                 .fetch();
     }
 
@@ -54,7 +41,31 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
     public List<Trip> findAllByRegionOrderByHeartCount(String region) {
         return queryFactory.selectFrom(trip)
                 .where(trip.region.eq(region))
-                .orderBy(trip.heartCount.desc())
+                .orderBy(trip.heartCount.desc(), trip.id.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<Trip> findAllOrderByChangeHeartCountBasic() {
+        return queryFactory.selectFrom(trip)
+                .orderBy(trip.changeHeartCount.desc(), trip.id.desc())
+                .limit(10)
+                .fetch();
+    }
+
+    @Override
+    public List<Trip> findAllOrderByChangeHeartCountMore() {
+        return queryFactory.selectFrom(trip)
+                .orderBy(trip.changeHeartCount.desc(), trip.id.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<Trip> findAllByMemberFetch(Member m) {
+        return queryFactory.selectFrom(trip)
+                .leftJoin(trip.member, member).fetchJoin()
+                .where(trip.member.id.eq(m.getId()))
+                .orderBy(trip.id.desc())
                 .fetch();
     }
 }

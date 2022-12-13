@@ -2,7 +2,7 @@ package com.Udemy.YeoGiDa.domain.trip.controller;
 
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
-import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
+import com.Udemy.YeoGiDa.domain.trip.exception.TripImgEssentialException;
 import com.Udemy.YeoGiDa.domain.trip.request.TripSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripListResponseDto;
@@ -10,7 +10,6 @@ import com.Udemy.YeoGiDa.domain.trip.service.TripService;
 import com.Udemy.YeoGiDa.global.response.DefaultResult;
 import com.Udemy.YeoGiDa.global.response.StatusCode;
 import com.Udemy.YeoGiDa.global.security.annotation.LoginMember;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -21,9 +20,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,13 +31,43 @@ public class TripController {
     private final S3Service s3Service;
 
     @ApiOperation("여행지 전체 조회 - 최신순")
-    @ApiResponse(code = 200, message = "조회 완료")
-    @GetMapping
+    @ApiResponse(code = 200, message = "여행지 목록 조회 성공 - 최신순")
+    @GetMapping("/newest")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity getTripList() {
-        List<TripListResponseDto> result = tripService.getTripList();
+    public ResponseEntity getTripListOrderByIdDesc() {
+        List<TripListResponseDto> result = tripService.getTripListOrderByIdDesc();
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "여행지 목록 조회 성공", result), HttpStatus.OK);
+                "여행지 목록 조회 성공 - 최신순", result), HttpStatus.OK);
+    }
+
+    @ApiOperation("여행지 전체 조회 - 좋아요순")
+    @ApiResponse(code = 200, message = "여행지 목록 조회 성공 - 좋아요순")
+    @GetMapping("/heart")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getTripListOrderByHeartDesc() {
+        List<TripListResponseDto> result = tripService.getTripListOrderByHeartDesc();
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "여행지 목록 조회 성공 - 좋아요순", result), HttpStatus.OK);
+    }
+
+    @ApiOperation("여행지 전체 조회 - 지역별로 + 최신순")
+    @ApiResponse(code = 200, message = "여행지 목록 조회 성공 - 지역별로 + 최신순")
+    @GetMapping("/{region}/newest")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getTripListFindByRegionOrderByIdDesc(@PathVariable String region) {
+        List<TripListResponseDto> result = tripService.getTripListFindByRegionOrderByIdDesc(region);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "여행지 목록 조회 성공 - 지역별로 + 최신순", result), HttpStatus.OK);
+    }
+
+    @ApiOperation("여행지 전체 조회 - 지역별로 + 하트순")
+    @ApiResponse(code = 200, message = "여행지 목록 조회 성공 - 지역별로 + 하트순")
+    @GetMapping("/{region}/heart")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getTripListFindByRegionOrderByHeartDesc(@PathVariable String region) {
+        List<TripListResponseDto> result = tripService.getTripListFindByRegionOrderByHeartDesc(region);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "여행지 목록 조회 성공 - 지역별로 + 하트순 ", result), HttpStatus.OK);
     }
 
     @ApiOperation("여행지 상세 조회")
@@ -67,10 +94,10 @@ public class TripController {
     @ResponseStatus(HttpStatus.CREATED)
 //    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
     public ResponseEntity save(@ModelAttribute TripSaveRequestDto tripSaveRequestDto,
-                               @RequestPart(name = "imgUrl", required = true) MultipartFile multipartFile,
-                               @LoginMember Member member) {
-        if(multipartFile == null) {
-            throw new RuntimeException();
+                               @RequestPart(name = "imgUrl", required = false) MultipartFile multipartFile,
+                               @LoginMember Member member) throws TripImgEssentialException {
+        if(multipartFile.isEmpty()) {
+            throw new TripImgEssentialException();
         }
 
         String imgPath = s3Service.upload(multipartFile);
@@ -94,7 +121,10 @@ public class TripController {
     public ResponseEntity update(@PathVariable Long tripId,
                                  @ModelAttribute TripSaveRequestDto tripSaveRequestDto,
                                  @RequestPart(name = "imgUrl", required = true) MultipartFile multipartFile,
-                                 @LoginMember Member member) {
+                                 @LoginMember Member member) throws TripImgEssentialException {
+        if(multipartFile.isEmpty()) {
+            throw new TripImgEssentialException();
+        }
         String imgPath = s3Service.upload(multipartFile);
         tripService.update(tripId, tripSaveRequestDto, member, imgPath);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
@@ -120,6 +150,16 @@ public class TripController {
                 "여행지 삭제 성공"), HttpStatus.OK);
     }
 
+    @ApiOperation("월간 베스트 여행지")
+    @ApiResponse(code = 200, message = "목록 조회 성공 - 월간 베스트 여행지")
+    @GetMapping("/monthly-best/basic")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getMonthBestTripBasic() {
+        List<TripListResponseDto> result = tripService.getMonthBestTripBasic();
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "목록 조회 성공 - 월간 베스트 여행지", result), HttpStatus.OK);
+    }
+
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @ApiOperation("여행지 좋아요 누르기")
     @ApiResponses({
@@ -139,21 +179,6 @@ public class TripController {
                 "여행지 좋아요 성공"), HttpStatus.CREATED);
     }
 
-    @ApiOperation("여행지 좋아요 개수 (ADMIN용)")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "조회 성공"),
-            @ApiResponse(code = 404, message = "존재하지않는 여행지")
-    })
-    @GetMapping("/{tripId}/heartCount")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity countHeart(@PathVariable Long tripId) {
-        int heartCount = tripService.countHeart(tripId);
-        Map<String, Object> result = new HashMap<>();
-        result.put("heartCount", heartCount);
-        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "여행지 좋아요 개수 세기 성공", result), HttpStatus.OK);
-    }
-
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @ApiOperation("여행지 좋아요 취소하기")
     @ApiResponses({
@@ -171,5 +196,15 @@ public class TripController {
         tripService.deleteHeart(tripId, member);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 좋아요 취소 성공"), HttpStatus.OK);
+    }
+
+    @ApiOperation("내가 작성한 여행지")
+    @ApiResponse(code = 200, message = "여행지 목록 조회 성공 - 내가 작성한")
+    @GetMapping("/my/{memberId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getMyTripList(@LoginMember Member member) {
+        List<TripListResponseDto> result = tripService.getMyTripList(member);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "여행지 목록 조회 성공 - 내가 작성한 ", result), HttpStatus.OK);
     }
 }

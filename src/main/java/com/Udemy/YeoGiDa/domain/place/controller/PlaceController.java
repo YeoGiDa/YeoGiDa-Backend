@@ -16,6 +16,7 @@ import io.swagger.annotations.*;
 import io.swagger.annotations.ApiOperation;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -28,7 +29,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-
+@Slf4j
 public class PlaceController {
 
     private final PlaceService placeService;
@@ -62,6 +63,16 @@ public class PlaceController {
                 "장소 목록 조회 성공 - 별점순", result), HttpStatus.OK);
     }
 
+    @ApiOperation("여행지 별 장소 목록 조회 - 키워드")
+    @GetMapping("/{tripId}/places/{tag}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getPlaceListByTag(@PathVariable Long tripId,
+                                            @PathVariable String tag){
+        List<PlaceListResponseDto> result = placeService.getPlaceListByTagDesc(tag);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "장소 목록 조회 성공 - 키워드", result), HttpStatus.OK);
+    }
+
     @ApiOperation("장소 상세 조회")
     @ApiResponses({
             @ApiResponse(code = 200, message = "상세 조회 완료"),
@@ -83,17 +94,15 @@ public class PlaceController {
                                @RequestPart(name = "imgUrls", required = false) List<MultipartFile> multipartFiles,
                                @LoginMember Member member) {
 
-        ArrayList<String> imgPaths = new ArrayList<>();
-        if(multipartFiles == null) {
-            imgPaths = null;
+        PlaceDetailResponseDto result;
+        if(multipartFiles.size() == 1 && multipartFiles.get(0).isEmpty()) {
+            result = placeService.saveNoPicture(placeSaveRequestDto, tripId, member);
         }
         else {
-            for (MultipartFile multipartFile : multipartFiles) {
-                imgPaths.add(s3Service.upload(multipartFile));
-            }
+            List<String> imgPaths = s3Service.upload(multipartFiles);
+            result = placeService.saveWithPictures(placeSaveRequestDto,tripId, member, imgPaths);
         }
 
-        PlaceDetailResponseDto result = placeService.save(placeSaveRequestDto,tripId, member, imgPaths);
         return new ResponseEntity(DefaultResult.res(StatusCode.CREATED,
                 "장소 작성 성공", result), HttpStatus.CREATED);
     }
@@ -106,14 +115,12 @@ public class PlaceController {
                                  @PathVariable Long placeId,
                                  @RequestPart(name = "imgUrls", required = false) List<MultipartFile> multipartFiles,
                                  @LoginMember Member member) {
-        ArrayList<String> imgPaths = new ArrayList<>();
-        if(multipartFiles == null) {
+        List<String> imgPaths = new ArrayList<>();
+        if(multipartFiles.size() == 1 && multipartFiles.get(0).isEmpty()) {
             imgPaths = null;
         }
         else {
-            for (MultipartFile multipartFile : multipartFiles) {
-                imgPaths.add(s3Service.upload(multipartFile));
-            }
+            imgPaths = s3Service.upload(multipartFiles);
         }
         placeService.update(placeUpdateRequestDto, placeId, member, imgPaths);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,

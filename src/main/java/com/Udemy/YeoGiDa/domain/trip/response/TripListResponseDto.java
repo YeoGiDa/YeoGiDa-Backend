@@ -19,7 +19,11 @@ public class TripListResponseDto {
     public TripListResponseDto(Trip trip) {
         this.title = trip.getTitle();
         this.subTitle = trip.getSubTitle();
-        this.imgUrl = trip.getTripImg().getImgUrl();
+        if(trip.getTripImg() == null) {
+            this.imgUrl = null;
+        } else {
+            this.imgUrl = trip.getTripImg().getImgUrl();
+        }
         this.heartCount = trip.getHeartCount();
 //        this.placeCount = trip.getPlaceCount();
     }

@@ -18,6 +18,7 @@ import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripListResponseDto;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +28,8 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
+@Slf4j
 public class TripService {
 
     private final TripRepository tripRepository;
@@ -35,15 +37,34 @@ public class TripService {
     private final S3Service s3Service;
     private final HeartRepository heartRepository;
 
-    @Transactional(readOnly = true)
-    public List<TripListResponseDto> getTripList() {
+    public List<TripListResponseDto> getTripListOrderByIdDesc() {
         return tripRepository.findAllOrderByIdDesc()
                 .stream()
                 .map(TripListResponseDto::new)
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
+    public List<TripListResponseDto> getTripListOrderByHeartDesc() {
+        return tripRepository.findAllOrderByHeartCount()
+                .stream()
+                .map(TripListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<TripListResponseDto> getTripListFindByRegionOrderByIdDesc(String region) {
+        return tripRepository.findAllByRegionDesc(region)
+                .stream()
+                .map(TripListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<TripListResponseDto> getTripListFindByRegionOrderByHeartDesc(String region) {
+        return tripRepository.findAllByRegionOrderByHeartCount(region)
+                .stream()
+                .map(TripListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
     public TripDetailResponseDto getTripDetail(Long tripId) {
         Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
                 .orElseThrow(() -> new TripNotFoundException())).get();
@@ -51,6 +72,7 @@ public class TripService {
         return new TripDetailResponseDto(trip);
     }
 
+    @Transactional
     public TripDetailResponseDto save(TripSaveRequestDto tripSaveRequestDto, Member member, String imgPath) {
         if(member == null) {
             throw new MemberNotFoundException();
@@ -72,16 +94,18 @@ public class TripService {
             throw new ImgNotFoundException();
         }
         tripImgRepository.save(tripImg);
+        trip.setTripImg(tripImg);
         return new TripDetailResponseDto(saveTrip);
     }
 
+    @Transactional
     public void update(Long tripId, TripSaveRequestDto tripSaveRequestDto, Member member, String imgPath) {
         if(member == null) {
             throw new MemberNotFoundException();
         }
 
         Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
-                .orElseThrow(() -> new TripNotFoundException())).get();
+                .orElseThrow(TripNotFoundException::new)).get();
 
         if(trip.getMember().getId() != member.getId()) {
             throw new ForbiddenException();
@@ -97,18 +121,20 @@ public class TripService {
             throw new ImgNotFoundException();
         }
         tripImgRepository.save(tripImg);
+        trip.setTripImg(tripImg);
 
         trip.update(tripSaveRequestDto.getRegion(), tripSaveRequestDto.getTitle(),
                 tripSaveRequestDto.getSubTitle());
     }
 
+    @Transactional
     public void delete(Long tripId, Member member) {
         if(member == null) {
             throw new ForbiddenException();
         }
 
         Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
-                .orElseThrow(() -> new TripNotFoundException())).get();
+                .orElseThrow(TripNotFoundException::new)).get();
 
         if(trip.getMember().getId() != member.getId()) {
             throw new ForbiddenException();
@@ -122,10 +148,14 @@ public class TripService {
         tripRepository.delete(trip);
     }
 
-    public Trip findById(Long tripId) {
-        return findById(tripId);
+    public List<TripListResponseDto> getMonthBestTripBasic() {
+        return tripRepository.findAllOrderByChangeHeartCountBasic()
+                .stream()
+                .map(TripListResponseDto::new)
+                .collect(Collectors.toList());
     }
 
+    @Transactional
     public void heart(Long tripId, Member member) {
         if(member == null) {
             throw new MemberNotFoundException();
@@ -147,14 +177,7 @@ public class TripService {
                 .build());
     }
 
-    @Transactional(readOnly = true)
-    public int countHeart(Long tripId) {
-        Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
-                .orElseThrow(() -> new TripNotFoundException())).get();
-
-        return heartRepository.findAllByTrip(trip).size();
-    }
-
+    @Transactional
     public void deleteHeart(Long tripId, Member member) {
         if(member == null) {
             throw new MemberNotFoundException();
@@ -170,6 +193,13 @@ public class TripService {
                 .orElseThrow(() -> new HeartNotFoundException());
 
         heartRepository.delete(heart);
+    }
+
+    public List<TripListResponseDto> getMyTripList(Member member) {
+        return tripRepository.findAllByMemberFetch(member)
+                .stream()
+                .map(TripListResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     //@Scheduler에서 매달 1일마다 하트 변화량을 0으로 수정

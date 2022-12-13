@@ -19,7 +19,6 @@ public class TripDetailResponseDto {
     private String region;
     private String title;
     private String subTitle;
-    private MemberDto member;
     private String imgUrl;
     @JsonFormat(pattern = "yyyy년 MM월 dd일")
     private LocalDateTime createdTime;
@@ -31,7 +30,6 @@ public class TripDetailResponseDto {
         this.region = trip.getRegion();
         this.title = trip.getTitle();
         this.subTitle = trip.getSubTitle();
-        this.member = new MemberDto(trip.getMember());
         this.imgUrl = trip.getTripImg().getImgUrl();
         this.createdTime = trip.getCreatedTime();
         this.modifiedTime = trip.getModifiedTime();

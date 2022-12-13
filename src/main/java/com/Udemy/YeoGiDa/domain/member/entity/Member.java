@@ -25,8 +25,8 @@ public class Member extends BaseEntity {
     @Column(unique = true)
     private String nickname;
 
-    @Transient
-    private MemberImg img = new MemberImg();
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private MemberImg memberImg = new MemberImg();
 
     private String role;
 
@@ -46,5 +46,9 @@ public class Member extends BaseEntity {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public void setMemberImg(MemberImg memberImg) {
+        this.memberImg = memberImg;
     }
 }

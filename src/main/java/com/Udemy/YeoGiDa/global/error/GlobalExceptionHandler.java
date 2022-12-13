@@ -1,13 +1,19 @@
 package com.Udemy.YeoGiDa.global.error;
 
 import com.Udemy.YeoGiDa.domain.heart.exception.AlreadyHeartException;
+import com.Udemy.YeoGiDa.domain.heart.exception.HeartNotFoundException;
 import com.Udemy.YeoGiDa.domain.member.exception.AlreadyExistsNicknameException;
 import com.Udemy.YeoGiDa.domain.member.exception.MemberDuplicateException;
+import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
+import com.Udemy.YeoGiDa.domain.place.exception.PlaceNotFoundException;
+import com.Udemy.YeoGiDa.domain.trip.exception.TripImgEssentialException;
+import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
 import com.Udemy.YeoGiDa.global.error.dto.ErrorResult;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import com.Udemy.YeoGiDa.global.exception.NotFoundException;
 import com.Udemy.YeoGiDa.global.jwt.exception.TokenHasExpiredException;
 import com.Udemy.YeoGiDa.global.jwt.exception.TokenIsInvalidException;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -54,6 +60,12 @@ public class GlobalExceptionHandler {
         return new ErrorResult(400, "AlreadyLiked Error!");
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler
+    protected ErrorResult handleAlreadyLikedException(TripImgEssentialException e) {
+        return new ErrorResult(400, "TripImgEssential Error!");
+    }
+
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler
     protected ErrorResult handleForbiddenException(ForbiddenException e){
@@ -78,15 +90,39 @@ public class GlobalExceptionHandler {
         return new ErrorResult(404, "NotFound Error!");
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler
+    protected ErrorResult handleNotFoundException(MemberNotFoundException e){
+        return new ErrorResult(404, "Member NotFound Error!");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler
+    protected ErrorResult handleNotFoundException(TripNotFoundException e){
+        return new ErrorResult(404, "Trip NotFound Error!");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler
+    protected ErrorResult handleNotFoundException(PlaceNotFoundException e){
+        return new ErrorResult(404, "Place NotFound Error!");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler
+    protected ErrorResult handleNotFoundException(HeartNotFoundException e){
+        return new ErrorResult(404, "Heart NotFound Error!");
+    }
+
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler
     protected ErrorResult handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e){
         return new ErrorResult(405, "HttpMethod Error!");
     }
 
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    @ExceptionHandler
-//    protected ErrorResult handleFileUploadException(FileUploadException e){
-//        return new ErrorResult("500", "FileUpload Error!");
-//    }
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler
+    protected ErrorResult handleFileUploadException(FileUploadException e){
+        return new ErrorResult(500, "FileUpload Error!");
+    }
 }

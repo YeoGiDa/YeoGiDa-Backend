@@ -37,7 +37,7 @@ public class Trip extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
-    @Transient
+    @OneToOne(mappedBy = "trip", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private TripImg tripImg = new TripImg();
 
     @Builder
@@ -72,5 +72,9 @@ public class Trip extends BaseEntity {
 
     public void initChangeHeartCount() {
         this.changeHeartCount = 0;
+    }
+
+    public void setTripImg(TripImg tripImg) {
+        this.tripImg = tripImg;
     }
 }
