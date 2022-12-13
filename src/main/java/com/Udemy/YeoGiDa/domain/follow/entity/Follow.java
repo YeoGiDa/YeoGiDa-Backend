@@ -13,32 +13,32 @@ import java.io.Serializable;
 @Entity
 @NoArgsConstructor
 @IdClass(Follow.PK.class)
-@Table(name = "follow",
+@Table(
         uniqueConstraints = {
                 @UniqueConstraint(
-                        columnNames = {"fromMemberId", "toMemberId"}
+                        columnNames = {"toMemberId", "fromMemberId"}
                 )
         })
 public class Follow extends BaseEntity {
 
     @Id
-    @Column(name = "fromMemberId", insertable = false, updatable = false)
-    private Long fromMember;
+    @Column(name = "toMemberId", insertable = false, updatable = false)
+    private Long toMemberId;
 
 
     @Id
-    @Column(name = "toMemberId", insertable = false, updatable = false)
-    private Long toMember;
+    @Column(name = "fromMemberId", insertable = false, updatable = false)
+    private Long fromMemberId;
 
     @Builder
-    public Follow(Long fromMember, Long toMember) {
-        this.fromMember = fromMember;
-        this.toMember = toMember;
+    public Follow(Long toMemberId, Long fromMemberId) {
+        this.toMemberId = toMemberId;
+        this.fromMemberId = fromMemberId;
     }
 
     public static class PK implements Serializable {
-        Long fromMember;
-        Long toMember;
+        Long toMemberId;
+        Long fromMemberId;
     }
 
 }

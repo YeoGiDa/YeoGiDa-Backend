@@ -1,47 +1,64 @@
 package com.Udemy.YeoGiDa.domain.follow.controller;
-import com.Udemy.YeoGiDa.domain.follow.response.UserSimpleInfoDto;
+
 import com.Udemy.YeoGiDa.domain.follow.service.FollowService;
+import com.Udemy.YeoGiDa.domain.place.response.PlaceListResponseDto;
+import com.Udemy.YeoGiDa.global.response.DefaultResult;
+import com.Udemy.YeoGiDa.global.response.StatusCode;
+import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
-
+@RequestMapping("/api/v1/follow")
 public class FollowController {
 
     private final FollowService followService;
 
 
-    @PostMapping("/follow/{toMemberNickname}/{fromMemberNickname}")
-    public String addFollow(@PathVariable String toMemberNickname, @PathVariable String fromMemberNickname){
-        Boolean result = followService.addFollow(toMemberNickname, fromMemberNickname);
-        return "ok";
-    }
+    @GetMapping("/{memberId}/following")
+    public ResponseEntity getFollowingListOrderById(@PathVariable Long memberId){
+        List<Tuple> followingList = followService.getFollowingList(memberId);
 
-    @PostMapping("/unfollow/{toUsername}/{fromUsername}")
-    public String unFollow(@PathVariable String toUsername, @PathVariable String fromUsername){
-        Boolean result = followService.unFollow(toUsername, fromUsername);
-        return "redirect:/profile/{toUsername}/{fromUsername}";
-    }
-
-    @GetMapping("/follower/{username}/{requestingUsername}")
-    public String getFollower(@PathVariable String username, @PathVariable String requestingUsername, Model model){
-        List<UserSimpleInfoDto> followerList = followService.getFollowerList(username, requestingUsername);
-        model.addAttribute("users", followerList);
-        return "/account/userList";
-    }
-
-    @GetMapping("/following/{username}/{requestingUsername}")
-    public String getFollowing(@PathVariable String username, @PathVariable String requestingUsername, Model model){
-        List<UserSimpleInfoDto> followingList = followService.getFollowingList(username, requestingUsername);
-        model.addAttribute("users", followingList);
-        return "/account/userList";
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "팔로잉 목록 조회 성공", followingList), HttpStatus.OK);
     }
 
 
+
+    @GetMapping("/{memberId}/follower")
+    public ResponseEntity getFollowerListOrderById(@PathVariable Long memberId){
+        List<Tuple> followerList = followService.getFollowerList(memberId);
+
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "팔로워 목록 조회 성공", followerList), HttpStatus.OK);
+    }
+
+
+    @PostMapping("/{toMemberId}/follows/{fromMemberId}")
+    public ResponseEntity addFollowing(@PathVariable Long toMemberId,
+                                       @PathVariable Long fromMemberId){
+
+        boolean result = followService.addFollow(toMemberId, fromMemberId);
+
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "팔로우 성공", result), HttpStatus.OK);
+
+    }
+
+    @DeleteMapping("/{toMemberId}/follows/{fromMemberId}")
+    public ResponseEntity deleteFollowing(@PathVariable Long toMemberId,
+                                       @PathVariable Long fromMemberId){
+
+        boolean result = followService.unFollow(toMemberId, fromMemberId);
+
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "팔로우 취소 성공", result), HttpStatus.OK);
+
+    }
 
 }
