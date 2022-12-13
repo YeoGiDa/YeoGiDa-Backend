@@ -15,11 +15,6 @@ spring:
         format_sql: true
         use_sql_comments: true
 
-logging:
-  level:
-    org.hibernate.type.descriptor.sql: trace
-    com.amazonaws.util.EC2MetadataUtils: ERROR
-
 jwt:
   header: Authorization
   secret: ${jwt.secret-key}
