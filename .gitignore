@@ -222,8 +222,7 @@ gradle-app.setting
 .idea
 *.imi
 
-application.yml
-application.properties
+application-SECRET.yml
 META-INF/*
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,gradle,git,java,macos,windows
