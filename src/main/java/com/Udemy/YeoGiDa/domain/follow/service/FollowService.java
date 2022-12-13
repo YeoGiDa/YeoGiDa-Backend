@@ -7,29 +7,40 @@ import com.Udemy.YeoGiDa.domain.follow.repository.FollowRepository;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
 import com.Udemy.YeoGiDa.domain.member.repository.MemberRepository;
+import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FollowService {
 
     private final FollowRepository followRepository;
     private final MemberRepository memberRepository;
 
-    public List<Tuple> getFollowingList(Long memberId){
-        return followRepository.findAllByToMember(memberId);
+    public List<MemberDto> getFollowingList(Long memberId){
+        return followRepository.findAllByFromMemberId(memberId)
+                .stream()
+                .map(MemberDto::new)
+                .collect(Collectors.toList());
     }
 
-    public List<Tuple> getFollowerList(Long memberId){
-        return followRepository.findAllByFromMember(memberId);
+    public List<MemberDto> getFollowerList(Long memberId){
+        return followRepository.findAllByToMemberId(memberId)
+                .stream()
+                .map(MemberDto::new)
+                .collect(Collectors.toList());
     }
 
 
+    @Transactional
     public boolean addFollow(Long toMemberId, Long fromMemberId){
         Member toMember = memberRepository.findById(toMemberId).orElseThrow(() -> new MemberNotFoundException());
         Member fromMember = memberRepository.findById(fromMemberId).orElseThrow(() -> new MemberNotFoundException());
@@ -45,6 +56,7 @@ public class FollowService {
         return true;
     }
 
+    @Transactional
     public boolean unFollow(Long toMemberId, Long fromMemberId){
         Member toMember = memberRepository.findById(toMemberId).orElseThrow(() -> new MemberNotFoundException());
         Member fromMember = memberRepository.findById(fromMemberId).orElseThrow(() -> new MemberNotFoundException());
