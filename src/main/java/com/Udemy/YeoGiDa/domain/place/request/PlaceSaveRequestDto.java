@@ -23,13 +23,13 @@ public class PlaceSaveRequestDto {
     private String tag;
 
     @Builder
-    public PlaceSaveRequestDto(String title, String address, String content,  Double longitude, Double latitude,Double star, String tag) {
+    public PlaceSaveRequestDto(String title, String address, Double longitude, Double latitude, Double star, String content, String tag) {
         this.title = title;
         this.address = address;
         this.longitude = longitude;
         this.latitude = latitude;
-        this.content = content;
         this.star = star;
+        this.content = content;
         this.tag = tag;
     }
 }

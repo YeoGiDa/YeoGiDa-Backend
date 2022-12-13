@@ -90,8 +90,6 @@ public class PlaceService {
         Place place = Place.builder()
                 .title(placeSaveRequestDto.getTitle())
                 .address(placeSaveRequestDto.getAddress())
-                .longitude(placeSaveRequestDto.getLongitude())
-                .latitude(placeSaveRequestDto.getLatitude())
                 .content(placeSaveRequestDto.getContent())
                 .star(placeSaveRequestDto.getStar())
                 .trip(trip)
