@@ -20,7 +20,9 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,7 +37,9 @@ public class TripController {
     @GetMapping("/newest")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getTripListOrderByIdDesc() {
-        List<TripListResponseDto> result = tripService.getTripListOrderByIdDesc();
+        List<TripListResponseDto> trips = tripService.getTripListOrderByIdDesc();
+        Map<String, Object> result = new HashMap<>();
+        result.put("memberList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 목록 조회 성공 - 최신순", result), HttpStatus.OK);
     }
@@ -45,7 +49,9 @@ public class TripController {
     @GetMapping("/heart")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getTripListOrderByHeartDesc() {
-        List<TripListResponseDto> result = tripService.getTripListOrderByHeartDesc();
+        List<TripListResponseDto> trips = tripService.getTripListOrderByHeartDesc();
+        Map<String, Object> result = new HashMap<>();
+        result.put("memberList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 목록 조회 성공 - 좋아요순", result), HttpStatus.OK);
     }
@@ -55,7 +61,9 @@ public class TripController {
     @GetMapping("/{region}/newest")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getTripListFindByRegionOrderByIdDesc(@PathVariable String region) {
-        List<TripListResponseDto> result = tripService.getTripListFindByRegionOrderByIdDesc(region);
+        List<TripListResponseDto> trips = tripService.getTripListFindByRegionOrderByIdDesc(region);
+        Map<String, Object> result = new HashMap<>();
+        result.put("memberList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 목록 조회 성공 - 지역별로 + 최신순", result), HttpStatus.OK);
     }
@@ -65,7 +73,9 @@ public class TripController {
     @GetMapping("/{region}/heart")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getTripListFindByRegionOrderByHeartDesc(@PathVariable String region) {
-        List<TripListResponseDto> result = tripService.getTripListFindByRegionOrderByHeartDesc(region);
+        List<TripListResponseDto> trips = tripService.getTripListFindByRegionOrderByHeartDesc(region);
+        Map<String, Object> result = new HashMap<>();
+        result.put("memberList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 목록 조회 성공 - 지역별로 + 하트순 ", result), HttpStatus.OK);
     }
@@ -203,7 +213,9 @@ public class TripController {
     @GetMapping("/my/{memberId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getMyTripList(@LoginMember Member member) {
-        List<TripListResponseDto> result = tripService.getMyTripList(member);
+        List<TripListResponseDto> trips = tripService.getMyTripList(member);
+        Map<String, Object> result = new HashMap<>();
+        result.put("memberList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 목록 조회 성공 - 내가 작성한 ", result), HttpStatus.OK);
     }

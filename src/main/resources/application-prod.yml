@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${rds.url}
+    username: ${rds.username}
+    password: ${rds.password}
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+
+logging:
+  level:
+    org.hibernate.type.descriptor.sql: trace
+    com.amazonaws.util.EC2MetadataUtils: ERROR
+
+jwt:
+  header: Authorization
+  secret: ${jwt.secret-key}

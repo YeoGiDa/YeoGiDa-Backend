@@ -24,7 +24,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,9 +46,11 @@ public class PlaceController {
     @GetMapping("/{tripId}/places")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getPlaceListOrderById(@PathVariable Long tripId){
-        List<PlaceListResponseDto> result = placeService.getPlaceListOrderById(tripId);
+        List<PlaceListResponseDto> places = placeService.getPlaceListOrderById(tripId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("memberList", places);
 
-           return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "장소 목록 조회 성공 - 최신순", result), HttpStatus.OK);
     }
 
@@ -58,7 +62,9 @@ public class PlaceController {
     @GetMapping("/{tripId}/places/star")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getPlaceListOrderByStar(@PathVariable Long tripId){
-        List<PlaceListResponseDto> result = placeService.getPlaceListOrderByStar(tripId);
+        List<PlaceListResponseDto> places = placeService.getPlaceListOrderByStar(tripId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("memberList", places);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "장소 목록 조회 성공 - 별점순", result), HttpStatus.OK);
     }
@@ -68,7 +74,9 @@ public class PlaceController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getPlaceListByTag(@PathVariable Long tripId,
                                             @PathVariable String tag){
-        List<PlaceListResponseDto> result = placeService.getPlaceListByTagDesc(tag);
+        List<PlaceListResponseDto> places = placeService.getPlaceListByTagDesc(tag);
+        Map<String, Object> result = new HashMap<>();
+        result.put("memberList", places);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "장소 목록 조회 성공 - 키워드", result), HttpStatus.OK);
     }
