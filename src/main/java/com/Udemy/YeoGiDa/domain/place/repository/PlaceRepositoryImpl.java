@@ -26,8 +26,19 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
     }
 
     @Override
+    public List<Place> findAllByTripIdOrderByStar(Long tripId) {
+        return queryFactory.selectFrom(place)
+                .where(place.trip.id.eq(tripId))
+                .orderBy(place.star.desc(),place.id.desc())
+                .fetch();
+    }
+
+    @Override
     public List<Place> findAllByTripIdOrderByComment(Long tripId) {
-        return null;
+        return queryFactory.selectFrom(place)
+                .where(place.trip.id.eq(tripId))
+                .orderBy(place.comments.size().desc(),place.id.desc())
+                .fetch();
     }
 
     @Override
@@ -35,14 +46,6 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
         return queryFactory.selectFrom(place)
                 .where(place.tag.eq(tag))
                 .orderBy(place.id.desc())
-                .fetch();
-    }
-
-    @Override
-    public List<Place> findAllByTripIdOrderByStar(Long tripId) {
-        return queryFactory.selectFrom(place)
-                .where(place.trip.id.eq(tripId))
-                .orderBy(place.star.desc(),place.id.desc())
                 .fetch();
     }
 }
