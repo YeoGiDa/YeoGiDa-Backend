@@ -15,7 +15,8 @@ import java.time.LocalDateTime;
 @Setter
 public class TripDetailResponseDto {
 
-    private Long id;
+    private Long tripId;
+    private Long memberId;
     private String region;
     private String title;
     private String subTitle;
@@ -26,7 +27,8 @@ public class TripDetailResponseDto {
     private LocalDateTime modifiedTime;
 
     public TripDetailResponseDto(Trip trip) {
-        this.id = trip.getId();
+        this.tripId = trip.getId();
+        this.memberId=trip.getMember().getId();
         this.region = trip.getRegion();
         this.title = trip.getTitle();
         this.subTitle = trip.getSubTitle();

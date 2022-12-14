@@ -10,6 +10,8 @@ import lombok.Setter;
 @Setter
 public class TripListResponseDto {
 
+    private Long tripId;
+    private Long memberId;
     private String title;
     private String subTitle;
     private String imgUrl;
@@ -17,6 +19,8 @@ public class TripListResponseDto {
     //private Integer placeCount;
 
     public TripListResponseDto(Trip trip) {
+        this.tripId = trip.getId();
+        this.memberId = trip.getMember().getId();
         this.title = trip.getTitle();
         this.subTitle = trip.getSubTitle();
         if(trip.getTripImg() == null) {
