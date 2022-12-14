@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @Setter
 public class CommentListResponseDto {
 
+    private Long commentId;
+    private Long memberId;
     private String nickName;
 
     @JsonFormat(pattern = "yyyy년 MM월 dd일")
@@ -23,6 +25,8 @@ public class CommentListResponseDto {
 
     @Builder
     public CommentListResponseDto(Comment comment) {
+        this.commentId=comment.getId();
+        this.memberId=comment.getMember().getId();
         this.nickName = comment.getMember().getNickname();
         this.createdTime = comment.getCreatedTime();
         this.content = comment.getContent();

@@ -11,14 +11,16 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PlaceListResponseDto {
-
+    private Long placeId;
+    private Long memberId;
     private String title;
     private Double star;
     private String imgUrl;
-
-//    private Integer commentCount;
+    private Integer commentCount;
 
     public PlaceListResponseDto(Place place) {
+        this.placeId=place.getId();
+        this.memberId=place.getTrip().getMember().getId();
         this.title = place.getTitle();
         this.star = place.getStar();
         if(place.getPlaceImgs().size() > 0) {
