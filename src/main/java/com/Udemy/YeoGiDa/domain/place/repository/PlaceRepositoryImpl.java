@@ -26,6 +26,11 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
     }
 
     @Override
+    public List<Place> findAllByTripIdOrderByComment(Long tripId) {
+        return null;
+    }
+
+    @Override
     public List<Place> findAllByTag(String tag) {
         return queryFactory.selectFrom(place)
                 .where(place.tag.eq(tag))
