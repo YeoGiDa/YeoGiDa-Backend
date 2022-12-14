@@ -17,6 +17,8 @@ import com.Udemy.YeoGiDa.domain.trip.request.TripSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripListResponseDto;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
+import com.Udemy.YeoGiDa.global.jwt.exception.TokenIsInvalidException;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

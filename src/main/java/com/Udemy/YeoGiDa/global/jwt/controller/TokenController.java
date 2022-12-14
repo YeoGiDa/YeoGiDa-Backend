@@ -32,7 +32,8 @@ public class TokenController {
     public ResponseEntity validateToken(@RequestBody HashMap<String, String> bodyJson) throws TokenIsInvalidException {
         log.info("refresh controller 실행");
         String oldAccessToken = bodyJson.get("accessToken");
-        boolean isAccessTokenValid = jwtProvider.validateAccessToken(oldAccessToken);
+        boolean isAccessTokenValid = false;
+        isAccessTokenValid = jwtProvider.validateAccessToken(oldAccessToken);
 
         if(isAccessTokenValid == true) {
             log.info("accessToken 유효함 클라이언트에서 처리");

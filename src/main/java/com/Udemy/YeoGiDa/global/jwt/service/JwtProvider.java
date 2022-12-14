@@ -82,7 +82,7 @@ public class JwtProvider {
         return claims.getSubject();
     }
 
-    public boolean validateAccessToken(String accessToken) {
+    public boolean validateAccessToken(String accessToken) throws TokenIsInvalidException {
         try {
             String email = getEmailFromAccessToken(accessToken);
             boolean existMember = memberRepository.existsByEmail(email);
@@ -91,26 +91,11 @@ public class JwtProvider {
             }
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken);
             return true;
-        } catch (SignatureException ex) {
-            log.error("Invalid JWT signature");
-            log.error("Token is Invalid");
-            return false;
-        } catch (MalformedJwtException ex) {
-            log.error("Invalid JWT token");
-            log.error("Token is Invalid");
-            return false;
+        } catch (SignatureException | MalformedJwtException
+                 | UnsupportedJwtException | IllegalArgumentException ex) {
+            throw new TokenIsInvalidException();
         } catch (ExpiredJwtException ex) {
-            log.error("Expired JWT token");
-            log.error("Token Has Expired");
-            return false;
-        } catch (UnsupportedJwtException ex) {
-            log.error("Unsupported JWT token");
-            log.error("Token is Invalid");
-            return false;
-        } catch (IllegalArgumentException ex) {
-            log.error("JWT claims string is empty.");
-            log.error("Token is Invalid");
-            return false;
+            throw new TokenHasExpiredException();
         }
     }
 
