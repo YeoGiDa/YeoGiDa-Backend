@@ -16,7 +16,7 @@ public class TripListResponseDto {
     private String subTitle;
     private String imgUrl;
     private Integer heartCount;
-    //private Integer placeCount;
+    private Integer placeCount;
 
     public TripListResponseDto(Trip trip) {
         this.tripId = trip.getId();
@@ -28,7 +28,7 @@ public class TripListResponseDto {
         } else {
             this.imgUrl = trip.getTripImg().getImgUrl();
         }
-        this.heartCount = trip.getHeartCount();
-//        this.placeCount = trip.getPlaceCount();
+        this.heartCount = trip.getHearts().size();
+        this.placeCount = trip.getPlaces().size();
     }
 }

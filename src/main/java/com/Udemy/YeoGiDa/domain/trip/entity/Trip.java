@@ -1,7 +1,9 @@
 package com.Udemy.YeoGiDa.domain.trip.entity;
 
 import com.Udemy.YeoGiDa.domain.common.entity.BaseEntity;
+import com.Udemy.YeoGiDa.domain.heart.entity.Heart;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
+import com.Udemy.YeoGiDa.domain.place.entity.Place;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +12,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,10 +30,6 @@ public class Trip extends BaseEntity {
 
     private String subTitle;
 
-    private Integer heartCount = 0;
-
-    private Integer placeCount = 0;
-
     private Integer changeHeartCount = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -39,6 +39,12 @@ public class Trip extends BaseEntity {
 
     @OneToOne(mappedBy = "trip", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private TripImg tripImg = new TripImg();
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    private List<Place> places = new ArrayList<>();
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    private List<Heart> hearts = new ArrayList<>();
 
     @Builder
     public Trip(String region, String title, String subTitle, Member member) {
@@ -54,13 +60,13 @@ public class Trip extends BaseEntity {
         this.subTitle = subTitle;
     }
 
-    public void plusHeartCount() {
-        this.heartCount++;
-    }
-
-    public void minusHeartCount() {
-        this.heartCount--;
-    }
+//    public void plusHeartCount() {
+//        this.heartCount++;
+//    }
+//
+//    public void minusHeartCount() {
+//        this.heartCount--;
+//    }
 
     public void plusChangeHeartCount() {
         this.changeHeartCount++;
