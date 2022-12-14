@@ -7,6 +7,7 @@ import com.Udemy.YeoGiDa.domain.trip.request.TripSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripListResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.service.TripService;
+import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import com.Udemy.YeoGiDa.global.response.DefaultResult;
 import com.Udemy.YeoGiDa.global.response.StatusCode;
 import com.Udemy.YeoGiDa.global.security.annotation.LoginMember;
