@@ -1,5 +1,6 @@
 package com.Udemy.YeoGiDa.global.error;
 
+import com.Udemy.YeoGiDa.domain.follow.exception.AlreadyFollowException;
 import com.Udemy.YeoGiDa.domain.heart.exception.AlreadyHeartException;
 import com.Udemy.YeoGiDa.domain.heart.exception.HeartNotFoundException;
 import com.Udemy.YeoGiDa.domain.member.exception.AlreadyExistsNicknameException;
@@ -13,15 +14,22 @@ import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import com.Udemy.YeoGiDa.global.exception.NotFoundException;
 import com.Udemy.YeoGiDa.global.jwt.exception.TokenHasExpiredException;
 import com.Udemy.YeoGiDa.global.jwt.exception.TokenIsInvalidException;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
+import io.jsonwebtoken.JwtException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -62,6 +70,12 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler
+    protected ErrorResult handleAlreadyLikedException(AlreadyFollowException e) {
+        return new ErrorResult(400, "AlreadyFollowed Error!");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler
     protected ErrorResult handleAlreadyLikedException(TripImgEssentialException e) {
         return new ErrorResult(400, "TripImgEssential Error!");
     }
@@ -70,6 +84,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     protected ErrorResult handleForbiddenException(ForbiddenException e){
         return new ErrorResult(403, "Forbidden Error!");
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler
+    protected ErrorResult handleException(Exception e){
+        return new ErrorResult(403, "Forbidden Error!");
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler
+    protected ErrorResult handleJwtException(JwtException e){
+        return new ErrorResult(403, "JwtInvalid Error!");
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -124,5 +150,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     protected ErrorResult handleFileUploadException(FileUploadException e){
         return new ErrorResult(500, "FileUpload Error!");
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler
+    protected ErrorResult handleAmazonS3Exception(AmazonS3Exception e){
+        return new ErrorResult(500, "AmazonS3 Error!");
     }
 }
