@@ -25,7 +25,7 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
     @Override
     public List<Trip> findAllOrderByHeartCount() {
         return queryFactory.selectFrom(trip)
-                .orderBy(trip.heartCount.desc(), trip.id.desc())
+                .orderBy(trip.hearts.size().desc(), trip.id.desc())
                 .fetch();
     }
 
@@ -41,7 +41,7 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
     public List<Trip> findAllByRegionOrderByHeartCount(String region) {
         return queryFactory.selectFrom(trip)
                 .where(trip.region.eq(region))
-                .orderBy(trip.heartCount.desc(), trip.id.desc())
+                .orderBy(trip.hearts.size().desc(), trip.id.desc())
                 .fetch();
     }
 
@@ -66,6 +66,21 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
                 .leftJoin(trip.member, member).fetchJoin()
                 .where(trip.member.id.eq(m.getId()))
                 .orderBy(trip.id.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<Trip> findAllByMemberOrderByHeartCountBasic() {
+        return queryFactory.select(trip).distinct().from(trip)
+                .orderBy(trip.hearts.size().desc(), trip.id.desc())
+                .limit(10)
+                .fetch();
+    }
+
+    @Override
+    public List<Trip> findAllByMemberOrderByHeartCountMore() {
+        return queryFactory.select(trip).distinct().from(trip)
+                .orderBy(trip.hearts.size().desc(), trip.id.desc())
                 .fetch();
     }
 }

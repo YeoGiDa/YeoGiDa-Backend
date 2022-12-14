@@ -8,6 +8,7 @@ import com.Udemy.YeoGiDa.domain.heart.exception.HeartNotFoundException;
 import com.Udemy.YeoGiDa.domain.heart.repository.HeartRepository;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
+import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.Udemy.YeoGiDa.domain.trip.entity.TripImg;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
@@ -24,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -157,6 +159,15 @@ public class TripService {
                 .collect(Collectors.toList());
     }
 
+    public List<MemberDto> getBestTravlerBasic() {
+        List<Trip> trips = tripRepository.findAllByMemberOrderByHeartCountBasic();
+        List<MemberDto> members = new ArrayList<>();
+        for (Trip trip : trips) {
+            members.add(new MemberDto(trip.getMember()));
+        }
+        return members;
+    }
+
     @Transactional
     public void heart(Long tripId, Member member) {
         if(member == null) {
@@ -166,7 +177,6 @@ public class TripService {
         Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
                 .orElseThrow(() -> new TripNotFoundException())).get();
 
-        trip.plusHeartCount();
         trip.plusChangeHeartCount();
 
         heartRepository.findByMemberAndTrip(member, trip).ifPresent(it -> {
@@ -188,7 +198,6 @@ public class TripService {
         Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
                 .orElseThrow(() -> new TripNotFoundException())).get();
 
-        trip.minusHeartCount();
         trip.minusChangeHeartCount();
 
         Heart heart = heartRepository.findByMemberAndTrip(member, trip)

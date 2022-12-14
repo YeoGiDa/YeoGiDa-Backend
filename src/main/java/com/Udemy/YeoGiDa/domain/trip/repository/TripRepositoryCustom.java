@@ -27,6 +27,12 @@ public interface TripRepositoryCustom {
     //월간 베스트 여행지 목록 더 보기 - 페이징 필요
     List<Trip> findAllOrderByChangeHeartCountMore();
 
+    //베스트 여행자 목록 기본 10개
+    List<Trip> findAllByMemberOrderByHeartCountBasic();
+
+    //베스트 여행자 목록 더 보기 - 페이징 필요
+    List<Trip> findAllByMemberOrderByHeartCountMore();
+
     //내가 작성한 글 목록
     List<Trip> findAllByMemberFetch(Member m);
 }

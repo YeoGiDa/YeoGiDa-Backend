@@ -2,6 +2,7 @@ package com.Udemy.YeoGiDa.domain.trip.controller;
 
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
+import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripImgEssentialException;
 import com.Udemy.YeoGiDa.domain.trip.request.TripSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
@@ -166,9 +167,23 @@ public class TripController {
     @GetMapping("/monthly-best/basic")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getMonthBestTripBasic() {
-        List<TripListResponseDto> result = tripService.getMonthBestTripBasic();
+        List<TripListResponseDto> trips = tripService.getMonthBestTripBasic();
+        Map<String, Object> result = new HashMap<>();
+        result.put("tripList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "목록 조회 성공 - 월간 베스트 여행지", result), HttpStatus.OK);
+    }
+
+    @ApiOperation("베스트 여행자")
+    @ApiResponse(code = 200, message = "목록 조회 성공 - 베스트 여행자")
+    @GetMapping("/best-travler/basic")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getBestTravler() {
+        List<MemberDto> members = tripService.getBestTravlerBasic();
+        Map<String, Object> result = new HashMap<>();
+        result.put("memberList", members);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "목록 조회 성공 - 베스트 여행자", result), HttpStatus.OK);
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
