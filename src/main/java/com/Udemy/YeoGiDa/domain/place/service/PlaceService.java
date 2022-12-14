@@ -66,6 +66,14 @@ public class PlaceService {
     }
 
     @Transactional(readOnly = true)
+    public List<PlaceListResponseDto> getPlaceListByComments(Long tripId){
+        return placeRepository.findAllByTripIdOrderByComment(tripId)
+                .stream()
+                .map(PlaceListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
     public PlaceDetailResponseDto getPlaceDetail(Long placeId) {
         Place place = Optional.ofNullable(placeRepository.findById(placeId)
                 .orElseThrow(() -> new PlaceNotFoundException())).get();

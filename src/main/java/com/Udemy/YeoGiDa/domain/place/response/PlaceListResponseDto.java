@@ -2,7 +2,6 @@ package com.Udemy.YeoGiDa.domain.place.response;
 
 
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
-import com.Udemy.YeoGiDa.domain.place.entity.PlaceImg;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,5 +27,6 @@ public class PlaceListResponseDto {
         } else {
             this.imgUrl = null;
         }
+        this.commentCount = place.getComments().size();
     }
 }

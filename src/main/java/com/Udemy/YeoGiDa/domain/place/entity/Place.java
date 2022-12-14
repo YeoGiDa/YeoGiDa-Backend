@@ -1,6 +1,7 @@
 package com.Udemy.YeoGiDa.domain.place.entity;
 
 
+import com.Udemy.YeoGiDa.domain.comment.entity.Comment;
 import com.Udemy.YeoGiDa.domain.common.entity.BaseEntity;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
@@ -38,6 +39,9 @@ public class Place extends BaseEntity {
     
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
     List<PlaceImg> placeImgs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
+    List<Comment> comments = new ArrayList<>();
 
     private String tag;
     @Builder

@@ -11,7 +11,7 @@ public interface PlaceRepositoryCustom {
     List<Place> findAllByTripIdOrderByStar(Long tripId);
 
     //TODO - 댓글 완성 후 댓글 정렬
-//    List<Place> findAllByTripIdOrderByComment(Long tripId);
+    List<Place> findAllByTripIdOrderByComment(Long tripId);
 
     List<Place> findAllByTag(String tag);
 }

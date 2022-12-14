@@ -69,6 +69,16 @@ public class PlaceController {
                 "장소 목록 조회 성공 - 별점순", result), HttpStatus.OK);
     }
 
+    @GetMapping("/{tripId}/places/comments")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getPlaceListOrderByComments(@PathVariable Long tripId){
+        List<PlaceListResponseDto> places = placeService.getPlaceListByComments(tripId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("memberList", places);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "장소 목록 조회 성공 - 댓글순", result), HttpStatus.OK);
+    }
+
     @ApiOperation("여행지 별 장소 목록 조회 - 키워드")
     @GetMapping("/{tripId}/places/{tag}")
     @ResponseStatus(HttpStatus.OK)
