@@ -42,6 +42,14 @@ public class PlaceService {
     private final TripRepository tripRepository;
 
     @Transactional(readOnly = true)
+    public List<PlaceListResponseDto> getPlaceList(Long tripId){
+        return placeRepository.findAllByTripId(tripId)
+                .stream()
+                .map(PlaceListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+   @Transactional(readOnly = true)
     public List<PlaceListResponseDto> getPlaceListOrderById(Long tripId){
         return placeRepository.findAllByTripIdOrderById(tripId)
                 .stream()
@@ -58,8 +66,32 @@ public class PlaceService {
     }
 
     @Transactional(readOnly = true)
-    public List<PlaceListResponseDto> getPlaceListByTagDesc(String tag){
-        return placeRepository.findAllByTag(tag)
+    public List<PlaceListResponseDto> getPlaceListByTagAsc(Long tripId,String tag){
+        return placeRepository.findAllByTagDefault(tripId,tag)
+                .stream()
+                .map(PlaceListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PlaceListResponseDto> getPlaceListByTagDesc(Long tripId,String tag){
+        return placeRepository.findAllByTagOrderById(tripId,tag)
+                .stream()
+                .map(PlaceListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PlaceListResponseDto> getPlaceListByTagStar(Long tripId,String tag){
+        return placeRepository.findAllByTagOrderByStar(tripId,tag)
+                .stream()
+                .map(PlaceListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PlaceListResponseDto> getPlaceListByTagComment(Long tripId,String tag){
+        return placeRepository.findAllByTagOrderByComment(tripId, tag)
                 .stream()
                 .map(PlaceListResponseDto::new)
                 .collect(Collectors.toList());

@@ -18,7 +18,7 @@ import java.util.List;
 @Setter
 public class PlaceDetailResponseDto {
 
-    private Long placeId;
+
     private Long memberId;
     private String title;
     private String address;
@@ -27,10 +27,10 @@ public class PlaceDetailResponseDto {
     private List<PlaceImg> placeImgs = new ArrayList<>();
     @JsonFormat(pattern = "yyyy년 MM월 dd일")
     private LocalDateTime createdTime;
+    private String tag;
 
     @Builder
     public PlaceDetailResponseDto(Place place) {
-        this.placeId = place.getId();
         this.memberId= place.getTrip().getMember().getId();
         this.title = place.getTitle();
         this.address = place.getAddress();
@@ -38,5 +38,6 @@ public class PlaceDetailResponseDto {
         this.content = place.getContent();
         this.placeImgs = place.getPlaceImgs();
         this.createdTime = place.getCreatedTime();
+        this.tag=place.getTag();
     }
 }
