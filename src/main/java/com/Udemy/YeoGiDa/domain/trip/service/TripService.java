@@ -8,7 +8,6 @@ import com.Udemy.YeoGiDa.domain.heart.exception.HeartNotFoundException;
 import com.Udemy.YeoGiDa.domain.heart.repository.HeartRepository;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
-import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.Udemy.YeoGiDa.domain.trip.entity.TripImg;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
@@ -17,15 +16,13 @@ import com.Udemy.YeoGiDa.domain.trip.repository.TripRepository;
 import com.Udemy.YeoGiDa.domain.trip.request.TripSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripListResponseDto;
+import com.Udemy.YeoGiDa.domain.trip.response.TripMonthBestListResponseDto;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
-import com.Udemy.YeoGiDa.global.jwt.exception.TokenIsInvalidException;
-import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,33 +38,40 @@ public class TripService {
     private final S3Service s3Service;
     private final HeartRepository heartRepository;
 
-    public List<TripListResponseDto> getTripListOrderByIdDesc() {
-        return tripRepository.findAllOrderByIdDesc()
+    public List<TripListResponseDto> getTripList(String condition) {
+        return tripRepository.findAllByConditionFetch(condition)
                 .stream()
                 .map(TripListResponseDto::new)
                 .collect(Collectors.toList());
     }
 
-    public List<TripListResponseDto> getTripListOrderByHeartDesc() {
-        return tripRepository.findAllOrderByHeartCount()
+    public List<TripListResponseDto> getTripListByRegion(String region, String condition) {
+        return tripRepository.findAllByRegionAndConditionFetch(region, condition)
                 .stream()
                 .map(TripListResponseDto::new)
                 .collect(Collectors.toList());
     }
 
-    public List<TripListResponseDto> getTripListFindByRegionOrderByIdDesc(String region) {
-        return tripRepository.findAllByRegionDesc(region)
-                .stream()
-                .map(TripListResponseDto::new)
-                .collect(Collectors.toList());
-    }
-
-    public List<TripListResponseDto> getTripListFindByRegionOrderByHeartDesc(String region) {
-        return tripRepository.findAllByRegionOrderByHeartCount(region)
-                .stream()
-                .map(TripListResponseDto::new)
-                .collect(Collectors.toList());
-    }
+//    public List<TripListResponseDto> getTripListOrderByHeartDesc() {
+//        return tripRepository.findAllOrderByHeartCountFetch()
+//                .stream()
+//                .map(TripListResponseDto::new)
+//                .collect(Collectors.toList());
+//    }
+//
+//    public List<TripListResponseDto> getTripListFindByRegionOrderByIdDesc(String region) {
+//        return tripRepository.findAllByRegionAndConditionFetch(region)
+//                .stream()
+//                .map(TripListResponseDto::new)
+//                .collect(Collectors.toList());
+//    }
+//
+//    public List<TripListResponseDto> getTripListFindByRegionOrderByHeartDesc(String region) {
+//        return tripRepository.findAllByRegionOrderByHeartCountFetch(region)
+//                .stream()
+//                .map(TripListResponseDto::new)
+//                .collect(Collectors.toList());
+//    }
 
     public TripDetailResponseDto getTripDetail(Long tripId) {
         Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
@@ -152,20 +156,11 @@ public class TripService {
         tripRepository.delete(trip);
     }
 
-    public List<TripListResponseDto> getMonthBestTripBasic() {
-        return tripRepository.findAllOrderByChangeHeartCountBasic()
+    public List<TripMonthBestListResponseDto> getMonthBestTripBasic() {
+        return tripRepository.findAllOrderByChangeHeartCountBasicFetch()
                 .stream()
-                .map(TripListResponseDto::new)
+                .map(TripMonthBestListResponseDto::new)
                 .collect(Collectors.toList());
-    }
-
-    public List<MemberDto> getBestTravlerBasic() {
-        List<Trip> trips = tripRepository.findAllByMemberOrderByHeartCountBasic();
-        List<MemberDto> members = new ArrayList<>();
-        for (Trip trip : trips) {
-            members.add(new MemberDto(trip.getMember()));
-        }
-        return members;
     }
 
     @Transactional

@@ -61,10 +61,6 @@ public class PlaceController {
                 String.format("장소 목록 조회 성공 - Tag&" + condition), result), HttpStatus.OK);
     }
 //    @ApiOperation("여행지 별 장소 목록 조회 - 최신순")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "조회 성공"),
-//            @ApiResponse(code = 404, message = "조회 실패(존재 하지 않는 여행지)")
-//    })
 //    @GetMapping("/{tripId}/places/latest")
 //    @ResponseStatus(HttpStatus.OK)
 //    public ResponseEntity getPlaceListOrderById(@PathVariable Long tripId){
@@ -77,10 +73,6 @@ public class PlaceController {
 //    }
 //
 //    @ApiOperation("여행지 별 장소 목록 조회 - 별점순")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "조회 성공"),
-//            @ApiResponse(code = 404, message = "조회 실패(존재 하지 않는 여행지)")
-//    })
 //    @GetMapping("/{tripId}/places/star")
 //    @ResponseStatus(HttpStatus.OK)
 //    public ResponseEntity getPlaceListOrderByStar(@PathVariable Long tripId){
@@ -148,9 +140,6 @@ public class PlaceController {
 //        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
 //                "장소 목록 조회 성공 - 키워드&댓글순", result), HttpStatus.OK);
 //    }
-
-
-
 
     @ApiOperation("장소 상세 조회")
     @ApiResponses({

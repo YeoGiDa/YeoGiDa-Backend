@@ -88,12 +88,6 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler
-    protected ErrorResult handleException(Exception e){
-        return new ErrorResult(403, "Forbidden Error!");
-    }
-
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ExceptionHandler
     protected ErrorResult handleJwtException(JwtException e){
         return new ErrorResult(403, "JwtInvalid Error!");
     }
@@ -156,5 +150,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     protected ErrorResult handleAmazonS3Exception(AmazonS3Exception e){
         return new ErrorResult(500, "AmazonS3 Error!");
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler
+    protected ErrorResult handleException(Exception e){
+        return new ErrorResult(500, "Global Exception Error!", e.getMessage());
     }
 }

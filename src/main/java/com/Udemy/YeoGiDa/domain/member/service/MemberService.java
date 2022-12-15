@@ -13,6 +13,7 @@ import com.Udemy.YeoGiDa.domain.member.repository.MemberRepository;
 import com.Udemy.YeoGiDa.domain.member.request.MemberJoinRequest;
 import com.Udemy.YeoGiDa.domain.member.request.MemberLoginRequest;
 import com.Udemy.YeoGiDa.domain.member.request.MemberUpdateRequest;
+import com.Udemy.YeoGiDa.domain.member.response.BestTravlerListResponse;
 import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
 import com.Udemy.YeoGiDa.domain.member.response.MemberJoinResponse;
 import com.Udemy.YeoGiDa.domain.member.response.MemberLoginResponse;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +46,7 @@ public class MemberService {
     }
 
     public MemberLoginResponse login(MemberLoginRequest memberLoginRequest) {
-        Member member = memberRepository.findByEmail(memberLoginRequest.getEmail());
+        Member member = memberRepository.findByEmailFetch(memberLoginRequest.getEmail());
         if(member == null) {
             throw new MemberNotFoundException();
         }
@@ -162,6 +164,13 @@ public class MemberService {
 
         return new MemberDto(member);
     }
+
+    public List<BestTravlerListResponse> getBestTravelerBasic() {
+        return memberRepository.findAllByMemberOrderByHeartCountBasicFetch()
+                .stream().map(BestTravlerListResponse::new)
+                .collect(Collectors.toList());
+    }
+
 
     private void isValidateDuplicateNickname(Member member) {
         if(memberRepository.existsByNickname(member.getNickname()) == true) {

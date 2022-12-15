@@ -5,8 +5,15 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ErrorResult {
+public class ErrorResult<T> {
     private int code;
     private String message;
+    private T data;
+
+    public ErrorResult(int code, String message) {
+        this.code = code;
+        this.message = message;
+        this.data = null;
+    }
 }
 
