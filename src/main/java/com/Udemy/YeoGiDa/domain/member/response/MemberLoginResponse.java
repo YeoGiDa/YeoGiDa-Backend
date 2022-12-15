@@ -8,5 +8,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class MemberLoginResponse {
 
+    private Long memberId;
     private Token token;
 }
