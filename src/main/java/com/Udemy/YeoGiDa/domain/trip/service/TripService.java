@@ -38,33 +38,40 @@ public class TripService {
     private final S3Service s3Service;
     private final HeartRepository heartRepository;
 
-    public List<TripListResponseDto> getTripListOrderByIdDesc() {
-        return tripRepository.findAllOrderByIdDescFetch()
+    public List<TripListResponseDto> getTripList(String condition) {
+        return tripRepository.findAllByConditionFetch(condition)
                 .stream()
                 .map(TripListResponseDto::new)
                 .collect(Collectors.toList());
     }
 
-    public List<TripListResponseDto> getTripListOrderByHeartDesc() {
-        return tripRepository.findAllOrderByHeartCountFetch()
+    public List<TripListResponseDto> getTripListByRegion(String region, String condition) {
+        return tripRepository.findAllByRegionAndConditionFetch(region, condition)
                 .stream()
                 .map(TripListResponseDto::new)
                 .collect(Collectors.toList());
     }
 
-    public List<TripListResponseDto> getTripListFindByRegionOrderByIdDesc(String region) {
-        return tripRepository.findAllByRegionDescFetch(region)
-                .stream()
-                .map(TripListResponseDto::new)
-                .collect(Collectors.toList());
-    }
-
-    public List<TripListResponseDto> getTripListFindByRegionOrderByHeartDesc(String region) {
-        return tripRepository.findAllByRegionOrderByHeartCountFetch(region)
-                .stream()
-                .map(TripListResponseDto::new)
-                .collect(Collectors.toList());
-    }
+//    public List<TripListResponseDto> getTripListOrderByHeartDesc() {
+//        return tripRepository.findAllOrderByHeartCountFetch()
+//                .stream()
+//                .map(TripListResponseDto::new)
+//                .collect(Collectors.toList());
+//    }
+//
+//    public List<TripListResponseDto> getTripListFindByRegionOrderByIdDesc(String region) {
+//        return tripRepository.findAllByRegionAndConditionFetch(region)
+//                .stream()
+//                .map(TripListResponseDto::new)
+//                .collect(Collectors.toList());
+//    }
+//
+//    public List<TripListResponseDto> getTripListFindByRegionOrderByHeartDesc(String region) {
+//        return tripRepository.findAllByRegionOrderByHeartCountFetch(region)
+//                .stream()
+//                .map(TripListResponseDto::new)
+//                .collect(Collectors.toList());
+//    }
 
     public TripDetailResponseDto getTripDetail(Long tripId) {
         Trip trip = Optional.ofNullable(tripRepository.findById(tripId)

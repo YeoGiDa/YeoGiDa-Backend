@@ -35,49 +35,51 @@ public class TripController {
     private final TripService tripService;
     private final S3Service s3Service;
 
-    @ApiOperation("여행지 전체 조회 - 최신순")
-    @GetMapping("/newest")
+    @ApiOperation("여행지 전체 조회 - 최신순 & 좋아요순")
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity getTripListOrderByIdDesc() {
-        List<TripListResponseDto> trips = tripService.getTripListOrderByIdDesc();
+    public ResponseEntity getTripList(@RequestParam String condition) {
+        List<TripListResponseDto> trips = tripService.getTripList(condition);
         Map<String, Object> result = new HashMap<>();
         result.put("memberList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "여행지 목록 조회 성공 - 최신순", result), HttpStatus.OK);
+                String.format("여행지 목록 조회 성공 - ", condition), result), HttpStatus.OK);
     }
 
-    @ApiOperation("여행지 전체 조회 - 좋아요순")
-    @GetMapping("/heart")
+    @ApiOperation("여행지 지역별 전체 조회 - 최신순 & 좋아요순")
+    @GetMapping("/region/{region}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity getTripListOrderByHeartDesc() {
-        List<TripListResponseDto> trips = tripService.getTripListOrderByHeartDesc();
+    public ResponseEntity getTripListRegion(@PathVariable String region,
+                                            @RequestParam String condition) {
+        List<TripListResponseDto> trips = tripService.getTripListByRegion(region, condition);
         Map<String, Object> result = new HashMap<>();
         result.put("memberList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "여행지 목록 조회 성공 - 좋아요순", result), HttpStatus.OK);
+                String.format("여행지 목록 조회 성공 - ", region, " + ", condition), result), HttpStatus.OK);
     }
 
-    @ApiOperation("여행지 전체 조회 - 지역별로 + 최신순")
-    @GetMapping("/{region}/newest")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity getTripListFindByRegionOrderByIdDesc(@PathVariable String region) {
-        List<TripListResponseDto> trips = tripService.getTripListFindByRegionOrderByIdDesc(region);
-        Map<String, Object> result = new HashMap<>();
-        result.put("memberList", trips);
-        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "여행지 목록 조회 성공 - 지역별로 + 최신순", result), HttpStatus.OK);
-    }
+//    @ApiOperation("여행지 전체 조회 - 좋아요순")
+//    @GetMapping("/heart")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity getTripListOrderByHeartDesc() {
+//        List<TripListResponseDto> trips = tripService.getTripListOrderByHeartDesc();
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("memberList", trips);
+//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+//                "여행지 목록 조회 성공 - 좋아요순", result), HttpStatus.OK);
+//    }
 
-    @ApiOperation("여행지 전체 조회 - 지역별로 + 하트순")
-    @GetMapping("/{region}/heart")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity getTripListFindByRegionOrderByHeartDesc(@PathVariable String region) {
-        List<TripListResponseDto> trips = tripService.getTripListFindByRegionOrderByHeartDesc(region);
-        Map<String, Object> result = new HashMap<>();
-        result.put("memberList", trips);
-        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "여행지 목록 조회 성공 - 지역별로 + 하트순 ", result), HttpStatus.OK);
-    }
+
+//    @ApiOperation("여행지 전체 조회 - 지역별로 + 하트순")
+//    @GetMapping("/{region}/heart")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity getTripListFindByRegionOrderByHeartDesc(@PathVariable String region) {
+//        List<TripListResponseDto> trips = tripService.getTripListFindByRegionOrderByHeartDesc(region);
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("memberList", trips);
+//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+//                "여행지 목록 조회 성공 - 지역별로 + 하트순 ", result), HttpStatus.OK);
+//    }
 
     @ApiOperation("여행지 상세 조회")
     @GetMapping("/{tripId}")
@@ -109,7 +111,6 @@ public class TripController {
     @ApiOperation("여행지 수정")
     @PutMapping("/{tripId}")
     @ResponseStatus(HttpStatus.OK)
-//    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
     public ResponseEntity update(@PathVariable Long tripId,
                                  @ModelAttribute TripSaveRequestDto tripSaveRequestDto,
                                  @RequestPart(name = "imgUrl", required = true) MultipartFile multipartFile,
