@@ -8,6 +8,8 @@ import com.Udemy.YeoGiDa.domain.place.response.PlaceDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceListResponseDto;
 import com.Udemy.YeoGiDa.domain.place.service.PlaceService;
 
+import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
+import com.Udemy.YeoGiDa.domain.trip.service.TripService;
 import com.Udemy.YeoGiDa.global.response.DefaultResult;
 import com.Udemy.YeoGiDa.global.response.StatusCode;
 import com.Udemy.YeoGiDa.global.security.annotation.LoginMember;
@@ -23,10 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,6 +34,7 @@ import java.util.Map;
 public class PlaceController {
 
     private final PlaceService placeService;
+    private final TripService tripService;
     private final S3Service s3Service;
 
     @GetMapping("/{tripId}/places")
@@ -42,9 +42,10 @@ public class PlaceController {
     public ResponseEntity getPlaceList(@PathVariable Long tripId,
                                        @RequestParam("condition") String condition){
         List<PlaceListResponseDto> places = placeService.getPlaceList(tripId,condition);
-        Map<String, Object> result = new HashMap<>();
+        Optional<Trip> trip = tripService.findById(tripId);
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("memberId", trip.get().getMember().getId());
         result.put("placeList", places);
-
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "장소 목록 조회 성공 "+condition, result), HttpStatus.OK);
     }
@@ -55,10 +56,12 @@ public class PlaceController {
                                                 @PathVariable String tag,
                                                 @RequestParam("condition") String condition){
         List<PlaceListResponseDto> places = placeService.getPlaceListByTagDefault(tripId,tag,condition);
-        Map<String, Object> result = new HashMap<>();
+        Optional<Trip> trip = tripService.findById(tripId);
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("memberId", trip.get().getMember().getId());
         result.put("placeList", places);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                String.format("장소 목록 조회 성공 - Tag&" + condition), result), HttpStatus.OK);
+                String.format("장소 목록 조회 성공 - Tag &" + condition), result), HttpStatus.OK);
     }
 //    @ApiOperation("여행지 별 장소 목록 조회 - 최신순")
 //    @GetMapping("/{tripId}/places/latest")

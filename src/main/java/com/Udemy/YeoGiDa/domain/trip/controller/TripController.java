@@ -43,7 +43,7 @@ public class TripController {
         Map<String, Object> result = new HashMap<>();
         result.put("memberList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                String.format("여행지 목록 조회 성공 - ", condition), result), HttpStatus.OK);
+                String.format("여행지 목록 조회 성공 - " + condition), result), HttpStatus.OK);
     }
 
     @ApiOperation("여행지 지역별 전체 조회 - 최신순 & 좋아요순")
@@ -55,7 +55,7 @@ public class TripController {
         Map<String, Object> result = new HashMap<>();
         result.put("memberList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                String.format("여행지 목록 조회 성공 - ", region, " + ", condition), result), HttpStatus.OK);
+                String.format("여행지 목록 조회 성공 - " + region + " + " + condition), result), HttpStatus.OK);
     }
 
 //    @ApiOperation("여행지 전체 조회 - 좋아요순")
@@ -174,7 +174,7 @@ public class TripController {
     public ResponseEntity getMyTripList(@LoginMember Member member) {
         List<TripListResponseDto> trips = tripService.getMyTripList(member);
         Map<String, Object> result = new HashMap<>();
-        result.put("memberList", trips);
+        result.put("tripList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 목록 조회 성공 - 내가 작성한 ", result), HttpStatus.OK);
     }
