@@ -11,7 +11,6 @@ import lombok.Setter;
 @Setter
 public class PlaceListResponseDto {
     private Long placeId;
-    private Long memberId;
     private String title;
     private Float star;
     private String imgUrl;
@@ -19,8 +18,7 @@ public class PlaceListResponseDto {
     private String tag;
 
     public PlaceListResponseDto(Place place) {
-        this.placeId=place.getId();
-        this.memberId=place.getTrip().getMember().getId();
+        this.placeId = place.getId();
         this.title = place.getTitle();
         this.star = place.getStar();
         if(place.getPlaceImgs().size() > 0) {

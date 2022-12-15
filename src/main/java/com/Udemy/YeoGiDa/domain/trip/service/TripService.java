@@ -222,4 +222,8 @@ public class TripService {
             trip.initChangeHeartCount();
         }
     }
+
+    public Optional<Trip> findById(Long tripId) {
+        return tripRepository.findById(tripId);
+    }
 }

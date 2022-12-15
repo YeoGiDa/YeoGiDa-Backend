@@ -1,5 +1,6 @@
 package com.Udemy.YeoGiDa.domain.member.entity;
 
+import com.Udemy.YeoGiDa.domain.alarm.entity.Alarm;
 import com.Udemy.YeoGiDa.domain.common.entity.BaseEntity;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import lombok.AccessLevel;
@@ -38,6 +39,9 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Trip> trips = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Alarm> alarms = new ArrayList<>();
 
     private int heartCount = 0;
 
