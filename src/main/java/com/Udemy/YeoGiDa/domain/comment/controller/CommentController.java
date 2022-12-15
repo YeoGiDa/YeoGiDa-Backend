@@ -33,10 +33,6 @@ public class CommentController {
     private final CommentService commentService;
 
     @ApiOperation("댓글 목록 조회 - 최신순")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "조회 성공"),
-            @ApiResponse(code = 404, message = "조회 실패(존재 하지 않는 여행지)")
-    })
     @GetMapping("/{placeId}/comments/idDesc")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getCommentListOrderByIdDesc(@PathVariable Long placeId){
@@ -50,10 +46,6 @@ public class CommentController {
 
 
     @ApiOperation("댓글 목록 조회 - 작성순")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "조회 성공"),
-            @ApiResponse(code = 404, message = "조회 실패(존재 하지 않는 여행지)")
-    })
     @GetMapping("/{placeId}/comments/idAsc")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getCommentListOrderByIdAsc(@PathVariable Long placeId){

@@ -36,7 +36,6 @@ public class TripController {
     private final S3Service s3Service;
 
     @ApiOperation("여행지 전체 조회 - 최신순")
-    @ApiResponse(code = 200, message = "여행지 목록 조회 성공 - 최신순")
     @GetMapping("/newest")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getTripListOrderByIdDesc() {
@@ -48,7 +47,6 @@ public class TripController {
     }
 
     @ApiOperation("여행지 전체 조회 - 좋아요순")
-    @ApiResponse(code = 200, message = "여행지 목록 조회 성공 - 좋아요순")
     @GetMapping("/heart")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getTripListOrderByHeartDesc() {
@@ -60,7 +58,6 @@ public class TripController {
     }
 
     @ApiOperation("여행지 전체 조회 - 지역별로 + 최신순")
-    @ApiResponse(code = 200, message = "여행지 목록 조회 성공 - 지역별로 + 최신순")
     @GetMapping("/{region}/newest")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getTripListFindByRegionOrderByIdDesc(@PathVariable String region) {
@@ -72,7 +69,6 @@ public class TripController {
     }
 
     @ApiOperation("여행지 전체 조회 - 지역별로 + 하트순")
-    @ApiResponse(code = 200, message = "여행지 목록 조회 성공 - 지역별로 + 하트순")
     @GetMapping("/{region}/heart")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getTripListFindByRegionOrderByHeartDesc(@PathVariable String region) {
@@ -84,10 +80,6 @@ public class TripController {
     }
 
     @ApiOperation("여행지 상세 조회")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "상세 조회 완료"),
-            @ApiResponse(code = 404, message = "존재하지않는 여행지")
-    })
     @GetMapping("/{tripId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getTripDetail(@PathVariable Long tripId) {
@@ -98,14 +90,8 @@ public class TripController {
 
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @ApiOperation("여행지 작성")
-    @ApiResponses({
-            @ApiResponse(code = 201, message = "작성 성공"),
-            @ApiResponse(code = 403, message = "권한 없음"),
-            @ApiResponse(code = 404, message = "존재하지않는 회원")
-    })
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
-//    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
     public ResponseEntity save(@ModelAttribute TripSaveRequestDto tripSaveRequestDto,
                                @RequestPart(name = "imgUrl", required = false) MultipartFile multipartFile,
                                @LoginMember Member member) throws TripImgEssentialException {
@@ -121,13 +107,6 @@ public class TripController {
 
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @ApiOperation("여행지 수정")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "수정 성공"),
-            @ApiResponse(code = 403, message = "권한 없음"),
-            @ApiResponse(code = 404, message = "수정 실패" +
-                    "존재하지않는 회원 - Member Not Found," +
-                    "존재하지않는 여행지 - Trip Not Found")
-    })
     @PutMapping("/{tripId}")
     @ResponseStatus(HttpStatus.OK)
 //    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
@@ -146,16 +125,8 @@ public class TripController {
 
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @ApiOperation("여행지 삭제")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "삭제 성공"),
-            @ApiResponse(code = 403, message = "권한 없음"),
-            @ApiResponse(code = 404, message = "수정 실패" +
-                    "존재하지않는 회원 - Member Not Found," +
-                    "존재하지않는 여행지 - Trip Not Found")
-    })
     @DeleteMapping("/{tripId}")
     @ResponseStatus(HttpStatus.OK)
-//    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
     public ResponseEntity delete(@PathVariable Long tripId,
                                  @LoginMember Member member) {
         tripService.delete(tripId, member);
@@ -164,7 +135,6 @@ public class TripController {
     }
 
     @ApiOperation("월간 베스트 여행지")
-    @ApiResponse(code = 200, message = "목록 조회 성공 - 월간 베스트 여행지")
     @GetMapping("/monthly-best/basic")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getMonthBestTripBasic() {
@@ -177,16 +147,8 @@ public class TripController {
 
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @ApiOperation("여행지 좋아요 누르기")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "수정 성공"),
-            @ApiResponse(code = 403, message = "권한 없음"),
-            @ApiResponse(code = 404, message = "수정 실패" +
-                    "존재하지않는 회원 - Member Not Found," +
-                    "존재하지않는 여행지 - Trip Not Found")
-    })
     @PostMapping("/{tripId}/heart")
     @ResponseStatus(HttpStatus.CREATED)
-//    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
     public ResponseEntity heart(@PathVariable Long tripId,
                                @LoginMember Member member) {
         tripService.heart(tripId, member);
@@ -196,16 +158,8 @@ public class TripController {
 
     @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @ApiOperation("여행지 좋아요 취소하기")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "수정 성공"),
-            @ApiResponse(code = 403, message = "권한 없음"),
-            @ApiResponse(code = 404, message = "수정 실패" +
-                    "존재하지않는 회원 - Member Not Found," +
-                    "존재하지않는 여행지 - Trip Not Found")
-    })
     @DeleteMapping("/{tripId}/heart")
     @ResponseStatus(HttpStatus.OK)
-//    @ApiImplicitParam(name = "Authorization", value = "사용자 인증을 위한 accessToken", paramType = "header", required = true, dataTypeClass = String.class)
     public ResponseEntity deleteHeart(@PathVariable Long tripId,
                                 @LoginMember Member member) {
         tripService.deleteHeart(tripId, member);
@@ -214,7 +168,6 @@ public class TripController {
     }
 
     @ApiOperation("내가 작성한 여행지")
-    @ApiResponse(code = 200, message = "여행지 목록 조회 성공 - 내가 작성한")
     @GetMapping("/my/{memberId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getMyTripList(@LoginMember Member member) {
