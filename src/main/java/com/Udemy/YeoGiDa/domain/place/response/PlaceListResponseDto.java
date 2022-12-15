@@ -13,7 +13,7 @@ public class PlaceListResponseDto {
     private Long placeId;
     private Long memberId;
     private String title;
-    private Double star;
+    private Float star;
     private String imgUrl;
     private Integer commentCount;
     private String tag;

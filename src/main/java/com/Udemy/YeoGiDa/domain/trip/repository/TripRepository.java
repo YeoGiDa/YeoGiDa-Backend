@@ -12,4 +12,7 @@ import java.util.Optional;
 public interface TripRepository extends JpaRepository<Trip, Long>, TripRepositoryCustom {
 
     Optional<Trip> findById(Long tripId);
+
+    @Query(value = "SELECT t FROM Trip t WHERE t.title LIKE %:keyword% OR t.subTitle LIKE %:keyword%")
+    List<Trip> findAllSearch(String keyword);
 }

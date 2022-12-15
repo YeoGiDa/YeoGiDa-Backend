@@ -73,6 +73,13 @@ public class TripService {
 //                .collect(Collectors.toList());
 //    }
 
+    public List<TripListResponseDto> getTripListSearch(String keyword) {
+        return tripRepository.findAllSearch(keyword)
+                .stream()
+                .map(TripListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
     public TripDetailResponseDto getTripDetail(Long tripId) {
         Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
                 .orElseThrow(() -> new TripNotFoundException())).get();

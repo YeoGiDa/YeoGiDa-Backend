@@ -18,12 +18,12 @@ public class PlaceSaveRequestDto {
     private String address;
     private Double longitude;
     private Double latitude;
-    private Double star;
+    private Float star;
     private String content;
     private String tag;
 
     @Builder
-    public PlaceSaveRequestDto(String title, String address, Double longitude, Double latitude, Double star, String content, String tag) {
+    public PlaceSaveRequestDto(String title, String address, Double longitude, Double latitude, Float star, String content, String tag) {
         this.title = title;
         this.address = address;
         this.longitude = longitude;
