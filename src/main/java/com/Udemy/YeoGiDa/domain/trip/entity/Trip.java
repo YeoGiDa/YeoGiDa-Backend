@@ -60,14 +60,6 @@ public class Trip extends BaseEntity {
         this.subTitle = subTitle;
     }
 
-//    public void plusHeartCount() {
-//        this.heartCount++;
-//    }
-//
-//    public void minusHeartCount() {
-//        this.heartCount--;
-//    }
-
     public void plusChangeHeartCount() {
         this.changeHeartCount++;
     }

@@ -21,7 +21,6 @@ import com.Udemy.YeoGiDa.domain.trip.repository.TripRepository;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +42,7 @@ public class PlaceService {
 
     @Transactional(readOnly = true)
     public List<PlaceListResponseDto> getPlaceList(Long tripId,String condition){
-        return placeRepository.findAllByTripId(tripId,condition)
+        return placeRepository.findAllByTripIdAndCondition(tripId,condition)
                 .stream()
                 .map(PlaceListResponseDto::new)
                 .collect(Collectors.toList());
@@ -107,7 +106,7 @@ public class PlaceService {
 
     @Transactional(readOnly = true)
     public List<PlaceListResponseDto> getPlaceListByTagDefault(Long tripId,String tag,String condition){
-        return placeRepository.findAllByTagDefaultTest(tripId,tag,condition)
+        return placeRepository.findAllByTripIdAndTagAndCondition(tripId,tag,condition)
                 .stream()
                 .map(PlaceListResponseDto::new)
                 .collect(Collectors.toList());
@@ -215,7 +214,7 @@ public class PlaceService {
         }
 
         //여행지 이미지 수정 로직
-        List<PlaceImg> findPlaceImgs = placeImgRepository.findPlaceImgsByPlace(place);
+        List<PlaceImg> findPlaceImgs = placeImgRepository.findPlaceImgsByPlaceFetch(place);
         //default_image일때
         String s3FileName = findPlaceImgs.get(0).getImgUrl().split("/")[3];
         if((findPlaceImgs.size() == 1) && (s3FileName.equals("default_place.png"))) {

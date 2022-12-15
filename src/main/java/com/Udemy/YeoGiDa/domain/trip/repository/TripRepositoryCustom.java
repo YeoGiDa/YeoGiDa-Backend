@@ -11,28 +11,16 @@ import java.util.List;
 public interface TripRepositoryCustom {
 
     //모든 여행지 목록 최신순 - 페이징 필요
-    List<Trip> findAllOrderByIdDesc();
-
-    //모든 여행지 목록 - 좋아요 순 정렬 - 페이징 필요
-    List<Trip> findAllOrderByHeartCount();
+    List<Trip> findAllByConditionFetch(String condition);
 
     //지역별 여행지 목록 - 최신순 정렬 - 페이징 필요
-    List<Trip> findAllByRegionDesc(String region);
-
-    //지역별 여행지 목록 - 좋아요 순 정렬 - 페이징 필요
-    List<Trip> findAllByRegionOrderByHeartCount(String region);
+    List<Trip> findAllByRegionAndConditionFetch(String region, String Condition);
 
     //월간 베스트 여행지 목록 기본 10개
-    List<Trip> findAllOrderByChangeHeartCountBasic();
+    List<Trip> findAllOrderByChangeHeartCountBasicFetch();
 
     //월간 베스트 여행지 목록 더 보기 - 페이징 필요
-    List<Trip> findAllOrderByChangeHeartCountMore();
-
-    //베스트 여행자 목록 기본 10개
-    List<Trip> findAllByMemberOrderByHeartCountBasic();
-
-    //베스트 여행자 목록 더 보기 - 페이징 필요
-    List<Trip> findAllByMemberOrderByHeartCountMore();
+    List<Trip> findAllOrderByChangeHeartCountMoreFetch();
 
     //내가 작성한 글 목록
     List<Trip> findAllByMemberFetch(Member m);
