@@ -41,32 +41,72 @@ public class PlaceService {
     private final TripRepository tripRepository;
 
     @Transactional(readOnly = true)
-    public List<PlaceListResponseDto> getPlaceListOrderById(Long tripId){
-        return placeRepository.findAllByTripIdOrderById(tripId)
+    public List<PlaceListResponseDto> getPlaceList(Long tripId,String condition){
+        return placeRepository.findAllByTripId(tripId,condition)
                 .stream()
                 .map(PlaceListResponseDto::new)
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<PlaceListResponseDto> getPlaceListOrderByStar(Long tripId){
-        return placeRepository.findAllByTripIdOrderByStar(tripId)
-                .stream()
-                .map(PlaceListResponseDto::new)
-                .collect(Collectors.toList());
-    }
+//   @Transactional(readOnly = true)
+//    public List<PlaceListResponseDto> getPlaceListOrderById(Long tripId){
+//        return placeRepository.findAllByTripIdOrderById(tripId)
+//                .stream()
+//                .map(PlaceListResponseDto::new)
+//                .collect(Collectors.toList());
+//    }
+//
+//    @Transactional(readOnly = true)
+//    public List<PlaceListResponseDto> getPlaceListOrderByStar(Long tripId){
+//        return placeRepository.findAllByTripIdOrderByStar(tripId)
+//                .stream()
+//                .map(PlaceListResponseDto::new)
+//                .collect(Collectors.toList());
+//    }
+//
+//    @Transactional(readOnly = true)
+//    public List<PlaceListResponseDto> getPlaceListByTagAsc(Long tripId,String tag){
+//        return placeRepository.findAllByTagDefault(tripId,tag)
+//                .stream()
+//                .map(PlaceListResponseDto::new)
+//                .collect(Collectors.toList());
+//    }
+//
+//    @Transactional(readOnly = true)
+//    public List<PlaceListResponseDto> getPlaceListByTagDesc(Long tripId,String tag){
+//        return placeRepository.findAllByTagOrderById(tripId,tag)
+//                .stream()
+//                .map(PlaceListResponseDto::new)
+//                .collect(Collectors.toList());
+//    }
+//
+//    @Transactional(readOnly = true)
+//    public List<PlaceListResponseDto> getPlaceListByTagStar(Long tripId,String tag){
+//        return placeRepository.findAllByTagOrderByStar(tripId,tag)
+//                .stream()
+//                .map(PlaceListResponseDto::new)
+//                .collect(Collectors.toList());
+//    }
+//
+//    @Transactional(readOnly = true)
+//    public List<PlaceListResponseDto> getPlaceListByTagComment(Long tripId,String tag){
+//        return placeRepository.findAllByTagOrderByComment(tripId, tag)
+//                .stream()
+//                .map(PlaceListResponseDto::new)
+//                .collect(Collectors.toList());
+//    }
+//
+//    @Transactional(readOnly = true)
+//    public List<PlaceListResponseDto> getPlaceListByComments(Long tripId){
+//        return placeRepository.findAllByTripIdOrderByComment(tripId)
+//                .stream()
+//                .map(PlaceListResponseDto::new)
+//                .collect(Collectors.toList());
+//    }
 
     @Transactional(readOnly = true)
-    public List<PlaceListResponseDto> getPlaceListByTagDesc(String tag){
-        return placeRepository.findAllByTag(tag)
-                .stream()
-                .map(PlaceListResponseDto::new)
-                .collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public List<PlaceListResponseDto> getPlaceListByComments(Long tripId){
-        return placeRepository.findAllByTripIdOrderByComment(tripId)
+    public List<PlaceListResponseDto> getPlaceListByTagDefault(Long tripId,String tag,String condition){
+        return placeRepository.findAllByTagDefaultTest(tripId,tag,condition)
                 .stream()
                 .map(PlaceListResponseDto::new)
                 .collect(Collectors.toList());

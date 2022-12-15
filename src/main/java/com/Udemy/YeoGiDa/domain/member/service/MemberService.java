@@ -59,7 +59,7 @@ public class MemberService {
 
         member.setRefreshToken(refreshToken);
 
-        return new MemberLoginResponse(member.getId(), token);
+        return new MemberLoginResponse(member.getId(),token);
     }
 
     public MemberJoinResponse join(MemberJoinRequest memberJoinRequest, String imgPath) {

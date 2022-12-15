@@ -40,8 +40,10 @@ public class CommentController {
     @GetMapping("/{placeId}/comments/idDesc")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getCommentListOrderByIdDesc(@PathVariable Long placeId){
-        List<CommentListResponseDto> result = commentService.getCommentListByDesc(placeId);
-
+        List<CommentListResponseDto> comments = commentService.getCommentListByDesc(placeId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("commentCounts",comments.size());
+        result.put("commentList", comments);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "댓글 목록 조회 성공 - 최신순", result), HttpStatus.OK);
     }
@@ -55,8 +57,10 @@ public class CommentController {
     @GetMapping("/{placeId}/comments/idAsc")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getCommentListOrderByIdAsc(@PathVariable Long placeId){
-        List<CommentListResponseDto> result = commentService.getCommentListByAsc(placeId);
-
+        List<CommentListResponseDto> comments = commentService.getCommentListByAsc(placeId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("commentCounts",comments.size());
+        result.put("commentList", comments);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "댓글 목록 조회 성공 - 작성순", result), HttpStatus.OK);
     }
@@ -84,6 +88,6 @@ public class CommentController {
         commentService.delete(commentId, member);
 
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "장소 삭제 성공"), HttpStatus.OK);
+                "댓글 삭제 성공"), HttpStatus.OK);
     }
 }

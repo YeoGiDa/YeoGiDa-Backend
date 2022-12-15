@@ -57,8 +57,8 @@ public class MemberController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity login(@Validated @RequestBody MemberLoginRequest memberLoginRequest) {
         MemberLoginResponse memberLoginResponse = memberService.login(memberLoginRequest);
-        Map<String, Object> result = new HashMap<>();
-        result.put("ld", memberLoginResponse.getId());
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("memberId", memberLoginResponse.getMemberId());
         result.put("accessToken", memberLoginResponse.getToken().getAccessToken());
         result.put("refreshToken", memberLoginResponse.getToken().getRefreshToken());
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,

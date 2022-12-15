@@ -7,14 +7,24 @@ import java.util.Optional;
 
 public interface PlaceRepositoryCustom {
 
-    Optional<Place> findByIdFetch(Long placeId);
+    List<Place> findAllByTripId(Long tripId,String condition);
 
-    List<Place> findAllByTripIdOrderById(Long tripId);
+//    List<Place> findAllByTripIdOrderById(Long tripId);
+//
+//    List<Place> findAllByTripIdOrderByStar(Long tripId);
+//
+//    List<Place> findAllByTripIdOrderByComment(Long tripId);
 
-    List<Place> findAllByTripIdOrderByStar(Long tripId);
+//    List<Place> findAllByTagDefault(Long tripId,String tag);
+//
+//
+//    List<Place> findAllByTagOrderById(Long tripId,String tag);
+//
+//    List<Place> findAllByTagOrderByStar(Long tripId,String tag);
+//
+//    List<Place> findAllByTagOrderByComment(Long tripId,String tag);
 
-    //TODO - 댓글 완성 후 댓글 정렬
-    List<Place> findAllByTripIdOrderByComment(Long tripId);
+    List<Place> findAllByTagDefaultTest(Long tripId,String tag,String condition);
 
-    List<Place> findAllByTag(String tag);
+
 }

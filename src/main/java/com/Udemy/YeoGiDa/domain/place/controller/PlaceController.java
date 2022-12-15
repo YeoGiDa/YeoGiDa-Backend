@@ -37,59 +37,120 @@ public class PlaceController {
     private final PlaceService placeService;
     private final S3Service s3Service;
 
-
-    @ApiOperation("여행지 별 장소 목록 조회 - 최신순")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "조회 성공"),
-            @ApiResponse(code = 404, message = "조회 실패(존재 하지 않는 여행지)")
-    })
     @GetMapping("/{tripId}/places")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity getPlaceListOrderById(@PathVariable Long tripId){
-        List<PlaceListResponseDto> places = placeService.getPlaceListOrderById(tripId);
+    public ResponseEntity getPlaceList(@PathVariable Long tripId,
+                                       @RequestParam("condition") String condition){
+        List<PlaceListResponseDto> places = placeService.getPlaceList(tripId,condition);
         Map<String, Object> result = new HashMap<>();
-        result.put("memberList", places);
+        result.put("placeList", places);
 
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "장소 목록 조회 성공 - 최신순", result), HttpStatus.OK);
+                "장소 목록 조회 성공 "+condition, result), HttpStatus.OK);
     }
 
-    @ApiOperation("여행지 별 장소 목록 조회 - 별점순")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "조회 성공"),
-            @ApiResponse(code = 404, message = "조회 실패(존재 하지 않는 여행지)")
-    })
-    @GetMapping("/{tripId}/places/star")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity getPlaceListOrderByStar(@PathVariable Long tripId){
-        List<PlaceListResponseDto> places = placeService.getPlaceListOrderByStar(tripId);
-        Map<String, Object> result = new HashMap<>();
-        result.put("memberList", places);
-        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "장소 목록 조회 성공 - 별점순", result), HttpStatus.OK);
-    }
-
-    @GetMapping("/{tripId}/places/comments")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity getPlaceListOrderByComments(@PathVariable Long tripId){
-        List<PlaceListResponseDto> places = placeService.getPlaceListByComments(tripId);
-        Map<String, Object> result = new HashMap<>();
-        result.put("memberList", places);
-        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "장소 목록 조회 성공 - 댓글순", result), HttpStatus.OK);
-    }
-
-    @ApiOperation("여행지 별 장소 목록 조회 - 키워드")
     @GetMapping("/{tripId}/places/{tag}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity getPlaceListByTag(@PathVariable Long tripId,
-                                            @PathVariable String tag){
-        List<PlaceListResponseDto> places = placeService.getPlaceListByTagDesc(tag);
+    public ResponseEntity getPlaceListByTagTest(@PathVariable Long tripId,
+                                                @PathVariable String tag,
+                                                @RequestParam("condition") String condition){
+        List<PlaceListResponseDto> places = placeService.getPlaceListByTagDefault(tripId,tag,condition);
         Map<String, Object> result = new HashMap<>();
-        result.put("memberList", places);
+        result.put("placeList", places);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "장소 목록 조회 성공 - 키워드", result), HttpStatus.OK);
+                String.format("장소 목록 조회 성공 - Tag&" + condition), result), HttpStatus.OK);
     }
+//    @ApiOperation("여행지 별 장소 목록 조회 - 최신순")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "조회 성공"),
+//            @ApiResponse(code = 404, message = "조회 실패(존재 하지 않는 여행지)")
+//    })
+//    @GetMapping("/{tripId}/places/latest")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity getPlaceListOrderById(@PathVariable Long tripId){
+//        List<PlaceListResponseDto> places = placeService.getPlaceListOrderById(tripId);
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("placeList", places);
+//
+//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+//                "장소 목록 조회 성공 - 최신순", result), HttpStatus.OK);
+//    }
+//
+//    @ApiOperation("여행지 별 장소 목록 조회 - 별점순")
+//    @ApiResponses({
+//            @ApiResponse(code = 200, message = "조회 성공"),
+//            @ApiResponse(code = 404, message = "조회 실패(존재 하지 않는 여행지)")
+//    })
+//    @GetMapping("/{tripId}/places/star")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity getPlaceListOrderByStar(@PathVariable Long tripId){
+//        List<PlaceListResponseDto> places = placeService.getPlaceListOrderByStar(tripId);
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("placeList", places);
+//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+//                "장소 목록 조회 성공 - 별점순", result), HttpStatus.OK);
+//    }
+//
+//    @GetMapping("/{tripId}/places/comments")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity getPlaceListOrderByComments(@PathVariable Long tripId){
+//        List<PlaceListResponseDto> places = placeService.getPlaceListByComments(tripId);
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("placeList", places);
+//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+//                "장소 목록 조회 성공 - 댓글순", result), HttpStatus.OK);
+//    }
+
+//    @ApiOperation("여행지 별 장소 목록 조회 - 키워드")
+//    @GetMapping("/{tripId}/places/{tag}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity getPlaceListByTag(@PathVariable Long tripId,
+//                                            @PathVariable String tag){
+//        List<PlaceListResponseDto> places = placeService.getPlaceListByTagAsc(tripId,tag);
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("placeList", places);
+//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+//                "장소 목록 조회 성공 - 키워드", result), HttpStatus.OK);
+//    }
+//
+//    @ApiOperation("여행지 별 장소 목록 조회 - 키워드&최신순")
+//    @GetMapping("/{tripId}/places/{tag}/latest")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity getPlaceListByTagOrderById(@PathVariable Long tripId,
+//                                                       @PathVariable String tag){
+//        List<PlaceListResponseDto> places = placeService.getPlaceListByTagDesc(tripId,tag);
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("placeList", places);
+//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+//                "장소 목록 조회 성공 - 키워드&최신순", result), HttpStatus.OK);
+//    }
+//
+//    @ApiOperation("여행지 별 장소 목록 조회 - 키워드&별점순")
+//    @GetMapping("/{tripId}/places/{tag}/star")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity getPlaceListByTagOrderByStar(@PathVariable Long tripId,
+//                                                       @PathVariable String tag){
+//        List<PlaceListResponseDto> places = placeService.getPlaceListByTagStar(tripId,tag);
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("placeList", places);
+//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+//                "장소 목록 조회 성공 - 키워드&별점", result), HttpStatus.OK);
+//    }
+//
+//    @ApiOperation("여행지 별 장소 목록 조회 - 키워드&댓글순")
+//    @GetMapping("/{tripId}/places/{tag}/comments")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity getPlaceListByTagOrderByComment(@PathVariable Long tripId,
+//                                                          @PathVariable String tag){
+//        List<PlaceListResponseDto> places = placeService.getPlaceListByTagComment(tripId,tag);
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("placeList", places);
+//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+//                "장소 목록 조회 성공 - 키워드&댓글순", result), HttpStatus.OK);
+//    }
+
+
+
 
     @ApiOperation("장소 상세 조회")
     @ApiResponses({
