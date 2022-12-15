@@ -94,7 +94,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
     }
 
     private OrderSpecifier conditionParam(String condition) {
-        BooleanBuilder builder = new BooleanBuilder();
+
 
         if (StringUtils.isNullOrEmpty(condition)) {
             return place.id.asc();
