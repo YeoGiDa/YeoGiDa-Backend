@@ -3,8 +3,11 @@ package com.Udemy.YeoGiDa.domain.place.repository;
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PlaceRepositoryCustom {
+
+    Optional<Place> findByIdFetch(Long placeId);
 
     List<Place> findAllByTripIdOrderById(Long tripId);
 

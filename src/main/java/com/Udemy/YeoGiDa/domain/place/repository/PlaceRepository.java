@@ -12,6 +12,5 @@ import java.util.Optional;
 @Repository
 public interface PlaceRepository extends JpaRepository<Place,Long>, PlaceRepositoryCustom {
 
-    Optional<Place> findById(Long placeId);
 }
 
