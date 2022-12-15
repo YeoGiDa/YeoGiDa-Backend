@@ -74,7 +74,7 @@ public class TripService {
 //    }
 
     public List<TripListResponseDto> getTripListSearch(String keyword) {
-        return tripRepository.findAll(keyword)
+        return tripRepository.findAllSearch(keyword)
                 .stream()
                 .map(TripListResponseDto::new)
                 .collect(Collectors.toList());

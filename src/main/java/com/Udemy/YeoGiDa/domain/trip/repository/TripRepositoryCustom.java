@@ -25,6 +25,5 @@ public interface TripRepositoryCustom {
     //내가 작성한 글 목록
     List<Trip> findAllByMemberFetch(Member m);
 
-    @Query(value = "SELECT t FROM Trip t WHERE t.title LIKE %:keyword% OR t.subTitle LIKE %:keyword%")
-    List<Trip> findAllSearch(String keyword);
+
 }
