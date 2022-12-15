@@ -185,6 +185,83 @@ public class InitDb {
                     .trip(trip3)
                     .build();
 
+            Place place6 = Place.builder()
+                    .title("한라산")
+                    .content("등산하기")
+                    .star(4D)
+                    .address("제주도 어디 34-1")
+                    .latitude(123.312D)
+                    .longitude(213.2131D)
+                    .tag("명소")
+                    .trip(trip2)
+                    .build();
+
+            Place place7 = Place.builder()
+                    .title("해운대 바닷가")
+                    .content("수영하기")
+                    .star(4D)
+                    .address("부산광역시 어디 34-1")
+                    .latitude(123.312D)
+                    .longitude(213.2131D)
+                    .tag("명소")
+                    .trip(trip2)
+                    .build();
+
+            Place place8 = Place.builder()
+                    .title("북한산")
+                    .content("트래킹 하기")
+                    .star(4D)
+                    .address("서울 어디 34-1")
+                    .latitude(123.312D)
+                    .longitude(213.2131D)
+                    .tag("명소")
+                    .trip(trip2)
+                    .build();
+
+            Place place9 = Place.builder()
+                    .title("강남")
+                    .content("노래방 가기")
+                    .star(4D)
+                    .address("서울 강남 어디 34-1")
+                    .latitude(123.312D)
+                    .longitude(213.2131D)
+                    .tag("명소")
+                    .trip(trip2)
+                    .build();
+
+            Place place10 = Place.builder()
+                    .title("웅진")
+                    .content("공부하기")
+                    .star(4D)
+                    .address("서울 어디 34-1")
+                    .latitude(123.312D)
+                    .longitude(213.2131D)
+                    .tag("명소")
+                    .trip(trip2)
+                    .build();
+
+            Place place11 = Place.builder()
+                    .title("서해바다")
+                    .content("갯벌")
+                    .star(4D)
+                    .address("강릉 어디 34-1")
+                    .latitude(123.312D)
+                    .longitude(213.2131D)
+                    .tag("명소")
+                    .trip(trip2)
+                    .build();
+
+            Place place12 = Place.builder()
+                    .title("울릉도")
+                    .content("지키기")
+                    .star(4D)
+                    .address("울릉도 어디 34-1")
+                    .latitude(123.312D)
+                    .longitude(213.2131D)
+                    .tag("명소")
+                    .trip(trip2)
+                    .build();
+
             List<PlaceImg> placeImgs1 = new ArrayList<>();
             placeImgs1.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place1.jpeg", place1));
             placeImgs1.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place2.jpeg", place1));
@@ -195,16 +272,48 @@ public class InitDb {
             place2.setPlaceImgs(placeImgs1);
             List<PlaceImg> placeImgs3 = new ArrayList<>();
             placeImgs3.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place5.jpeg", place3));
+            place3.setPlaceImgs(placeImgs3);
             List<PlaceImg> placeImgs4 = new ArrayList<>();
             placeImgs4.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/default_place.png", place4));
+            place4.setPlaceImgs(placeImgs4);
             List<PlaceImg> placeImgs5 = new ArrayList<>();
             placeImgs5.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/default_place.png", place5));
+            place5.setPlaceImgs(placeImgs5);
+
+            List<PlaceImg> placeImgs6 = new ArrayList<>();
+            placeImgs6.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place6.jpeg", place6));
+            place6.setPlaceImgs(placeImgs6);
+            List<PlaceImg> placeImgs7 = new ArrayList<>();
+            placeImgs7.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place7.jpeg", place7));
+            place7.setPlaceImgs(placeImgs7);
+            List<PlaceImg> placeImgs8 = new ArrayList<>();
+            placeImgs8.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place8.jpeg", place8));
+            place8.setPlaceImgs(placeImgs8);
+            List<PlaceImg> placeImgs9 = new ArrayList<>();
+            placeImgs9.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place9.jpeg", place9));
+            place9.setPlaceImgs(placeImgs9);
+            List<PlaceImg> placeImgs10 = new ArrayList<>();
+            placeImgs10.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place10.jpeg", place10));
+            place10.setPlaceImgs(placeImgs10);
+            List<PlaceImg> placeImgs11 = new ArrayList<>();
+            placeImgs11.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place11.jpeg", place11));
+            place11.setPlaceImgs(placeImgs11);
+            List<PlaceImg> placeImgs12 = new ArrayList<>();
+            placeImgs12.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place12.jpeg", place12));
+            place12.setPlaceImgs(placeImgs12);
 
             em.persist(place1);
             em.persist(place2);
             em.persist(place3);
             em.persist(place4);
             em.persist(place5);
+            em.persist(place6);
+            em.persist(place7);
+            em.persist(place8);
+            em.persist(place9);
+            em.persist(place10);
+            em.persist(place11);
+            em.persist(place12);
 
             Comment comment1 = new Comment(member1, place3, "여기 짱");
             Comment comment2 = new Comment(member3, place3, "여기 짱2");
