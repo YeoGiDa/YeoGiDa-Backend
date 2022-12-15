@@ -169,7 +169,7 @@ public class TripController {
     }
 
     @ApiOperation("내가 작성한 여행지")
-    @GetMapping("/my/{memberId}")
+    @GetMapping("/my")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getMyTripList(@LoginMember Member member) {
         List<TripListResponseDto> trips = tripService.getMyTripList(member);
@@ -177,5 +177,15 @@ public class TripController {
         result.put("memberList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 목록 조회 성공 - 내가 작성한 ", result), HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getTripListSearch(@RequestParam("keyword") String keyword) {
+        List<TripListResponseDto> trips = tripService.getTripListSearch(keyword);
+        Map<String, Object> result = new HashMap<>();
+        result.put("tripList", trips);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "여행지 목록 검색 성공 ", result), HttpStatus.OK);
     }
 }
