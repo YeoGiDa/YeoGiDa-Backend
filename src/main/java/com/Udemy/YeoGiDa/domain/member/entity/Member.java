@@ -1,19 +1,23 @@
 package com.Udemy.YeoGiDa.domain.member.entity;
 
 import com.Udemy.YeoGiDa.domain.common.entity.BaseEntity;
+import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
 
@@ -31,6 +35,11 @@ public class Member extends BaseEntity {
     private String role;
 
     private String refreshToken;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Trip> trips = new ArrayList<>();
+
+    private int heartCount = 0;
 
     @Builder
     public Member(String email, String password, String nickname, String role) {
@@ -50,5 +59,13 @@ public class Member extends BaseEntity {
 
     public void setMemberImg(MemberImg memberImg) {
         this.memberImg = memberImg;
+    }
+
+    public int getTotalHeartCount() {
+        int totalHeartCount = 0;
+        for (Trip trip : trips) {
+            totalHeartCount += trip.getHearts().size();
+        }
+        return totalHeartCount;
     }
 }

@@ -3,6 +3,7 @@ package com.Udemy.YeoGiDa.domain.member.controller;
 import com.Udemy.YeoGiDa.domain.common.exception.WrongImgFormatException;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.member.request.MemberLoginRequest;
+import com.Udemy.YeoGiDa.domain.member.response.BestTravlerListResponse;
 import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
 import com.Udemy.YeoGiDa.domain.member.response.MemberLoginResponse;
 import com.Udemy.YeoGiDa.global.response.DefaultResult;
@@ -18,7 +19,6 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +58,7 @@ public class MemberController {
     public ResponseEntity login(@Validated @RequestBody MemberLoginRequest memberLoginRequest) {
         MemberLoginResponse memberLoginResponse = memberService.login(memberLoginRequest);
         Map<String, Object> result = new HashMap<>();
+        result.put("ld", memberLoginResponse.getId());
         result.put("accessToken", memberLoginResponse.getToken().getAccessToken());
         result.put("refreshToken", memberLoginResponse.getToken().getRefreshToken());
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
@@ -75,6 +76,18 @@ public class MemberController {
 
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "회원 목록 조회 성공", result), HttpStatus.OK);
+    }
+
+    @ApiOperation("베스트 여행자")
+    @ApiResponse(code = 200, message = "목록 조회 성공 - 베스트 여행자")
+    @GetMapping("/best-traveler/basic")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getBestTraveler() {
+        List<BestTravlerListResponse> members = memberService.getBestTravelerBasic();
+        Map<String, Object> result = new HashMap<>();
+        result.put("memberList", members);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "목록 조회 성공 - 베스트 여행자", result), HttpStatus.OK);
     }
 
     @ApiOperation("회원상세 (ADMIN용)")
