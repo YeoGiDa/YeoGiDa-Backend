@@ -42,7 +42,7 @@ public class PlaceService {
 
     @Transactional(readOnly = true)
     public List<PlaceListResponseDto> getPlaceList(Long tripId,String condition){
-        return placeRepository.findAllByTripId(tripId,condition)
+        return placeRepository.findAllByTripIdAndCondition(tripId,condition)
                 .stream()
                 .map(PlaceListResponseDto::new)
                 .collect(Collectors.toList());
@@ -106,7 +106,7 @@ public class PlaceService {
 
     @Transactional(readOnly = true)
     public List<PlaceListResponseDto> getPlaceListByTagDefault(Long tripId,String tag,String condition){
-        return placeRepository.findAllByTagDefaultTest(tripId,tag,condition)
+        return placeRepository.findAllByTripIdAndTagAndCondition(tripId,tag,condition)
                 .stream()
                 .map(PlaceListResponseDto::new)
                 .collect(Collectors.toList());
