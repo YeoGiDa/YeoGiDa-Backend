@@ -28,6 +28,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
     @Override
     public List<Member> findAllByMemberOrderByHeartCountBasicFetch() {
         return queryFactory.selectFrom(member)
+                .leftJoin(member.memberImg, QMemberImg.memberImg).fetchJoin()
                 .orderBy(member.heartCount.desc(), member.id.desc())
                 .where(member.heartCount.goe(0))
                 .limit(10)
@@ -37,6 +38,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
     @Override
     public List<Member> findAllByMemberOrderByHeartCountMoreFetch() {
         return queryFactory.selectFrom(member)
+                .leftJoin(member.memberImg, QMemberImg.memberImg).fetchJoin()
                 .orderBy(member.heartCount.desc(), member.id.desc())
                 .where(member.heartCount.goe(0))
                 .fetch();
