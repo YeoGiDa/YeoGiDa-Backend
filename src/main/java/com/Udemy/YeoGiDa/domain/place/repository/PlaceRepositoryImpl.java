@@ -18,6 +18,14 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
+    public List<Place> findAllByTripId(Long tripId) {
+        return queryFactory.selectFrom(place)
+                .where(place.trip.id.eq(tripId))
+                .orderBy(place.id.asc())
+                .fetch();
+    }
+
+    @Override
     public List<Place> findAllByTripIdOrderById(Long tripId) {
         return queryFactory.selectFrom(place)
                 .where(place.trip.id.eq(tripId))
@@ -42,10 +50,34 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
     }
 
     @Override
-    public List<Place> findAllByTag(String tag) {
+    public List<Place> findAllByTagDefault(Long tripId, String tag) {
         return queryFactory.selectFrom(place)
-                .where(place.tag.eq(tag))
+                .where(place.tag.eq(tag) , place.trip.id.eq(tripId))
+                .orderBy(place.id.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<Place> findAllByTagOrderById(Long tripId, String tag) {
+        return queryFactory.selectFrom(place)
+                .where(place.tag.eq(tag), place.trip.id.eq(tripId))
                 .orderBy(place.id.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<Place> findAllByTagOrderByStar(Long tripId,String tag) {
+        return queryFactory.selectFrom(place)
+                .where(place.tag.eq(tag), place.trip.id.eq(tripId))
+                .orderBy(place.star.desc(),place.id.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<Place> findAllByTagOrderByComment(Long tripId,String tag) {
+        return queryFactory.selectFrom(place)
+                .where(place.tag.eq(tag), place.trip.id.eq(tripId))
+                .orderBy(place.comments.size().desc(),place.id.desc())
                 .fetch();
     }
 }

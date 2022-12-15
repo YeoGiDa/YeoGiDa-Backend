@@ -16,6 +16,7 @@ public class PlaceListResponseDto {
     private Double star;
     private String imgUrl;
     private Integer commentCount;
+    private String tag;
 
     public PlaceListResponseDto(Place place) {
         this.placeId=place.getId();
@@ -28,5 +29,6 @@ public class PlaceListResponseDto {
             this.imgUrl = null;
         }
         this.commentCount = place.getComments().size();
+        this.tag = place.getTag();
     }
 }
