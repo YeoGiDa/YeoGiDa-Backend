@@ -24,6 +24,7 @@ public class CommentListResponseDto {
 
     private String content;
 
+
     @Builder
     public CommentListResponseDto(Comment comment) {
         this.commentId=comment.getId();
@@ -32,5 +33,6 @@ public class CommentListResponseDto {
         this.nickName = comment.getMember().getNickname();
         this.createdTime = comment.getCreatedTime();
         this.content = comment.getContent();
+
     }
 }
