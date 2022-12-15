@@ -22,7 +22,7 @@ public class PlaceDetailResponseDto {
     private Long memberId;
     private String title;
     private String address;
-    private Double star;
+    private Float star;
     private String content;
     private List<PlaceImg> placeImgs = new ArrayList<>();
     @JsonFormat(pattern = "yyyy년 MM월 dd일")

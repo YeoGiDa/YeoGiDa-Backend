@@ -13,11 +13,11 @@ public class PlaceUpdateRequestDto {
     private Double longitude;
     private Double latitude;
     private String content;
-    private Double star;
+    private Float star;
     private String tag;
 
     @Builder
-    public PlaceUpdateRequestDto(String title, String address,  Double longitude, Double latitude, String content, Double star, String tag) {
+    public PlaceUpdateRequestDto(String title, String address,  Double longitude, Double latitude, String content, Float star, String tag) {
         this.title = title;
         this.address = address;
         this.longitude = longitude;
