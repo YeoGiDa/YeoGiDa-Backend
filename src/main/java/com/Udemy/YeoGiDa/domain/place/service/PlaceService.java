@@ -14,6 +14,7 @@ import com.Udemy.YeoGiDa.domain.place.repository.PlaceRepository;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceUpdateRequestDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceDetailResponseDto;
+import com.Udemy.YeoGiDa.domain.place.response.PlaceListInTripResponseDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceListResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
@@ -119,6 +120,15 @@ public class PlaceService {
 
         return new PlaceDetailResponseDto(place);
     }
+
+    @Transactional(readOnly = true)
+    public PlaceListInTripResponseDto getTripDataInPlaceList(Long placeId) {
+        Place place = Optional.ofNullable(placeRepository.findById(placeId)
+                .orElseThrow(() -> new PlaceNotFoundException())).get();
+
+        return new PlaceListInTripResponseDto(place);
+    }
+
 
     public PlaceDetailResponseDto saveNoPicture(PlaceSaveRequestDto placeSaveRequestDto,
                                        Long tripId, Member member) {
