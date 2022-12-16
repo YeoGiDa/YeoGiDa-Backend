@@ -38,18 +38,19 @@ public class PlaceController {
     private final TripService tripService;
     private final S3Service s3Service;
 
-    @GetMapping("/{tripId}/places")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity getPlaceList(@PathVariable Long tripId,
-                                       @RequestParam("condition") String condition){
-        List<PlaceListResponseDto> places = placeService.getPlaceList(tripId,condition);
-        Optional<Trip> trip = tripService.findById(tripId);
-        Map<String, Object> result = new LinkedHashMap<>();
-        result.put("memberId", trip.get().getMember().getId());
-        result.put("placeList", places);
-        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "장소 목록 조회 성공 "+condition, result), HttpStatus.OK);
-    }
+//    @GetMapping("/{tripId}/places")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity getPlaceList(@PathVariable Long tripId,
+//                                       @RequestParam("condition") String condition){
+//        List<PlaceListResponseDto> places = placeService.getPlaceList(tripId,condition);
+//        Optional<Trip> trip = tripService.findById(tripId);
+//        Map<String, Object> result = new LinkedHashMap<>();
+//        result.put("memberId", trip.get().getMember().getId());
+//        result.put("placeList", places);
+//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+//                "장소 목록 조회 성공 "+condition, result), HttpStatus.OK);
+//    }
+
 
     @GetMapping("/{tripId}/places/{tag}")
     @ResponseStatus(HttpStatus.OK)
@@ -62,7 +63,7 @@ public class PlaceController {
         result.put("memberId", trip.get().getMember().getId());
         result.put("placeList", places);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                String.format("장소 목록 조회 성공 - Tag &" + condition), result), HttpStatus.OK);
+                String.format("장소 목록 조회 성공 " + condition), result), HttpStatus.OK);
     }
 
     @GetMapping("/{tripId}/places/tripInfo")

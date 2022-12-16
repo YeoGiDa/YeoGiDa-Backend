@@ -41,9 +41,17 @@ public class PlaceService {
     private final S3Service s3Service;
     private final TripRepository tripRepository;
 
+//    @Transactional(readOnly = true)
+//    public List<PlaceListResponseDto> getPlaceList(Long tripId,String condition){
+//        return placeRepository.findAllByTripIdAndCondition(tripId,condition)
+//                .stream()
+//                .map(PlaceListResponseDto::new)
+//                .collect(Collectors.toList());
+//    }
+
     @Transactional(readOnly = true)
-    public List<PlaceListResponseDto> getPlaceList(Long tripId,String condition){
-        return placeRepository.findAllByTripIdAndCondition(tripId,condition)
+    public List<PlaceListResponseDto> getPlaceListByTagDefault(Long tripId,String tag,String condition){
+        return placeRepository.findAllByTripIdAndTagAndCondition(tripId,tag,condition)
                 .stream()
                 .map(PlaceListResponseDto::new)
                 .collect(Collectors.toList());
@@ -105,13 +113,7 @@ public class PlaceService {
 //                .collect(Collectors.toList());
 //    }
 
-    @Transactional(readOnly = true)
-    public List<PlaceListResponseDto> getPlaceListByTagDefault(Long tripId,String tag,String condition){
-        return placeRepository.findAllByTripIdAndTagAndCondition(tripId,tag,condition)
-                .stream()
-                .map(PlaceListResponseDto::new)
-                .collect(Collectors.toList());
-    }
+
 
     @Transactional(readOnly = true)
     public PlaceDetailResponseDto getPlaceDetail(Long placeId) {
