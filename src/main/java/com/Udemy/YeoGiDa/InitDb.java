@@ -155,7 +155,7 @@ public class InitDb {
             Place place3 = Place.builder()
                     .title("SOju")
                     .content("안주 맛집")
-                    .star(4F)
+                    .star(3F)
                     .address("서울시 강남구 34-1")
                     .latitude(123.312D)
                     .longitude(213.2131D)
@@ -166,11 +166,11 @@ public class InitDb {
             Place place4 = Place.builder()
                     .title("MAckJu")
                     .content("안주맛집22")
-                    .star(4F)
+                    .star(2F)
                     .address("서울시 강남구 34-1")
                     .latitude(123.312D)
                     .longitude(213.2131D)
-                    .tag("술집")
+                    .tag("식당")
                     .trip(trip2)
                     .build();
 
@@ -181,84 +181,84 @@ public class InitDb {
                     .address("부산광역시 어디 34-1")
                     .latitude(123.312D)
                     .longitude(213.2131D)
-                    .tag("명소")
+                    .tag("관광지")
                     .trip(trip3)
                     .build();
 
             Place place6 = Place.builder()
                     .title("한라산")
                     .content("등산하기")
-                    .star(4F)
+                    .star(1F)
                     .address("제주도 어디 34-1")
                     .latitude(123.312D)
                     .longitude(213.2131D)
-                    .tag("명소")
+                    .tag("관광지")
                     .trip(trip2)
                     .build();
 
             Place place7 = Place.builder()
                     .title("해운대 바닷가")
                     .content("수영하기")
-                    .star(4F)
+                    .star(2F)
                     .address("부산광역시 어디 34-1")
                     .latitude(123.312D)
                     .longitude(213.2131D)
-                    .tag("명소")
+                    .tag("술집")
                     .trip(trip2)
                     .build();
 
             Place place8 = Place.builder()
                     .title("북한산")
                     .content("트래킹 하기")
-                    .star(4F)
+                    .star(3.5F)
                     .address("서울 어디 34-1")
                     .latitude(123.312D)
                     .longitude(213.2131D)
-                    .tag("명소")
+                    .tag("숙소")
                     .trip(trip2)
                     .build();
 
             Place place9 = Place.builder()
                     .title("강남")
                     .content("노래방 가기")
-                    .star(4F)
+                    .star(2.5F)
                     .address("서울 강남 어디 34-1")
                     .latitude(123.312D)
                     .longitude(213.2131D)
-                    .tag("명소")
+                    .tag("카페")
                     .trip(trip2)
                     .build();
 
             Place place10 = Place.builder()
                     .title("웅진")
                     .content("공부하기")
-                    .star(4F)
+                    .star(1.5F)
                     .address("서울 어디 34-1")
                     .latitude(123.312D)
                     .longitude(213.2131D)
-                    .tag("명소")
+                    .tag("쇼핑")
                     .trip(trip2)
                     .build();
 
             Place place11 = Place.builder()
                     .title("서해바다")
                     .content("갯벌")
-                    .star(4F)
+                    .star(4.5F)
                     .address("강릉 어디 34-1")
                     .latitude(123.312D)
                     .longitude(213.2131D)
-                    .tag("명소")
+                    .tag("기타")
                     .trip(trip2)
                     .build();
 
             Place place12 = Place.builder()
                     .title("울릉도")
                     .content("지키기")
-                    .star(4F)
+                    .star(5F)
                     .address("울릉도 어디 34-1")
                     .latitude(123.312D)
                     .longitude(213.2131D)
-                    .tag("명소")
+                    .tag("식당")
                     .trip(trip2)
                     .build();
 
@@ -317,15 +317,23 @@ public class InitDb {
 
             Comment comment1 = new Comment(member1, place3, "여기 짱");
             Comment comment2 = new Comment(member3, place3, "여기 짱2");
-            Comment comment3 = new Comment(member1, place5, "여기 짱3");
-            Comment comment4 = new Comment(member4, place5, "여기 짱4");
-            Comment comment5 = new Comment(member5, place5, "여기 짱5");
+            Comment comment3 = new Comment(member1, place4, "여기 짱3");
+            Comment comment4 = new Comment(member4, place4, "여기 짱4");
+            Comment comment5 = new Comment(member1, place4, "여기 짱5");
+            Comment comment6 = new Comment(member2, place5, "여기 짱6");
+            Comment comment7 = new Comment(member3, place5, "여기 짱7");
+            Comment comment8 = new Comment(member4, place5, "여기 짱8");
+            Comment comment9 = new Comment(member5, place5, "여기 짱9");
 
             em.persist(comment1);
             em.persist(comment2);
             em.persist(comment3);
             em.persist(comment4);
             em.persist(comment5);
+            em.persist(comment6);
+            em.persist(comment7);
+            em.persist(comment8);
+            em.persist(comment9);
 
             Heart heart1 = new Heart(member1, trip1);
             Heart heart2 = new Heart(member2, trip1);
