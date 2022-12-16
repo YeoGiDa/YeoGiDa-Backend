@@ -5,6 +5,7 @@ import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceUpdateRequestDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceDetailResponseDto;
+import com.Udemy.YeoGiDa.domain.place.response.PlaceListInTripResponseDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceListResponseDto;
 import com.Udemy.YeoGiDa.domain.place.service.PlaceService;
 
@@ -59,6 +60,16 @@ public class PlaceController {
         result.put("placeList", places);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 String.format("장소 목록 조회 성공 - Tag&" + condition), result), HttpStatus.OK);
+    }
+
+    @GetMapping("/{tripId}/places/tripInfo")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getTripInfoInPlaceList(@PathVariable Long tripId){
+        PlaceListInTripResponseDto result = placeService.getTripDataInPlaceList(tripId);
+
+
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "여행지 정보 조회 성공 ", result), HttpStatus.OK);
     }
 //    @ApiOperation("여행지 별 장소 목록 조회 - 최신순")
 //    @GetMapping("/{tripId}/places/latest")
