@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import static com.Udemy.YeoGiDa.domain.comment.entity.QComment.comment;
 import static com.Udemy.YeoGiDa.domain.place.entity.QPlace.*;
 import static com.Udemy.YeoGiDa.domain.trip.entity.QTrip.*;
 
@@ -35,6 +36,15 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
                 .leftJoin(trip.tripImg, QTripImg.tripImg).fetchJoin()
                 .where(place.trip.id.eq(tripId),whereCondition(tag))
                 .orderBy(conditionParam(condition))
+                .fetch();
+    }
+
+    @Override
+    public List<Place> findAllPlaceByComment(Long memberId) {
+        return queryFactory.selectFrom(place)
+                .leftJoin(place.comments,comment).fetchJoin()
+                .where(comment.member.id.eq(memberId))
+                .orderBy(comment.id.desc())
                 .fetch();
     }
 

@@ -10,6 +10,9 @@ public interface PlaceRepositoryCustom {
 
     List<Place> findAllByTripIdAndTagAndCondition(Long tripId, String tag, String condition);
 
+    List<Place> findAllPlaceByComment(Long memberId);
+
+
 //    List<Place> findAllByTripIdOrderById(Long tripId);
 //
 //    List<Place> findAllByTripIdOrderByStar(Long tripId);
