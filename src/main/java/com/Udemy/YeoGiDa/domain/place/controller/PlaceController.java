@@ -73,17 +73,18 @@ public class PlaceController {
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 정보 조회 성공 ", result), HttpStatus.OK);
     }
-//    @ApiOperation("여행지 별 장소 목록 조회 - 최신순")
-//    @GetMapping("/{tripId}/places/latest")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ResponseEntity getPlaceListOrderById(@PathVariable Long tripId){
-//        List<PlaceListResponseDto> places = placeService.getPlaceListOrderById(tripId);
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("placeList", places);
-//
-//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-//                "장소 목록 조회 성공 - 최신순", result), HttpStatus.OK);
-//    }
+
+
+    @GetMapping("/places/commented")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getPlaceListByComment(@LoginMember Member member){
+        List<PlaceListResponseDto> places = placeService.getPlaceByComment(member.getId());
+        Map<String, Object> result = new HashMap<>();
+        result.put("placeList", places);
+
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "내가 댓글 단 장소 목록 조회 성공", result), HttpStatus.OK);
+    }
 //
 //    @ApiOperation("여행지 별 장소 목록 조회 - 별점순")
 //    @GetMapping("/{tripId}/places/star")

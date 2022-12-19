@@ -57,13 +57,14 @@ public class PlaceService {
                 .collect(Collectors.toList());
     }
 
-//   @Transactional(readOnly = true)
-//    public List<PlaceListResponseDto> getPlaceListOrderById(Long tripId){
-//        return placeRepository.findAllByTripIdOrderById(tripId)
-//                .stream()
-//                .map(PlaceListResponseDto::new)
-//                .collect(Collectors.toList());
-//    }
+   @Transactional(readOnly = true)
+    public List<PlaceListResponseDto> getPlaceByComment(Long memberId){
+        return placeRepository.findAllPlaceByComment(memberId)
+                .stream()
+                .map(PlaceListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
 //
 //    @Transactional(readOnly = true)
 //    public List<PlaceListResponseDto> getPlaceListOrderByStar(Long tripId){
