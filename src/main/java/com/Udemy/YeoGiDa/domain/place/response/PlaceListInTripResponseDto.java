@@ -1,8 +1,7 @@
 package com.Udemy.YeoGiDa.domain.place.response;
 
 
-import com.Udemy.YeoGiDa.domain.place.entity.Place;
-import lombok.Builder;
+import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,15 +18,15 @@ public class PlaceListInTripResponseDto {
     private Integer placeCount;
 
 
-    public PlaceListInTripResponseDto(Place place) {
-        this.title = place.getTrip().getTitle();
-        this.subTitle = place.getTrip().getSubTitle();
-        if(place.getTrip().getTripImg() == null) {
+    public PlaceListInTripResponseDto(Trip trip) {
+        this.title = trip.getTitle();
+        this.subTitle = trip.getSubTitle();
+        if(trip.getTripImg() == null) {
             this.imgUrl = null;
         } else {
-            this.imgUrl = place.getTrip().getTripImg().getImgUrl();
+            this.imgUrl = trip.getTripImg().getImgUrl();
         }
-        this.heartCount = place.getTrip().getHearts().size();
-        this.placeCount = place.getTrip().getPlaces().size();
+        this.heartCount = trip.getHearts().size();
+        this.placeCount = trip.getPlaces().size();
     }
 }

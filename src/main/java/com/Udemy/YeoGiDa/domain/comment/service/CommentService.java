@@ -16,8 +16,10 @@ import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +49,17 @@ public class CommentService {
                 .stream()
                 .map(CommentListResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Page<CommentListResponseDto> getTest(Long placeId,
+                                                @RequestParam int page,
+                                                @RequestParam int size,
+                                                @RequestParam String condition){
+
+        Pageable pageable = PageRequest.of(page, size);
+        return commentRepository.test(placeId,pageable,condition);
+
     }
 
     public CommentListResponseDto save(CommentSaveRequestDto commentSaveRequestDto, Long placeId, Member member) {

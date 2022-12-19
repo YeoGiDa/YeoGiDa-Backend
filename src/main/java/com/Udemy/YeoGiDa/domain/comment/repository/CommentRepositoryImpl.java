@@ -1,16 +1,19 @@
 package com.Udemy.YeoGiDa.domain.comment.repository;
 
 import com.Udemy.YeoGiDa.domain.comment.entity.Comment;
-import com.Udemy.YeoGiDa.domain.comment.entity.QComment;
+import com.Udemy.YeoGiDa.domain.comment.response.CommentListResponseDto;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-
+import org.springframework.data.domain.*;
 import java.util.List;
 
 import static com.Udemy.YeoGiDa.domain.comment.entity.QComment.*;
+import static com.Udemy.YeoGiDa.domain.place.entity.QPlace.place;
 
 @RequiredArgsConstructor
-public class CommentRepositoryImpl implements CommentRepositoryCustom{
+public class CommentRepositoryImpl implements CommentRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
@@ -29,4 +32,48 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom{
                 .orderBy(comment.id.asc())
                 .fetch();
     }
+
+    @Override
+    public Page<CommentListResponseDto> test(Long placeId, Pageable pageable,String condition) {
+
+        List<CommentListResponseDto> ResponseList = queryFactory.select(Projections.fields(
+                        CommentListResponseDto.class,
+                        comment.id.as("commentId"),
+                        comment.member.id.as("memberId"),
+                        comment.member.memberImg.imgUrl,
+                        comment.member.nickname,
+                        comment.createdTime,
+                        comment.content
+                ))
+                .from(comment)
+                .where(comment.place.id.eq(placeId))
+                .orderBy(conditionParam(condition))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        int totalSize = queryFactory.select(Projections.fields(
+                        CommentListResponseDto.class,
+                        comment.id.as("commentId"),
+                        comment.member.id.as("memberId"),
+                        comment.member.memberImg.imgUrl,
+                        comment.member.nickname,
+                        comment.createdTime,
+                        comment.content
+                ))
+                .from(comment)
+                .where(comment.place.id.eq(placeId))
+                .fetch().size();
+
+        return new PageImpl<>(ResponseList, pageable, totalSize);
+    }
+
+    private OrderSpecifier conditionParam(String condition) {
+        if (condition.equals("desc")) {
+            return place.id.desc();
+        } else if (condition.equals("asc")) {
+            return place.id.asc();
+        } throw new IllegalArgumentException();
+    }
 }
+
