@@ -124,11 +124,11 @@ public class PlaceService {
     }
 
     @Transactional(readOnly = true)
-    public PlaceListInTripResponseDto getTripDataInPlaceList(Long placeId) {
-        Place place = Optional.ofNullable(placeRepository.findById(placeId)
-                .orElseThrow(() -> new PlaceNotFoundException())).get();
+    public PlaceListInTripResponseDto getTripDataInPlaceList(Long tripId) {
+        Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
+                .orElseThrow(() -> new TripNotFoundException())).get();
 
-        return new PlaceListInTripResponseDto(place);
+        return new PlaceListInTripResponseDto(trip);
     }
 
 
