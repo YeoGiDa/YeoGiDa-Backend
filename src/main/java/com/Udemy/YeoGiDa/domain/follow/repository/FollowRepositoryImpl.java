@@ -1,6 +1,7 @@
 package com.Udemy.YeoGiDa.domain.follow.repository;
 
 import com.Udemy.YeoGiDa.domain.follow.entity.Follow;
+import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -41,4 +42,7 @@ public class FollowRepositoryImpl implements FollowRepositoryCustom{
                 .where(follow.toMemberId.eq(memberId))
                 .fetch();
     }
+
+
+
 }

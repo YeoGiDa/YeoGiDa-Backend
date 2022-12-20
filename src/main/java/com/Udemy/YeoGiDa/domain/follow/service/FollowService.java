@@ -8,6 +8,7 @@ import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
 import com.Udemy.YeoGiDa.domain.member.repository.MemberRepository;
 import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
+import com.Udemy.YeoGiDa.domain.trip.response.TripListResponseDto;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,20 @@ public class FollowService {
                 .collect(Collectors.toList());
     }
 
+
+    public List<MemberDto> getFollowingListSearch(Long memberId,String nickname) {
+        return  followRepository.SearchFollowingMemberByNickname(memberId,nickname)
+                .stream()
+                .map(MemberDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<MemberDto> getFollowerListSearch(Long memberId,String nickname) {
+        return  followRepository.SearchFollowerMemberByNickname(memberId,nickname)
+                .stream()
+                .map(MemberDto::new)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public boolean addFollow(Long toMemberId, Long fromMemberId){
