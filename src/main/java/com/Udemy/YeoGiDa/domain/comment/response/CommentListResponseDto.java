@@ -17,7 +17,7 @@ public class CommentListResponseDto {
     private Long commentId;
     private Long memberId;
     private String imgUrl;
-    private String nickName;
+    private String nickname;
 
     @JsonFormat(pattern = "yyyy년 MM월 dd일")
     private LocalDateTime createdTime;
@@ -30,7 +30,7 @@ public class CommentListResponseDto {
         this.commentId = comment.getId();
         this.memberId = comment.getMember().getId();
         this.imgUrl = comment.getMember().getMemberImg().getImgUrl();
-        this.nickName = comment.getMember().getNickname();
+        this.nickname = comment.getMember().getNickname();
         this.createdTime = comment.getCreatedTime();
         this.content = comment.getContent();
 

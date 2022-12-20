@@ -34,8 +34,6 @@ public class Comment extends BaseEntity {
 
     private String content;
 
-    private Integer commentCounts;
-
     @Builder
     public Comment(Member member, Place place, String content) {
         this.member = member;

@@ -6,9 +6,12 @@ import java.util.List;
 
 public interface PlaceRepositoryCustom {
 
-    List<Place> findAllByTripIdAndCondition(Long tripId, String condition);
+//    List<Place> findAllByTripIdAndCondition(Long tripId, String condition);
 
     List<Place> findAllByTripIdAndTagAndCondition(Long tripId, String tag, String condition);
+
+    List<Place> findAllPlaceByComment(Long memberId);
+
 
 //    List<Place> findAllByTripIdOrderById(Long tripId);
 //

@@ -41,21 +41,30 @@ public class PlaceService {
     private final S3Service s3Service;
     private final TripRepository tripRepository;
 
+//    @Transactional(readOnly = true)
+//    public List<PlaceListResponseDto> getPlaceList(Long tripId,String condition){
+//        return placeRepository.findAllByTripIdAndCondition(tripId,condition)
+//                .stream()
+//                .map(PlaceListResponseDto::new)
+//                .collect(Collectors.toList());
+//    }
+
     @Transactional(readOnly = true)
-    public List<PlaceListResponseDto> getPlaceList(Long tripId,String condition){
-        return placeRepository.findAllByTripIdAndCondition(tripId,condition)
+    public List<PlaceListResponseDto> getPlaceListByTagDefault(Long tripId,String tag,String condition){
+        return placeRepository.findAllByTripIdAndTagAndCondition(tripId,tag,condition)
                 .stream()
                 .map(PlaceListResponseDto::new)
                 .collect(Collectors.toList());
     }
 
-//   @Transactional(readOnly = true)
-//    public List<PlaceListResponseDto> getPlaceListOrderById(Long tripId){
-//        return placeRepository.findAllByTripIdOrderById(tripId)
-//                .stream()
-//                .map(PlaceListResponseDto::new)
-//                .collect(Collectors.toList());
-//    }
+   @Transactional(readOnly = true)
+    public List<PlaceListResponseDto> getPlaceByComment(Long memberId){
+        return placeRepository.findAllPlaceByComment(memberId)
+                .stream()
+                .map(PlaceListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
 //
 //    @Transactional(readOnly = true)
 //    public List<PlaceListResponseDto> getPlaceListOrderByStar(Long tripId){
@@ -105,13 +114,7 @@ public class PlaceService {
 //                .collect(Collectors.toList());
 //    }
 
-    @Transactional(readOnly = true)
-    public List<PlaceListResponseDto> getPlaceListByTagDefault(Long tripId,String tag,String condition){
-        return placeRepository.findAllByTripIdAndTagAndCondition(tripId,tag,condition)
-                .stream()
-                .map(PlaceListResponseDto::new)
-                .collect(Collectors.toList());
-    }
+
 
     @Transactional(readOnly = true)
     public PlaceDetailResponseDto getPlaceDetail(Long placeId) {
@@ -122,11 +125,11 @@ public class PlaceService {
     }
 
     @Transactional(readOnly = true)
-    public PlaceListInTripResponseDto getTripDataInPlaceList(Long placeId) {
-        Place place = Optional.ofNullable(placeRepository.findById(placeId)
-                .orElseThrow(() -> new PlaceNotFoundException())).get();
+    public PlaceListInTripResponseDto getTripDataInPlaceList(Long tripId) {
+        Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
+                .orElseThrow(() -> new TripNotFoundException())).get();
 
-        return new PlaceListInTripResponseDto(place);
+        return new PlaceListInTripResponseDto(trip);
     }
 
 
