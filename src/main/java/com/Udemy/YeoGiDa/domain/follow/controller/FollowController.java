@@ -1,16 +1,11 @@
 package com.Udemy.YeoGiDa.domain.follow.controller;
 
-import com.Udemy.YeoGiDa.domain.follow.entity.Follow;
 import com.Udemy.YeoGiDa.domain.follow.service.FollowService;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
-import com.Udemy.YeoGiDa.domain.member.entity.QMember;
-import com.Udemy.YeoGiDa.domain.member.repository.MemberRepository;
 import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
-import com.Udemy.YeoGiDa.domain.place.response.PlaceListResponseDto;
 import com.Udemy.YeoGiDa.global.response.DefaultResult;
 import com.Udemy.YeoGiDa.global.response.StatusCode;
 import com.Udemy.YeoGiDa.global.security.annotation.LoginMember;
-import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,22 +21,19 @@ import java.util.Map;
 public class FollowController {
 
     private final FollowService followService;
-    private final MemberRepository memberRepository;
 
-    @GetMapping("/{memberId}/following")
-    public ResponseEntity getFollowingListOrderById(@PathVariable Long memberId){
-        List<MemberDto> followingList = followService.getFollowingList(memberId);
+    @GetMapping("/following")
+    public ResponseEntity getFollowingListOrderById(@LoginMember Member member){
+        List<MemberDto> followingList = followService.getFollowingList(member);
         Map<String, Object> result = new HashMap<>();
         result.put("followingList",followingList);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "팔로잉 목록 조회 성공", followingList), HttpStatus.OK);
     }
 
-
-
-    @GetMapping("/{memberId}/follower")
-    public ResponseEntity getFollowerListOrderById(@PathVariable Long memberId){
-        List<MemberDto> followerList = followService.getFollowerList(memberId);
+    @GetMapping("/follower")
+    public ResponseEntity getFollowerListOrderById(@LoginMember Member member){
+        List<MemberDto> followerList = followService.getFollowerList(member);
         Map<String, Object> result = new HashMap<>();
         result.put("followerList",followerList);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
@@ -86,7 +78,6 @@ public class FollowController {
 
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "팔로우 성공", result), HttpStatus.OK);
-
     }
 
     @DeleteMapping("/{toMemberId}")
@@ -97,7 +88,5 @@ public class FollowController {
 
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "팔로우 취소 성공", result), HttpStatus.OK);
-
     }
-
 }

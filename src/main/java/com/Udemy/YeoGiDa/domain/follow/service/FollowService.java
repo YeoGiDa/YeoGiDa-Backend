@@ -25,16 +25,17 @@ public class FollowService {
 
     private final FollowRepository followRepository;
     private final MemberRepository memberRepository;
+    private final AlarmRepository alarmRepository;
 
-    public List<MemberDto> getFollowingList(Long memberId){
-        return followRepository.findAllByFromMemberId(memberId)
+    public List<MemberDto> getFollowingList(Member member){
+        return followRepository.findAllByFromMemberId(member.getId())
                 .stream()
                 .map(MemberDto::new)
                 .collect(Collectors.toList());
     }
 
-    public List<MemberDto> getFollowerList(Long memberId){
-        return followRepository.findAllByToMemberId(memberId)
+    public List<MemberDto> getFollowerList(Member member){
+        return followRepository.findAllByToMemberId(member.getId())
                 .stream()
                 .map(MemberDto::new)
                 .collect(Collectors.toList());
@@ -60,13 +61,24 @@ public class FollowService {
         Member toMember = memberRepository.findById(toMemberId).orElseThrow(() -> new MemberNotFoundException());
         Member fromMember = memberRepository.findById(fromMemberId).orElseThrow(() -> new MemberNotFoundException());
 
-        Optional<Follow> relation = getFollowRelation(toMemberId, fromMemberId);
+        Optional<Follow> relation = getFollowRelation(toMember.getId(), fromMember.getId());
 
         if(relation.isPresent()) {
             throw new AlreadyFollowException();
         }
 
         followRepository.save(new Follow(toMemberId, fromMemberId));
+
+        List<Long> argIds = new ArrayList<>();
+        argIds.add(fromMemberId);
+        //알람 추가
+        alarmRepository.save(Alarm.builder()
+                .member(toMember)
+                .alarmType(AlarmType.NEW_FOLLOW)
+                .makeAlarmMemberId(fromMemberId)
+                .placeId(null)
+                .targetId(fromMemberId)
+                .build());
 
         return true;
     }
@@ -76,7 +88,7 @@ public class FollowService {
         Member toMember = memberRepository.findById(toMemberId).orElseThrow(() -> new MemberNotFoundException());
         Member fromMember = memberRepository.findById(fromMemberId).orElseThrow(() -> new MemberNotFoundException());
 
-        Optional<Follow> relation = getFollowRelation(toMemberId, fromMemberId);
+        Optional<Follow> relation = getFollowRelation(toMember.getId(), fromMember.getId());
 
         if(relation.isEmpty()) {
             throw new FollowNotFoundException();
@@ -84,6 +96,12 @@ public class FollowService {
 
         followRepository.delete(relation.get());
 
+        //알람 삭제
+        Alarm findAlarm = alarmRepository.findFollowAlarmByMemberAndMakeMemberId(toMember, fromMemberId);
+        if(findAlarm == null) {
+            throw new AlarmNotFoundException();
+        }
+        alarmRepository.delete(findAlarm);
         return true;
     }
 

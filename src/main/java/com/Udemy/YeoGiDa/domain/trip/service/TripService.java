@@ -1,5 +1,9 @@
 package com.Udemy.YeoGiDa.domain.trip.service;
 
+import com.Udemy.YeoGiDa.domain.alarm.entity.Alarm;
+import com.Udemy.YeoGiDa.domain.alarm.entity.AlarmType;
+import com.Udemy.YeoGiDa.domain.alarm.exception.AlarmNotFoundException;
+import com.Udemy.YeoGiDa.domain.alarm.repository.AlarmRepository;
 import com.Udemy.YeoGiDa.domain.common.exception.ImgNotFoundException;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.heart.entity.Heart;
@@ -23,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,6 +42,7 @@ public class TripService {
     private final TripImgRepository tripImgRepository;
     private final S3Service s3Service;
     private final HeartRepository heartRepository;
+    private final AlarmRepository alarmRepository;
 
     public List<TripListResponseDto> getTripList(String condition) {
         return tripRepository.findAllByConditionFetch(condition)
@@ -189,6 +195,17 @@ public class TripService {
                 .member(member)
                 .trip(trip)
                 .build());
+
+        List<Long> argIds = new ArrayList<>();
+        argIds.add(tripId);
+        //알람 추가
+        alarmRepository.save(Alarm.builder()
+                .member(trip.getMember())
+                .alarmType(AlarmType.NEW_HEART)
+                .makeAlarmMemberId(member.getId())
+                .placeId(null)
+                .targetId(trip.getId())
+                .build());
     }
 
     @Transactional
@@ -206,6 +223,13 @@ public class TripService {
                 .orElseThrow(() -> new HeartNotFoundException());
 
         heartRepository.delete(heart);
+
+        //알람 삭제
+        Alarm findAlarm = alarmRepository.findHeartAlarmByMemberAndMakeMemberId(trip.getMember(), member.getId());
+        if(findAlarm == null) {
+            throw new AlarmNotFoundException();
+        }
+        alarmRepository.delete(findAlarm);
     }
 
     public List<TripListResponseDto> getMyTripList(Member member) {

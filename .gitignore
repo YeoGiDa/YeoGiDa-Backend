@@ -225,4 +225,6 @@ gradle-app.setting
 application-SECRET.yml
 META-INF/*
 
+firebase_service_key.json
+
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,gradle,git,java,macos,windows
