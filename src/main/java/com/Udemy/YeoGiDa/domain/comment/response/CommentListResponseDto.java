@@ -27,8 +27,8 @@ public class CommentListResponseDto {
 
     @Builder
     public CommentListResponseDto(Comment comment) {
-        this.commentId=comment.getId();
-        this.memberId=comment.getMember().getId();
+        this.commentId = comment.getId();
+        this.memberId = comment.getMember().getId();
         this.imgUrl = comment.getMember().getMemberImg().getImgUrl();
         this.nickname = comment.getMember().getNickname();
         this.createdTime = comment.getCreatedTime();

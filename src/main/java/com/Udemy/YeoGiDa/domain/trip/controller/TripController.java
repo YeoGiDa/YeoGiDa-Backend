@@ -2,20 +2,16 @@ package com.Udemy.YeoGiDa.domain.trip.controller;
 
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
-import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripImgEssentialException;
 import com.Udemy.YeoGiDa.domain.trip.request.TripSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripListResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripMonthBestListResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.service.TripService;
-import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import com.Udemy.YeoGiDa.global.response.DefaultResult;
 import com.Udemy.YeoGiDa.global.response.StatusCode;
 import com.Udemy.YeoGiDa.global.security.annotation.LoginMember;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +37,7 @@ public class TripController {
     public ResponseEntity getTripList(@RequestParam String condition) {
         List<TripListResponseDto> trips = tripService.getTripList(condition);
         Map<String, Object> result = new HashMap<>();
-        result.put("memberList", trips);
+        result.put("tripList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 String.format("여행지 목록 조회 성공 - " + condition), result), HttpStatus.OK);
     }
@@ -53,7 +49,7 @@ public class TripController {
                                             @RequestParam String condition) {
         List<TripListResponseDto> trips = tripService.getTripListByRegion(region, condition);
         Map<String, Object> result = new HashMap<>();
-        result.put("memberList", trips);
+        result.put("tripList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 String.format("여행지 목록 조회 성공 - " + region + " + " + condition), result), HttpStatus.OK);
     }
