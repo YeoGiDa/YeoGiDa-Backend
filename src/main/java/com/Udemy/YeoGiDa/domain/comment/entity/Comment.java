@@ -3,7 +3,6 @@ package com.Udemy.YeoGiDa.domain.comment.entity;
 import com.Udemy.YeoGiDa.domain.common.entity.BaseEntity;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +11,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -29,11 +27,11 @@ public class Comment extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Member member;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "place_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Place place;
+
     private String content;
 
     private Integer commentCounts;

@@ -1,21 +1,23 @@
 
 package com.Udemy.YeoGiDa.domain.comment.service;
 
+import com.Udemy.YeoGiDa.domain.alarm.entity.Alarm;
+import com.Udemy.YeoGiDa.domain.alarm.entity.AlarmType;
+import com.Udemy.YeoGiDa.domain.alarm.exception.AlarmNotFoundException;
+import com.Udemy.YeoGiDa.domain.alarm.repository.AlarmRepository;
 import com.Udemy.YeoGiDa.domain.comment.entity.Comment;
 import com.Udemy.YeoGiDa.domain.comment.exception.CommentNotFoundException;
 import com.Udemy.YeoGiDa.domain.comment.repository.CommentRepository;
 import com.Udemy.YeoGiDa.domain.comment.request.CommentSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.comment.response.CommentListResponseDto;
-
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
 import com.Udemy.YeoGiDa.domain.place.exception.PlaceNotFoundException;
 import com.Udemy.YeoGiDa.domain.place.repository.PlaceRepository;
-import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
-import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,10 +28,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class CommentService {
 
     private final PlaceRepository placeRepository;
     private final CommentRepository commentRepository;
+    private final AlarmRepository alarmRepository;
 
     @Transactional(readOnly = true)
     public List<CommentListResponseDto> getCommentListByDesc(Long placeId){
@@ -57,8 +61,6 @@ public class CommentService {
             throw new MemberNotFoundException();
         }
 
-
-
         Comment comment = Comment.builder() 
                 .content(commentSaveRequestDto.getContent())
                 .member(member)
@@ -66,6 +68,15 @@ public class CommentService {
                 .build();
 
         Comment saveComment = commentRepository.save(comment);
+
+        //알람 추가
+        alarmRepository.save(Alarm.builder()
+                .member(place.getTrip().getMember())
+                .alarmType(AlarmType.NEW_COMMENT)
+                .makeAlarmMemberId(member.getId())
+                .placeId(placeId)
+                .targetId(comment.getId())
+                .build());
 
         return new CommentListResponseDto(saveComment);
     }
@@ -89,9 +100,14 @@ public class CommentService {
             throw new PlaceNotFoundException();
         }
 
-
-
         commentRepository.delete(comment);
 
+        //알림 삭제
+        Alarm findAlarm = alarmRepository.findCommentAlarmByMemberAndMakeMemberIdAndCommentId(
+                place.getTrip().getMember(), member.getId(), place.getId(), commentId);
+        if(findAlarm == null) {
+            throw new AlarmNotFoundException();
+        }
+        alarmRepository.delete(findAlarm);
     }
 }
