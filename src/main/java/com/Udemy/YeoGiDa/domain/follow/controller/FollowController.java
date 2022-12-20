@@ -28,7 +28,7 @@ public class FollowController {
         Map<String, Object> result = new HashMap<>();
         result.put("followingList",followingList);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "팔로잉 목록 조회 성공", result), HttpStatus.OK);
+                "팔로잉 목록 조회 성공", followingList), HttpStatus.OK);
     }
 
     @GetMapping("/follower")
@@ -40,6 +40,35 @@ public class FollowController {
                 "팔로워 목록 조회 성공", result), HttpStatus.OK);
     }
 
+    @GetMapping("/search/following")
+    public ResponseEntity getFollowingByNickname(@LoginMember Member member,
+                                                 @RequestParam("nickname") String nickname){
+        List<MemberDto> followerList = followService.getFollowingListSearch(member.getId(),nickname);
+        Map<String, Object> result = new HashMap<>();
+        result.put("followerList",followerList);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "팔로워 목록 조회 성공", followerList), HttpStatus.OK);
+    }
+
+    @GetMapping("/search/follower")
+    public ResponseEntity getFollowerByNickname(@LoginMember Member member,
+                                                 @RequestParam("nickname") String nickname){
+        List<MemberDto> followerList = followService.getFollowerListSearch(member.getId(),nickname);
+        Map<String, Object> result = new HashMap<>();
+        result.put("followerList",followerList);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "팔로워 목록 조회 성공", followerList), HttpStatus.OK);
+    }
+
+
+//    @GetMapping("/search/follower")
+//    public ResponseEntity getFollowerListByNickname(@LoginMember Member member){
+//        List<MemberDto> followerList = followService.getFollowerList(member.getId());
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("followerList",followerList);
+//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+//                "팔로워 목록 조회 성공", result), HttpStatus.OK);
+//    }
 
     @PostMapping("/{toMemberId}")
     public ResponseEntity addFollowing(@PathVariable Long toMemberId,
