@@ -1,5 +1,9 @@
 package com.Udemy.YeoGiDa.domain.follow.service;
 
+import com.Udemy.YeoGiDa.domain.alarm.entity.Alarm;
+import com.Udemy.YeoGiDa.domain.alarm.entity.AlarmType;
+import com.Udemy.YeoGiDa.domain.alarm.exception.AlarmNotFoundException;
+import com.Udemy.YeoGiDa.domain.alarm.repository.AlarmRepository;
 import com.Udemy.YeoGiDa.domain.follow.entity.Follow;
 import com.Udemy.YeoGiDa.domain.follow.exception.AlreadyFollowException;
 import com.Udemy.YeoGiDa.domain.follow.exception.FollowNotFoundException;
@@ -8,12 +12,11 @@ import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
 import com.Udemy.YeoGiDa.domain.member.repository.MemberRepository;
 import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
-import com.Udemy.YeoGiDa.domain.trip.response.TripListResponseDto;
-import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -66,6 +69,7 @@ public class FollowService {
         if(relation.isPresent()) {
             throw new AlreadyFollowException();
         }
+
 
         followRepository.save(new Follow(toMemberId, fromMemberId));
 
