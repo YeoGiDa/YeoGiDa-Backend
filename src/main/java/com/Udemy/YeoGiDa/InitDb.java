@@ -269,7 +269,7 @@ public class InitDb {
             List<PlaceImg> placeImgs2 = new ArrayList<>();
             placeImgs2.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place3.jpeg", place2));
             placeImgs2.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place4.jpeg", place2));
-            place2.setPlaceImgs(placeImgs1);
+            place2.setPlaceImgs(placeImgs2);
             List<PlaceImg> placeImgs3 = new ArrayList<>();
             placeImgs3.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place5.jpeg", place3));
             place3.setPlaceImgs(placeImgs3);

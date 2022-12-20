@@ -47,7 +47,7 @@ public class FollowController {
         Map<String, Object> result = new HashMap<>();
         result.put("followerList",followerList);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "팔로워 목록 조회 성공", followerList), HttpStatus.OK);
+                "팔로잉 검색 목록 조회 성공", followerList), HttpStatus.OK);
     }
 
     @GetMapping("/search/follower")
@@ -57,18 +57,9 @@ public class FollowController {
         Map<String, Object> result = new HashMap<>();
         result.put("followerList",followerList);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "팔로워 목록 조회 성공", followerList), HttpStatus.OK);
+                "팔로워 검색 목록 조회 성공", followerList), HttpStatus.OK);
     }
 
-
-//    @GetMapping("/search/follower")
-//    public ResponseEntity getFollowerListByNickname(@LoginMember Member member){
-//        List<MemberDto> followerList = followService.getFollowerList(member.getId());
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("followerList",followerList);
-//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-//                "팔로워 목록 조회 성공", result), HttpStatus.OK);
-//    }
 
     @PostMapping("/{toMemberId}")
     public ResponseEntity addFollowing(@PathVariable Long toMemberId,
