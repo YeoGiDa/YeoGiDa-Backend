@@ -27,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,27 +56,6 @@ public class TripService {
                 .map(TripListResponseDto::new)
                 .collect(Collectors.toList());
     }
-
-//    public List<TripListResponseDto> getTripListOrderByHeartDesc() {
-//        return tripRepository.findAllOrderByHeartCountFetch()
-//                .stream()
-//                .map(TripListResponseDto::new)
-//                .collect(Collectors.toList());
-//    }
-//
-//    public List<TripListResponseDto> getTripListFindByRegionOrderByIdDesc(String region) {
-//        return tripRepository.findAllByRegionAndConditionFetch(region)
-//                .stream()
-//                .map(TripListResponseDto::new)
-//                .collect(Collectors.toList());
-//    }
-//
-//    public List<TripListResponseDto> getTripListFindByRegionOrderByHeartDesc(String region) {
-//        return tripRepository.findAllByRegionOrderByHeartCountFetch(region)
-//                .stream()
-//                .map(TripListResponseDto::new)
-//                .collect(Collectors.toList());
-//    }
 
     public List<TripListResponseDto> getTripListSearch(String keyword) {
         return tripRepository.findAllSearch(keyword)
@@ -176,6 +154,13 @@ public class TripService {
                 .collect(Collectors.toList());
     }
 
+    public List<TripMonthBestListResponseDto> getMonthBestTripMore() {
+        return tripRepository.findAllOrderByChangeHeartCountMoreFetch()
+                .stream()
+                .map(TripMonthBestListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void heart(Long tripId, Member member) {
         if(member == null) {
@@ -186,6 +171,7 @@ public class TripService {
                 .orElseThrow(() -> new TripNotFoundException())).get();
 
         trip.plusChangeHeartCount();
+        trip.getMember().plusHeartCount();
 
         heartRepository.findByMemberAndTrip(member, trip).ifPresent(it -> {
             throw new AlreadyHeartException();
@@ -196,8 +182,6 @@ public class TripService {
                 .trip(trip)
                 .build());
 
-        List<Long> argIds = new ArrayList<>();
-        argIds.add(tripId);
         //알람 추가
         alarmRepository.save(Alarm.builder()
                 .member(trip.getMember())
@@ -218,6 +202,7 @@ public class TripService {
                 .orElseThrow(() -> new TripNotFoundException())).get();
 
         trip.minusChangeHeartCount();
+        trip.getMember().minusHeartCount();
 
         Heart heart = heartRepository.findByMemberAndTrip(member, trip)
                 .orElseThrow(() -> new HeartNotFoundException());

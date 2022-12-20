@@ -54,29 +54,6 @@ public class TripController {
                 String.format("여행지 목록 조회 성공 - " + region + " + " + condition), result), HttpStatus.OK);
     }
 
-//    @ApiOperation("여행지 전체 조회 - 좋아요순")
-//    @GetMapping("/heart")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ResponseEntity getTripListOrderByHeartDesc() {
-//        List<TripListResponseDto> trips = tripService.getTripListOrderByHeartDesc();
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("memberList", trips);
-//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-//                "여행지 목록 조회 성공 - 좋아요순", result), HttpStatus.OK);
-//    }
-
-
-//    @ApiOperation("여행지 전체 조회 - 지역별로 + 하트순")
-//    @GetMapping("/{region}/heart")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ResponseEntity getTripListFindByRegionOrderByHeartDesc(@PathVariable String region) {
-//        List<TripListResponseDto> trips = tripService.getTripListFindByRegionOrderByHeartDesc(region);
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("memberList", trips);
-//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-//                "여행지 목록 조회 성공 - 지역별로 + 하트순 ", result), HttpStatus.OK);
-//    }
-
     @ApiOperation("여행지 상세 조회")
     @GetMapping("/{tripId}")
     @ResponseStatus(HttpStatus.OK)
@@ -131,7 +108,7 @@ public class TripController {
                 "여행지 삭제 성공"), HttpStatus.OK);
     }
 
-    @ApiOperation("월간 베스트 여행지")
+    @ApiOperation("월간 베스트 여행지 - 기본 10개")
     @GetMapping("/monthly-best/basic")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getMonthBestTripBasic() {
@@ -139,7 +116,18 @@ public class TripController {
         Map<String, Object> result = new HashMap<>();
         result.put("tripList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "목록 조회 성공 - 월간 베스트 여행지", result), HttpStatus.OK);
+                "목록 조회 성공 - 월간 베스트 여행지(기본 10개)", result), HttpStatus.OK);
+    }
+
+    @ApiOperation("월간 베스트 여행지 - 전부")
+    @GetMapping("/monthly-best/more")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getMonthBestTripMore() {
+        List<TripMonthBestListResponseDto> trips = tripService.getMonthBestTripMore();
+        Map<String, Object> result = new HashMap<>();
+        result.put("tripList", trips);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "목록 조회 성공 - 월간 베스트 여행지(전부)", result), HttpStatus.OK);
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_USER"})

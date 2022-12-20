@@ -1,13 +1,10 @@
 package com.Udemy.YeoGiDa.domain.member.response;
 
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
-import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @NoArgsConstructor
 @Getter @Setter
@@ -27,6 +24,6 @@ public class BestTravlerListResponse {
         } else {
             this.imgUrl = member.getMemberImg().getImgUrl();
         }
-        this.heartCount = member.getTotalHeartCount();
+        this.heartCount = member.getHeartCount();
     }
 }

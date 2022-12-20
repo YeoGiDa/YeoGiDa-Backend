@@ -39,7 +39,7 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Trip> trips = new ArrayList<>();
 
-    private int heartCount = 0;
+    private Integer heartCount = 0;
 
     @Builder
     public Member(String email, String password, String nickname, String role) {
@@ -61,11 +61,19 @@ public class Member extends BaseEntity {
         this.memberImg = memberImg;
     }
 
-    public int getTotalHeartCount() {
-        int totalHeartCount = 0;
-        for (Trip trip : trips) {
-            totalHeartCount += trip.getHearts().size();
-        }
-        return totalHeartCount;
+    public void plusHeartCount() {
+        this.heartCount++;
     }
+
+    public void minusHeartCount() {
+        this.heartCount--;
+    }
+
+//    public int getTotalHeartCount() {
+//        int totalHeartCount = 0;
+//        for (Trip trip : trips) {
+//            totalHeartCount += trip.getHearts().size();
+//        }
+//        return totalHeartCount;
+//    }
 }
