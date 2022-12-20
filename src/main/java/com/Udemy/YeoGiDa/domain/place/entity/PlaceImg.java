@@ -1,6 +1,5 @@
 package com.Udemy.YeoGiDa.domain.place.entity;
 
-import com.Udemy.YeoGiDa.domain.common.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor
-public class PlaceImg extends BaseEntity {
+public class PlaceImg {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "place_img_id")
