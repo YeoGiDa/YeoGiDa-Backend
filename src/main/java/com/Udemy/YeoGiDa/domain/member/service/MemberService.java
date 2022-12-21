@@ -131,11 +131,7 @@ public class MemberService {
             throw new MemberNotFoundException();
         }
 
-        log.info("membeIdr={}", member.getId());
-        log.info("memberEmail={}", member.getEmail());
         MemberImg findMemberImg = memberImgRepository.findMemberImgByMember(member);
-        log.info("memberImgMember={}", findMemberImg.getMember());
-        log.info("memberImgImgUrl={}", findMemberImg.getImgUrl());
         String fileName = findMemberImg.getImgUrl().split("/")[3];
         //이미지가 기본 이미지가 아닐때만
         if(!fileName.equals("default_member.png")) {
@@ -165,8 +161,15 @@ public class MemberService {
         return new MemberDto(member);
     }
 
+    //베스트 여행자 10명
     public List<BestTravlerListResponse> getBestTravelerBasic() {
         return memberRepository.findAllByMemberOrderByHeartCountBasicFetch()
+                .stream().map(BestTravlerListResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<BestTravlerListResponse> getBestTravelerMore() {
+        return memberRepository.findAllByMemberOrderByHeartCountMoreFetch()
                 .stream().map(BestTravlerListResponse::new)
                 .collect(Collectors.toList());
     }

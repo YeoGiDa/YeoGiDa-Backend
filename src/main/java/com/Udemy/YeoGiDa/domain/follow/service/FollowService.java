@@ -73,8 +73,6 @@ public class FollowService {
 
         followRepository.save(new Follow(toMemberId, fromMemberId));
 
-        List<Long> argIds = new ArrayList<>();
-        argIds.add(fromMemberId);
         //알람 추가
         alarmRepository.save(Alarm.builder()
                 .member(toMember)

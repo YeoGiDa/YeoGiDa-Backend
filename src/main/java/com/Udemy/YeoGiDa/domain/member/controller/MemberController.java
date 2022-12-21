@@ -74,12 +74,23 @@ public class MemberController {
     @ApiOperation("베스트 여행자")
     @GetMapping("/best-traveler/basic")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity getBestTraveler() {
+    public ResponseEntity getBestTravelerBasic() {
         List<BestTravlerListResponse> members = memberService.getBestTravelerBasic();
         Map<String, Object> result = new HashMap<>();
         result.put("memberList", members);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "목록 조회 성공 - 베스트 여행자", result), HttpStatus.OK);
+                "목록 조회 성공 - 베스트 여행자(기본 10명)", result), HttpStatus.OK);
+    }
+
+    @ApiOperation("베스트 여행자")
+    @GetMapping("/best-traveler/more")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getBestTravelerBasicMore() {
+        List<BestTravlerListResponse> members = memberService.getBestTravelerMore();
+        Map<String, Object> result = new HashMap<>();
+        result.put("memberList", members);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "목록 조회 성공 - 베스트 여행자(전체)", result), HttpStatus.OK);
     }
 
     @ApiOperation("회원상세 (ADMIN용)")

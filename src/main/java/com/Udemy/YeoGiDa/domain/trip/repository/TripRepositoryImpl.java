@@ -1,11 +1,7 @@
 package com.Udemy.YeoGiDa.domain.trip.repository;
 
-import com.Udemy.YeoGiDa.domain.heart.entity.QHeart;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
-import com.Udemy.YeoGiDa.domain.member.entity.QMember;
 import com.Udemy.YeoGiDa.domain.member.entity.QMemberImg;
-import com.Udemy.YeoGiDa.domain.place.entity.QPlace;
-import com.Udemy.YeoGiDa.domain.place.entity.QPlaceImg;
 import com.Udemy.YeoGiDa.domain.trip.entity.QTripImg;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.querydsl.core.types.OrderSpecifier;
@@ -16,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import static com.Udemy.YeoGiDa.domain.member.entity.QMember.member;
-import static com.Udemy.YeoGiDa.domain.place.entity.QPlace.place;
 import static com.Udemy.YeoGiDa.domain.trip.entity.QTrip.trip;
 
 @RequiredArgsConstructor
@@ -61,6 +56,7 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
                 .leftJoin(trip.tripImg, QTripImg.tripImg).fetchJoin()
                 .leftJoin(trip.member, member).fetchJoin()
                 .leftJoin(member.memberImg, QMemberImg.memberImg).fetchJoin()
+                .where(trip.changeHeartCount.gt(0))
                 .orderBy(trip.changeHeartCount.desc(), trip.id.desc())
                 .limit(10)
                 .fetch();
@@ -72,6 +68,7 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
                 .leftJoin(trip.tripImg, QTripImg.tripImg).fetchJoin()
                 .leftJoin(trip.member, member).fetchJoin()
                 .leftJoin(member.memberImg, QMemberImg.memberImg).fetchJoin()
+                .where(trip.changeHeartCount.gt(0))
                 .orderBy(trip.changeHeartCount.desc(), trip.id.desc())
                 .fetch();
     }

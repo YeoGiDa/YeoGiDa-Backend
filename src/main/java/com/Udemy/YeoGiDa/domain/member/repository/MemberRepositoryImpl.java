@@ -1,16 +1,13 @@
 package com.Udemy.YeoGiDa.domain.member.repository;
 
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
-import com.Udemy.YeoGiDa.domain.member.entity.QMember;
 import com.Udemy.YeoGiDa.domain.member.entity.QMemberImg;
-import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
-import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.Udemy.YeoGiDa.domain.member.entity.QMember.*;
+import static com.Udemy.YeoGiDa.domain.member.entity.QMember.member;
 
 @RequiredArgsConstructor
 public class MemberRepositoryImpl implements MemberRepositoryCustom{
@@ -30,7 +27,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
         return queryFactory.selectFrom(member)
                 .leftJoin(member.memberImg, QMemberImg.memberImg).fetchJoin()
                 .orderBy(member.heartCount.desc(), member.id.asc())
-                .where(member.heartCount.goe(0))
+                .where(member.heartCount.gt(0))
                 .limit(10)
                 .fetch();
     }
@@ -40,7 +37,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
         return queryFactory.selectFrom(member)
                 .leftJoin(member.memberImg, QMemberImg.memberImg).fetchJoin()
                 .orderBy(member.heartCount.desc(), member.id.asc())
-                .where(member.heartCount.goe(0))
+                .where(member.heartCount.gt(0))
                 .fetch();
     }
 }
