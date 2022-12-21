@@ -244,6 +244,25 @@ public class TripService {
         return tripListResponseDtos;
     }
 
+    //좋아요한 여행지 검색
+    public List<TripListResponseDto> getMyHeartTripSearchList(Member member,String keyword) {
+        List<Heart> findHeart = heartRepository.findAllByMemberAndHeartFetch(member);
+        if(findHeart.isEmpty()) {
+            throw new HeartTripNotFoundException();
+        }
+        List<TripListResponseDto> tripListResponseDtos = new ArrayList<>();
+        for (Heart heart : findHeart) {
+            Long tripId = heart.getTrip().getId();
+            Trip trip = tripRepository.findById(tripId).orElseThrow(TripNotFoundException::new);
+            if(trip.getTitle().contains(keyword) || trip.getSubTitle().contains(keyword))
+                tripListResponseDtos.add(new TripListResponseDto(trip));
+        }
+        Collections.reverse(tripListResponseDtos);
+        return tripListResponseDtos;
+    }
+
+
+
     //@Scheduler에서 매달 1일마다 하트 변화량을 0으로 수정
     public void initTripChangeHeartCount() {
         List<Trip> tripList = tripRepository.findAll();
