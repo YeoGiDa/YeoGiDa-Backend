@@ -11,18 +11,23 @@ import lombok.Setter;
 @Setter
 public class PlaceListInMapResponseDto {
 
+    private Long placeId;
     private String title;
     private String address;
     private Float star;
     private Integer commentCount;
     private String imgUrl;
     private String tag;
+    private Double latitude;
+    private Double longitude;
 
 
     public PlaceListInMapResponseDto(Place place) {
-
+        this.placeId=place.getId();
         this.title = place.getTitle();
         this.address=place.getAddress();
+        this.latitude = place.getLatitude();
+        this.longitude = place.getLongitude();
         this.star = place.getStar();
         this.commentCount = place.getComments().size();
         if(place.getPlaceImgs().size() > 0) {

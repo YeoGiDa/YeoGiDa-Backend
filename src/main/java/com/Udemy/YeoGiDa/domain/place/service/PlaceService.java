@@ -1,7 +1,6 @@
 package com.Udemy.YeoGiDa.domain.place.service;
 
 
-
 import com.Udemy.YeoGiDa.domain.common.exception.ImgNotFoundException;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
@@ -41,6 +40,7 @@ public class PlaceService {
     private final PlaceImgRepository placeImgRepository;
     private final S3Service s3Service;
     private final TripRepository tripRepository;
+
 
 //    @Transactional(readOnly = true)
 //    public List<PlaceListResponseDto> getPlaceList(Long tripId,String condition){
@@ -160,6 +160,8 @@ public class PlaceService {
         Place place = Place.builder()
                 .title(placeSaveRequestDto.getTitle())
                 .address(placeSaveRequestDto.getAddress())
+                .longitude(placeSaveRequestDto.getLongitude())
+                .latitude(placeSaveRequestDto.getLatitude())
                 .content(placeSaveRequestDto.getContent())
                 .star(placeSaveRequestDto.getStar())
                 .trip(trip)
