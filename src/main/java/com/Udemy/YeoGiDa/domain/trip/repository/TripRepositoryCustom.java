@@ -23,11 +23,4 @@ public interface TripRepositoryCustom {
 
     //내가 작성한 여행지 목록
     List<Trip> findAllByMemberFetch(Member m);
-
-    //친구의 최근 여행지 목록 기본 10개
-//    List<Trip> findAllByFollowingOrderByIdBasicFetch(Member m);
-
-    //친구의 최근 여행지 목록 전부
-//    List<Trip> findAllByFollowingOrderByIdMoreFetch(Member m);
-
 }
