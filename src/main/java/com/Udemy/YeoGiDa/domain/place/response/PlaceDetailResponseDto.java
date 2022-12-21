@@ -18,6 +18,7 @@ import java.util.List;
 @Setter
 public class PlaceDetailResponseDto {
 
+    private Long tripId;
     private Long placeId;
     private Long memberId;
     private String title;
@@ -31,6 +32,7 @@ public class PlaceDetailResponseDto {
 
     @Builder
     public PlaceDetailResponseDto(Place place) {
+        this.tripId=place.getTrip().getId();
         this.placeId=place.getId();
         this.memberId= place.getTrip().getMember().getId();
         this.title = place.getTitle();

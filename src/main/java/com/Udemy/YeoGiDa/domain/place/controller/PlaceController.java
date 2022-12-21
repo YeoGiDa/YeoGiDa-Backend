@@ -91,8 +91,11 @@ public class PlaceController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getPlaceInMap(@PathVariable Long tripId) {
         List<PlaceListInMapResponseDto> places = placeService.getPlaceInMap(tripId);
+        List<Double> meanLatLng = new ArrayList<>();
 
         Map<String, Object> result = new LinkedHashMap<>();
+        result.put("meanLat",37.49312949999999);
+        result.put("meanLng",127.059154);
         result.put("placeList", places);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 String.format("지도 위 장소 목록 조회 성공" ), result), HttpStatus.OK);
