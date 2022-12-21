@@ -83,4 +83,9 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
                 .orderBy(trip.id.desc())
                 .fetch();
     }
+
+    @Override
+    public List<Trip> findAllByMemberId(Long memberId) {
+        return null;
+    }
 }

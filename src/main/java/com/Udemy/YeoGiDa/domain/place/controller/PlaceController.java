@@ -9,21 +9,15 @@ import com.Udemy.YeoGiDa.domain.place.response.PlaceListInMapResponseDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceListInTripResponseDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceListResponseDto;
 import com.Udemy.YeoGiDa.domain.place.service.PlaceService;
-
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.Udemy.YeoGiDa.domain.trip.service.TripService;
 import com.Udemy.YeoGiDa.global.response.DefaultResult;
 import com.Udemy.YeoGiDa.global.response.StatusCode;
 import com.Udemy.YeoGiDa.global.security.annotation.LoginMember;
-import io.swagger.annotations.*;
-
-import io.swagger.annotations.ApiOperation;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,19 +33,13 @@ public class PlaceController {
     private final TripService tripService;
     private final S3Service s3Service;
 
-//    @GetMapping("/{tripId}/places")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ResponseEntity getPlaceList(@PathVariable Long tripId,
-//                                       @RequestParam("condition") String condition){
-//        List<PlaceListResponseDto> places = placeService.getPlaceList(tripId,condition);
-//        Optional<Trip> trip = tripService.findById(tripId);
-//        Map<String, Object> result = new LinkedHashMap<>();
-//        result.put("memberId", trip.get().getMember().getId());
-//        result.put("placeList", places);
-//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-//                "장소 목록 조회 성공 "+condition, result), HttpStatus.OK);
-//    }
-
+    /**
+     *
+     * @param tripId
+     * @param tag
+     * @param condition
+     * @return 장소 목록 조회
+     */
 
     @GetMapping("/{tripId}/places/{tag}")
     @ResponseStatus(HttpStatus.OK)
@@ -67,6 +55,10 @@ public class PlaceController {
                 String.format("장소 목록 조회 성공 " + condition), result), HttpStatus.OK);
     }
 
+    /**
+     * @param tripId
+     * @return 장소 목록에서 필요한 여행지 정보
+     */
     @GetMapping("/{tripId}/places/tripInfo")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getTripInfoInPlaceList(@PathVariable Long tripId){
@@ -75,7 +67,11 @@ public class PlaceController {
                 "여행지 정보 조회 성공 ", result), HttpStatus.OK);
     }
 
-
+    /**
+     * 
+     * @param member
+     * @return 내가 댓글 단 장소 목록 조회
+     */
     @GetMapping("/places/commented")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getPlaceListByComment(@LoginMember Member member){
@@ -87,94 +83,27 @@ public class PlaceController {
                 "내가 댓글 단 장소 목록 조회 성공", result), HttpStatus.OK);
     }
 
+    /**
+     * @param tripId
+     * @return 장소 지도로 보기
+     */
     @GetMapping("/{tripId}/places/inMap")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getPlaceInMap(@PathVariable Long tripId) {
         List<PlaceListInMapResponseDto> places = placeService.getPlaceInMap(tripId);
-        List<Double> meanLatLng = new ArrayList<>();
 
         Map<String, Object> result = new LinkedHashMap<>();
-        result.put("meanLat",37.49312949999999);
-        result.put("meanLng",127.059154);
+        result.put("meanLat",placeService.getCentralGeoCoordinate(places).get(0));
+        result.put("meanLng",placeService.getCentralGeoCoordinate(places).get(1));
         result.put("placeList", places);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 String.format("지도 위 장소 목록 조회 성공" ), result), HttpStatus.OK);
     }
 
-//    @ApiOperation("여행지 별 장소 목록 조회 - 별점순")
-//    @GetMapping("/{tripId}/places/star")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ResponseEntity getPlaceListOrderByStar(@PathVariable Long tripId){
-//        List<PlaceListResponseDto> places = placeService.getPlaceListOrderByStar(tripId);
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("placeList", places);
-//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-//                "장소 목록 조회 성공 - 별점순", result), HttpStatus.OK);
-//    }
-//
-//    @GetMapping("/{tripId}/places/comments")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ResponseEntity getPlaceListOrderByComments(@PathVariable Long tripId){
-//        List<PlaceListResponseDto> places = placeService.getPlaceListByComments(tripId);
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("placeList", places);
-//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-//                "장소 목록 조회 성공 - 댓글순", result), HttpStatus.OK);
-//    }
-
-//    @ApiOperation("여행지 별 장소 목록 조회 - 키워드")
-//    @GetMapping("/{tripId}/places/{tag}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ResponseEntity getPlaceListByTag(@PathVariable Long tripId,
-//                                            @PathVariable String tag){
-//        List<PlaceListResponseDto> places = placeService.getPlaceListByTagAsc(tripId,tag);
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("placeList", places);
-//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-//                "장소 목록 조회 성공 - 키워드", result), HttpStatus.OK);
-//    }
-//
-//    @ApiOperation("여행지 별 장소 목록 조회 - 키워드&최신순")
-//    @GetMapping("/{tripId}/places/{tag}/latest")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ResponseEntity getPlaceListByTagOrderById(@PathVariable Long tripId,
-//                                                       @PathVariable String tag){
-//        List<PlaceListResponseDto> places = placeService.getPlaceListByTagDesc(tripId,tag);
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("placeList", places);
-//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-//                "장소 목록 조회 성공 - 키워드&최신순", result), HttpStatus.OK);
-//    }
-//
-//    @ApiOperation("여행지 별 장소 목록 조회 - 키워드&별점순")
-//    @GetMapping("/{tripId}/places/{tag}/star")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ResponseEntity getPlaceListByTagOrderByStar(@PathVariable Long tripId,
-//                                                       @PathVariable String tag){
-//        List<PlaceListResponseDto> places = placeService.getPlaceListByTagStar(tripId,tag);
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("placeList", places);
-//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-//                "장소 목록 조회 성공 - 키워드&별점", result), HttpStatus.OK);
-//    }
-//
-//    @ApiOperation("여행지 별 장소 목록 조회 - 키워드&댓글순")
-//    @GetMapping("/{tripId}/places/{tag}/comments")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ResponseEntity getPlaceListByTagOrderByComment(@PathVariable Long tripId,
-//                                                          @PathVariable String tag){
-//        List<PlaceListResponseDto> places = placeService.getPlaceListByTagComment(tripId,tag);
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("placeList", places);
-//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-//                "장소 목록 조회 성공 - 키워드&댓글순", result), HttpStatus.OK);
-//    }
-
-    @ApiOperation("장소 상세 조회")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "상세 조회 완료"),
-            @ApiResponse(code = 404, message = "존재하지않는 장소")
-    })
+    /**
+     * @param placeId
+     * @return 장소 상세 조회
+     */
     @GetMapping("/places/{placeId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getPlaceDetail(@PathVariable Long placeId) {
@@ -183,7 +112,14 @@ public class PlaceController {
                 "장소 상세 조회 성공", result), HttpStatus.OK);
     }
 
-    @ApiOperation("장소 작성")
+
+    /**
+     * @param placeSaveRequestDto
+     * @param tripId
+     * @param multipartFiles
+     * @param member
+     * @return 장소 저장
+     */
     @PostMapping("/{tripId}/places/save")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity save(PlaceSaveRequestDto placeSaveRequestDto,
@@ -205,7 +141,13 @@ public class PlaceController {
     }
 
 
-    @ApiOperation("장소 수정")
+    /**
+     * @param placeUpdateRequestDto
+     * @param placeId
+     * @param multipartFiles
+     * @param member
+     * @return 장소 수정
+     */
     @PutMapping("/places/{placeId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity update(@ModelAttribute PlaceUpdateRequestDto placeUpdateRequestDto,
@@ -224,7 +166,12 @@ public class PlaceController {
                 "여행지 수정 성공"), HttpStatus.OK);
     }
 
-    @ApiOperation("장소 삭제")
+    /**
+     *
+     * @param placeId
+     * @param member
+     * @return 장소 삭제
+     */
     @DeleteMapping("/places/{placeId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity delete(@PathVariable Long placeId,

@@ -66,6 +66,7 @@ public class PlaceService {
                 .collect(Collectors.toList());
     }
 
+    //지도 위의 장소
     @Transactional(readOnly = true)
     public List<PlaceListInMapResponseDto> getPlaceInMap(Long tripId){
 
@@ -73,6 +74,59 @@ public class PlaceService {
                 .stream()
                 .map(PlaceListInMapResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    //위경도 중심 구하는 로직
+    public List<Double> getCentralGeoCoordinate(List<PlaceListInMapResponseDto> placeList)
+    {
+        List<Double> result = new ArrayList<>();
+        // 사이즈 하나면 그 자체가 중심값이니까
+        if (placeList.size() == 1)
+        {
+            PlaceListInMapResponseDto place = placeList.get(0);
+//            log.info("lati: {} longi: {}", place.getLatitude(), place.getLongitude());
+            result.add(place.getLatitude());
+            result.add(place.getLongitude());
+            return result;
+        } else if(placeList.size() == 0){
+            result.add(null);
+            result.add(null);
+
+            return  result;
+        }
+
+        double x = 0;
+        double y = 0;
+        double z = 0;
+
+        for (PlaceListInMapResponseDto place: placeList) {
+//            log.info("name: {} latitude: {} longitude: {}", place.getTitle(), place.getLatitude(), place.getLongitude());
+            double latitude = place.getLatitude() * Math.PI / 180;
+            double longitude = place.getLongitude() * Math.PI / 180;
+
+            x += Math.cos(latitude) * Math.cos(longitude);
+            y += Math.cos(latitude) * Math.sin(longitude);
+            z += Math.sin(latitude);
+        }
+
+        int total = placeList.size();
+
+        x = x / total;
+        y = y / total;
+        z = z / total;
+
+        double centralLongitude = Math.atan2(y, x);
+        double centralSquareRoot = Math.sqrt(x * x + y * y);
+        double centralLatitude = Math.atan2(z, centralSquareRoot);
+
+        log.info("centerLatitude: {} centerLongitute: {}", centralLatitude, centralLongitude);
+        double finalLat = centralLatitude * 180 / Math.PI;
+        double finalLog = centralLongitude * 180 / Math.PI;
+
+        result.add(finalLat);
+        result.add(finalLog);
+
+        return result;
     }
 
 //
@@ -145,18 +199,12 @@ public class PlaceService {
 
     public PlaceDetailResponseDto saveNoPicture(PlaceSaveRequestDto placeSaveRequestDto,
                                        Long tripId, Member member) {
-
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(TripNotFoundException::new);
-
         if(member == null){
-            throw new MemberNotFoundException();
-        }
-
+            throw new MemberNotFoundException();}
         if(trip.getMember().getId() != member.getId()){
-            throw new ForbiddenException();
-        }
-
+            throw new ForbiddenException();}
         Place place = Place.builder()
                 .title(placeSaveRequestDto.getTitle())
                 .address(placeSaveRequestDto.getAddress())
@@ -185,18 +233,14 @@ public class PlaceService {
 
     public PlaceDetailResponseDto saveWithPictures(PlaceSaveRequestDto placeSaveRequestDto,
                                        Long tripId, Member member, List<String> imgPaths) {
-
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new TripNotFoundException());
-
         if(member == null){
             throw new MemberNotFoundException();
         }
-
         if(trip.getMember().getId() != member.getId()){
             throw new ForbiddenException();
         }
-
         Place place = Place.builder()
                 .title(placeSaveRequestDto.getTitle())
                 .address(placeSaveRequestDto.getAddress())

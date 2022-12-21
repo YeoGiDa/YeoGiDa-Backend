@@ -75,6 +75,8 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
                 .orderBy(place.id.desc())
                 .fetch();
     }
+
+
 //
 //    @Override
 //    public List<Place> findAllByTripIdOrderByStar(Long tripId) {
@@ -123,4 +125,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
 //                .orderBy(place.comments.size().desc(),place.id.desc())
 //                .fetch();
 //    }
+
+
+
 }

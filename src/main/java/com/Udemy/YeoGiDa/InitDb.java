@@ -1,6 +1,8 @@
 package com.Udemy.YeoGiDa;
 
 import com.Udemy.YeoGiDa.domain.comment.entity.Comment;
+import com.Udemy.YeoGiDa.domain.follow.entity.Follow;
+import com.Udemy.YeoGiDa.domain.heart.entity.Heart;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.entity.MemberImg;
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
@@ -159,60 +161,60 @@ public class InitDb {
                     .latitude(123.312D)
                     .longitude(213.2131D)
                     .tag("술집")
-                    .trip(trip2)
+                    .trip(trip1)
                     .build();
 
             Place place4 = Place.builder()
-                    .title("MAckJu")
-                    .content("안주맛집22")
+                    .title("교보문고")
+                    .content("광화문 교보문고")
                     .star(2F)
                     .address("서울시 강남구 34-1")
-                    .latitude(123.312D)
-                    .longitude(213.2131D)
+                    .latitude(37.5705737)
+                    .longitude(126.977827)
                     .tag("식당")
                     .trip(trip2)
                     .build();
 
             Place place5 = Place.builder()
                     .title("광안리 바닷가")
-                    .content("요트타기")
+                    .content("프레지던트 호텔")
                     .star(4F)
                     .address("부산광역시 어디 34-1")
-                    .latitude(123.312D)
-                    .longitude(213.2131D)
+                    .latitude(37.5656096)
+                    .longitude(126.979413)
                     .tag("관광지")
-                    .trip(trip3)
+                    .trip(trip2)
                     .build();
 
             Place place6 = Place.builder()
-                    .title("한라산")
+                    .title("신한은행")
                     .content("등산하기")
                     .star(1F)
                     .address("제주도 어디 34-1")
-                    .latitude(123.312D)
-                    .longitude(213.2131D)
+                    .latitude(37.5682051)
+                    .longitude(126.983600)
                     .tag("관광지")
                     .trip(trip2)
                     .build();
 
             Place place7 = Place.builder()
-                    .title("해운대 바닷가")
+                    .title("서울 시청")
                     .content("수영하기")
                     .star(2F)
                     .address("부산광역시 어디 34-1")
-                    .latitude(123.312D)
-                    .longitude(213.2131D)
+                    .latitude(37.5665734)
+                    .longitude(126.978179)
                     .tag("술집")
                     .trip(trip2)
                     .build();
 
             Place place8 = Place.builder()
-                    .title("북한산")
+                    .title("투썸")
                     .content("트래킹 하기")
                     .star(3.5F)
                     .address("서울 어디 34-1")
-                    .latitude(123.312D)
-                    .longitude(213.2131D)
+                    .latitude(37.5704017)
+                    .longitude(126.974103)
                     .tag("숙소")
                     .trip(trip2)
                     .build();
@@ -225,7 +227,7 @@ public class InitDb {
                     .latitude(123.312D)
                     .longitude(213.2131D)
                     .tag("카페")
-                    .trip(trip2)
+//                    .trip(trip2)
                     .build();
 
             Place place10 = Place.builder()
@@ -236,7 +238,7 @@ public class InitDb {
                     .latitude(123.312D)
                     .longitude(213.2131D)
                     .tag("쇼핑")
-                    .trip(trip2)
+//                    .trip(trip2)
                     .build();
 
             Place place11 = Place.builder()
@@ -247,7 +249,7 @@ public class InitDb {
                     .latitude(123.312D)
                     .longitude(213.2131D)
                     .tag("기타")
-                    .trip(trip2)
+//                    .trip(trip2)
                     .build();
 
             Place place12 = Place.builder()
@@ -258,7 +260,7 @@ public class InitDb {
                     .latitude(123.312D)
                     .longitude(213.2131D)
                     .tag("식당")
-                    .trip(trip2)
+//                    .trip(trip2)
                     .build();
 
             List<PlaceImg> placeImgs1 = new ArrayList<>();
@@ -334,37 +336,57 @@ public class InitDb {
             em.persist(comment8);
             em.persist(comment9);
 
-//            Heart heart1 = new Heart(member1, trip1);
-//            Heart heart2 = new Heart(member2, trip1);
-//            Heart heart3 = new Heart(member3, trip1);
-//            Heart heart4 = new Heart(member4, trip1);
-//            Heart heart5 = new Heart(member5, trip1);
-//            Heart heart6 = new Heart(member1, trip2);
-//            Heart heart7 = new Heart(member2, trip2);
-//            Heart heart8 = new Heart(member3, trip2);
-//            Heart heart9 = new Heart(member4, trip2);
-//            Heart heart10 = new Heart(member1, trip3);
-//            Heart heart11 = new Heart(member2, trip3);
-//            Heart heart12 = new Heart(member3, trip3);
-//            Heart heart13 = new Heart(member1, trip4);
-//            Heart heart14 = new Heart(member2, trip4);
-//            Heart heart15 = new Heart(member1, trip5);
-//
-//            em.persist(heart1);
-//            em.persist(heart2);
-//            em.persist(heart3);
-//            em.persist(heart4);
-//            em.persist(heart5);
-//            em.persist(heart6);
-//            em.persist(heart7);
-//            em.persist(heart8);
-//            em.persist(heart9);
-//            em.persist(heart10);
-//            em.persist(heart11);
-//            em.persist(heart12);
-//            em.persist(heart13);
-//            em.persist(heart14);
-//            em.persist(heart15);
+            Heart heart1 = new Heart(member1, trip1);
+            Heart heart2 = new Heart(member2, trip1);
+            Heart heart3 = new Heart(member3, trip1);
+            Heart heart4 = new Heart(member4, trip1);
+            Heart heart5 = new Heart(member5, trip1);
+            Heart heart6 = new Heart(member1, trip2);
+            Heart heart7 = new Heart(member2, trip2);
+            Heart heart8 = new Heart(member3, trip2);
+            Heart heart9 = new Heart(member4, trip2);
+            Heart heart10 = new Heart(member1, trip3);
+            Heart heart11 = new Heart(member2, trip3);
+            Heart heart12 = new Heart(member3, trip3);
+            Heart heart13 = new Heart(member1, trip4);
+            Heart heart14 = new Heart(member2, trip4);
+            Heart heart15 = new Heart(member1, trip5);
+
+            em.persist(heart1);
+            em.persist(heart2);
+            em.persist(heart3);
+            em.persist(heart4);
+            em.persist(heart5);
+            em.persist(heart6);
+            em.persist(heart7);
+            em.persist(heart8);
+            em.persist(heart9);
+            em.persist(heart10);
+            em.persist(heart11);
+            em.persist(heart12);
+            em.persist(heart13);
+            em.persist(heart14);
+            em.persist(heart15);
+
+            Follow follow1 = new Follow(member1.getId(), member2.getId());
+            Follow follow2 = new Follow(member3.getId(), member2.getId());
+            Follow follow3 = new Follow(member4.getId(), member2.getId());
+            Follow follow4 = new Follow(member5.getId(), member2.getId());
+            Follow follow5 = new Follow(member2.getId(), member1.getId());
+            Follow follow6 = new Follow(member3.getId(), member1.getId());
+            Follow follow7 = new Follow(member4.getId(), member1.getId());
+            Follow follow8 = new Follow(member1.getId(), member3.getId());
+            Follow follow9 = new Follow(member2.getId(), member3.getId());
+
+            em.persist(follow1);
+            em.persist(follow2);
+            em.persist(follow3);
+            em.persist(follow4);
+            em.persist(follow5);
+            em.persist(follow6);
+            em.persist(follow7);
+            em.persist(follow8);
+            em.persist(follow9);
         }
     }
 }
