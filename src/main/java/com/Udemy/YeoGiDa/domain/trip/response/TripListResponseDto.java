@@ -12,6 +12,7 @@ public class TripListResponseDto {
 
     private Long tripId;
     private Long memberId;
+    private String nickname;
     private String title;
     private String subTitle;
     private String imgUrl;
@@ -21,6 +22,7 @@ public class TripListResponseDto {
     public TripListResponseDto(Trip trip) {
         this.tripId = trip.getId();
         this.memberId = trip.getMember().getId();
+        this.nickname = trip.getMember().getNickname();
         this.title = trip.getTitle();
         this.subTitle = trip.getSubTitle();
         if(trip.getTripImg() == null) {

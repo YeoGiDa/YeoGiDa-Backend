@@ -6,6 +6,8 @@ import com.Udemy.YeoGiDa.domain.alarm.exception.AlarmNotFoundException;
 import com.Udemy.YeoGiDa.domain.alarm.repository.AlarmRepository;
 import com.Udemy.YeoGiDa.domain.common.exception.ImgNotFoundException;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
+import com.Udemy.YeoGiDa.domain.follow.exception.NoOneFollowException;
+import com.Udemy.YeoGiDa.domain.follow.repository.FollowRepository;
 import com.Udemy.YeoGiDa.domain.heart.entity.Heart;
 import com.Udemy.YeoGiDa.domain.heart.exception.AlreadyHeartException;
 import com.Udemy.YeoGiDa.domain.heart.exception.HeartNotFoundException;
@@ -45,6 +47,7 @@ public class TripService {
     private final S3Service s3Service;
     private final HeartRepository heartRepository;
     private final AlarmRepository alarmRepository;
+    private final FollowRepository followRepository;
 
     public List<TripListResponseDto> getTripList(String condition) {
         return tripRepository.findAllByConditionFetch(condition)
@@ -244,6 +247,24 @@ public class TripService {
         return tripListResponseDtos;
     }
 
+    //좋아요한 여행지 지역별 필터
+    public List<TripListResponseDto> getMyHeartTripFilterList(Member member, String region) {
+        List<Heart> findHeart = heartRepository.findAllByMemberAndHeartFetch(member);
+        if(findHeart.isEmpty()) {
+            throw new HeartTripNotFoundException();
+        }
+        List<TripListResponseDto> tripListResponseDtos = new ArrayList<>();
+        for (Heart heart : findHeart) {
+            Long tripId = heart.getTrip().getId();
+            Trip trip = tripRepository.findById(tripId).orElseThrow(TripNotFoundException::new);
+            if(trip.getRegion().equals(region)) {
+                tripListResponseDtos.add(new TripListResponseDto(trip));
+            }
+        }
+        Collections.reverse(tripListResponseDtos);
+        return tripListResponseDtos;
+    }
+
     //좋아요한 여행지 검색
     public List<TripListResponseDto> getMyHeartTripSearchList(Member member,String keyword) {
         List<Heart> findHeart = heartRepository.findAllByMemberAndHeartFetch(member);
@@ -254,14 +275,56 @@ public class TripService {
         for (Heart heart : findHeart) {
             Long tripId = heart.getTrip().getId();
             Trip trip = tripRepository.findById(tripId).orElseThrow(TripNotFoundException::new);
-            if(trip.getTitle().contains(keyword) || trip.getSubTitle().contains(keyword))
+            if(trip.getTitle().contains(keyword) || trip.getSubTitle().contains(keyword)) {
                 tripListResponseDtos.add(new TripListResponseDto(trip));
+            }
         }
         Collections.reverse(tripListResponseDtos);
         return tripListResponseDtos;
     }
 
+    //팔로잉의 최근 여행지 10개
+    public List<TripListResponseDto> getFollowingsTripListBasic(Member member) {
+        List<Member> followingMemberList = followRepository.findAllByFromMemberId(member.getId());
+        if(followingMemberList.isEmpty()) {
+            throw new NoOneFollowException();
+        }
 
+        List<TripListResponseDto> tripListResponseDtos = new ArrayList<>();
+        for (Member followingMember : followingMemberList) {
+            List<Trip> trip = tripRepository.findAllByMember(followingMember);
+            if(!trip.isEmpty()) {
+                tripListResponseDtos.add(new TripListResponseDto(trip.get(trip.size()-1)));
+                if(tripListResponseDtos.size() == 10) {
+                    return tripListResponseDtos;
+                }
+            }
+            if(tripListResponseDtos.isEmpty()) {
+                throw new TripNotFoundException();
+            }
+        }
+        return tripListResponseDtos;
+    }
+
+    //팔로잉의 최근 여행지 모두
+    public List<TripListResponseDto> getFollwingsTripListMore(Member member) {
+        List<Member> followingMemberList = followRepository.findAllByFromMemberId(member.getId());
+        if(followingMemberList.isEmpty()) {
+            throw new NoOneFollowException();
+        }
+
+        List<TripListResponseDto> tripListResponseDtos = new ArrayList<>();
+        for (Member followingMember : followingMemberList) {
+            List<Trip> trip = tripRepository.findAllByMember(followingMember);
+            if(!trip.isEmpty()) {
+                tripListResponseDtos.add(new TripListResponseDto(trip.get(trip.size()-1)));
+            }
+            if(tripListResponseDtos.isEmpty()) {
+                throw new TripNotFoundException();
+            }
+        }
+        return tripListResponseDtos;
+    }
 
     //@Scheduler에서 매달 1일마다 하트 변화량을 0으로 수정
     public void initTripChangeHeartCount() {
