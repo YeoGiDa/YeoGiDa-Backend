@@ -2,7 +2,6 @@ package com.Udemy.YeoGiDa.domain.trip.repository;
 
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,8 +21,13 @@ public interface TripRepositoryCustom {
     //월간 베스트 여행지 목록 더 보기 - 페이징 필요
     List<Trip> findAllOrderByChangeHeartCountMoreFetch();
 
-    //내가 작성한 글 목록
+    //내가 작성한 여행지 목록
     List<Trip> findAllByMemberFetch(Member m);
 
+    //친구의 최근 여행지 목록 기본 10개
+//    List<Trip> findAllByFollowingOrderByIdBasicFetch(Member m);
+
+    //친구의 최근 여행지 목록 전부
+//    List<Trip> findAllByFollowingOrderByIdMoreFetch(Member m);
 
 }

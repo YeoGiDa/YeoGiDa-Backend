@@ -163,6 +163,17 @@ public class TripController {
                 "여행지 목록 조회 성공 - 내가 작성한 ", result), HttpStatus.OK);
     }
 
+    @ApiOperation("내가 좋아요한 여행지")
+    @GetMapping("/my/heart")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getMyHeartTripList(@LoginMember Member member) {
+        List<TripListResponseDto> trips = tripService.getMyHeartTripList(member);
+        Map<String, Object> result = new HashMap<>();
+        result.put("tripList", trips);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "여행지 목록 조회 성공 - 내가 좋아요한 ", result), HttpStatus.OK);
+    }
+
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getTripListSearch(@RequestParam("keyword") String keyword) {

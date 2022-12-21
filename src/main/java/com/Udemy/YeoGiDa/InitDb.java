@@ -1,7 +1,6 @@
 package com.Udemy.YeoGiDa;
 
 import com.Udemy.YeoGiDa.domain.comment.entity.Comment;
-import com.Udemy.YeoGiDa.domain.heart.entity.Heart;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.entity.MemberImg;
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
@@ -269,7 +268,7 @@ public class InitDb {
             List<PlaceImg> placeImgs2 = new ArrayList<>();
             placeImgs2.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place3.jpeg", place2));
             placeImgs2.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place4.jpeg", place2));
-            place2.setPlaceImgs(placeImgs1);
+            place2.setPlaceImgs(placeImgs2);
             List<PlaceImg> placeImgs3 = new ArrayList<>();
             placeImgs3.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place5.jpeg", place3));
             place3.setPlaceImgs(placeImgs3);
@@ -335,39 +334,37 @@ public class InitDb {
             em.persist(comment8);
             em.persist(comment9);
 
-            Heart heart1 = new Heart(member1, trip1);
-            Heart heart2 = new Heart(member2, trip1);
-            Heart heart3 = new Heart(member3, trip1);
-            Heart heart4 = new Heart(member4, trip1);
-            Heart heart5 = new Heart(member5, trip1);
-            Heart heart6 = new Heart(member1, trip2);
-            Heart heart7 = new Heart(member2, trip2);
-            Heart heart8 = new Heart(member3, trip2);
-            Heart heart9 = new Heart(member4, trip2);
-            Heart heart10 = new Heart(member1, trip3);
-            Heart heart11 = new Heart(member2, trip3);
-            Heart heart12 = new Heart(member3, trip3);
-            Heart heart13 = new Heart(member1, trip4);
-            Heart heart14 = new Heart(member2, trip4);
-            Heart heart15 = new Heart(member1, trip5);
-
-            em.persist(heart1);
-            em.persist(heart2);
-            em.persist(heart3);
-            em.persist(heart4);
-            em.persist(heart5);
-            em.persist(heart6);
-            em.persist(heart7);
-            em.persist(heart8);
-            em.persist(heart9);
-            em.persist(heart10);
-            em.persist(heart11);
-            em.persist(heart12);
-            em.persist(heart13);
-            em.persist(heart14);
-            em.persist(heart15);
+//            Heart heart1 = new Heart(member1, trip1);
+//            Heart heart2 = new Heart(member2, trip1);
+//            Heart heart3 = new Heart(member3, trip1);
+//            Heart heart4 = new Heart(member4, trip1);
+//            Heart heart5 = new Heart(member5, trip1);
+//            Heart heart6 = new Heart(member1, trip2);
+//            Heart heart7 = new Heart(member2, trip2);
+//            Heart heart8 = new Heart(member3, trip2);
+//            Heart heart9 = new Heart(member4, trip2);
+//            Heart heart10 = new Heart(member1, trip3);
+//            Heart heart11 = new Heart(member2, trip3);
+//            Heart heart12 = new Heart(member3, trip3);
+//            Heart heart13 = new Heart(member1, trip4);
+//            Heart heart14 = new Heart(member2, trip4);
+//            Heart heart15 = new Heart(member1, trip5);
+//
+//            em.persist(heart1);
+//            em.persist(heart2);
+//            em.persist(heart3);
+//            em.persist(heart4);
+//            em.persist(heart5);
+//            em.persist(heart6);
+//            em.persist(heart7);
+//            em.persist(heart8);
+//            em.persist(heart9);
+//            em.persist(heart10);
+//            em.persist(heart11);
+//            em.persist(heart12);
+//            em.persist(heart13);
+//            em.persist(heart14);
+//            em.persist(heart15);
         }
-
     }
-
 }
