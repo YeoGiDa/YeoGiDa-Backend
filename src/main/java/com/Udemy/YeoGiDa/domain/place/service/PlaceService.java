@@ -129,7 +129,7 @@ public class PlaceService {
     @Transactional(readOnly = true)
     public PlaceDetailResponseDto getPlaceDetail(Long placeId) {
         Place place = Optional.ofNullable(placeRepository.findById(placeId)
-                .orElseThrow(() -> new PlaceNotFoundException())).get();
+                .orElseThrow(PlaceNotFoundException::new)).get();
 
         return new PlaceDetailResponseDto(place);
     }
@@ -137,7 +137,7 @@ public class PlaceService {
     @Transactional(readOnly = true)
     public PlaceListInTripResponseDto getTripDataInPlaceList(Long tripId) {
         Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
-                .orElseThrow(() -> new TripNotFoundException())).get();
+                .orElseThrow(TripNotFoundException::new)).get();
 
         return new PlaceListInTripResponseDto(trip);
     }
@@ -147,7 +147,7 @@ public class PlaceService {
                                        Long tripId, Member member) {
 
         Trip trip = tripRepository.findById(tripId)
-                .orElseThrow(() -> new TripNotFoundException());
+                .orElseThrow(TripNotFoundException::new);
 
         if(member == null){
             throw new MemberNotFoundException();
@@ -171,7 +171,7 @@ public class PlaceService {
         Place savePlace = placeRepository.save(place);
 
         //장소 이미지 저장 로직
-        String defaultImgPath = "https://s3.ap-northeast-2.amazonaws.com/yeogida-bucket/default_place_img.png";
+        String defaultImgPath = "https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/default_place.png";
         PlaceImg placeImg = new PlaceImg(defaultImgPath, savePlace);
         placeImgRepository.save(placeImg);
         ArrayList<PlaceImg> placeImgs = new ArrayList<>();
@@ -259,7 +259,7 @@ public class PlaceService {
         //수정된 사진이 default일 때
         ArrayList<PlaceImg> placeImgs = new ArrayList<>();
         if(imgPaths == null) {
-            String imgPath = "https://s3.ap-northeast-2.amazonaws.com/yeogida-bucket/image/default_place_img.png";
+            String imgPath = "https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/default_place.png";
             PlaceImg placeImg = new PlaceImg(imgPath, place);
             placeImgRepository.save(placeImg);
             placeImgs.add(placeImg);

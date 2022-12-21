@@ -174,13 +174,29 @@ public class TripController {
                 "여행지 목록 조회 성공 - 내가 좋아요한 ", result), HttpStatus.OK);
     }
 
+    //여행지 목록 검색
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity getTripListSearch(@RequestParam("keyword") String keyword) {
+    public ResponseEntity getTripListSearch(@RequestParam("keyword") String keyword,
+                                            @LoginMember Member member) {
         List<TripListResponseDto> trips = tripService.getTripListSearch(keyword);
         Map<String, Object> result = new HashMap<>();
         result.put("tripList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 목록 검색 성공 ", result), HttpStatus.OK);
     }
+
+
+    //좋아요 한 여행지 검색
+    @GetMapping("/my/heart/search")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getMyHeartTripSearchList(@RequestParam("keyword") String keyword,
+                                                 @LoginMember Member member) {
+        List<TripListResponseDto> trips = tripService.getMyHeartTripSearchList(member,keyword);
+        Map<String, Object> result = new HashMap<>();
+        result.put("tripList", trips);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "좋아요 여행지 목록 검색 성공 ", result), HttpStatus.OK);
+    }
+
 }
