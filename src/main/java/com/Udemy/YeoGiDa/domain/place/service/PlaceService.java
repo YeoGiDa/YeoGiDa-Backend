@@ -14,6 +14,7 @@ import com.Udemy.YeoGiDa.domain.place.repository.PlaceRepository;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceUpdateRequestDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceDetailResponseDto;
+import com.Udemy.YeoGiDa.domain.place.response.PlaceListInMapResponseDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceListInTripResponseDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceListResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
@@ -62,6 +63,15 @@ public class PlaceService {
         return placeRepository.findAllPlaceByComment(memberId)
                 .stream()
                 .map(PlaceListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PlaceListInMapResponseDto> getPlaceInMap(Long tripId){
+
+        return placeRepository.findAllByTripId(tripId)
+                .stream()
+                .map(PlaceListInMapResponseDto::new)
                 .collect(Collectors.toList());
     }
 

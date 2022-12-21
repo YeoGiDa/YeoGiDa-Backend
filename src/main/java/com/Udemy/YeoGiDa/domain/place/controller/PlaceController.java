@@ -5,6 +5,7 @@ import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceUpdateRequestDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceDetailResponseDto;
+import com.Udemy.YeoGiDa.domain.place.response.PlaceListInMapResponseDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceListInTripResponseDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceListResponseDto;
 import com.Udemy.YeoGiDa.domain.place.service.PlaceService;
@@ -85,7 +86,18 @@ public class PlaceController {
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "내가 댓글 단 장소 목록 조회 성공", result), HttpStatus.OK);
     }
-//
+
+    @GetMapping("/{tripId}/places/inMap")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getPlaceInMap(@PathVariable Long tripId) {
+        List<PlaceListInMapResponseDto> places = placeService.getPlaceInMap(tripId);
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("placeList", places);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                String.format("지도 위 장소 목록 조회 성공" ), result), HttpStatus.OK);
+    }
+
 //    @ApiOperation("여행지 별 장소 목록 조회 - 별점순")
 //    @GetMapping("/{tripId}/places/star")
 //    @ResponseStatus(HttpStatus.OK)
