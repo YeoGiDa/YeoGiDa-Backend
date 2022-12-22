@@ -7,7 +7,7 @@ public interface AlarmRepositoryCustom {
 
     Alarm findFollowAlarmByMemberAndMakeMemberId(Member member, Long makeMemberId);
 
-    Alarm findHeartAlarmByMemberAndMakeMemberId(Member member, Long makeMemberId);
+    Alarm findHeartAlarmByMemberAndTripId(Member member, Long makeMemberId);
 
     Alarm findCommentAlarmByMemberAndMakeMemberIdAndCommentId(Member member, Long makeMemberId, Long placeId, Long commentId);
 }

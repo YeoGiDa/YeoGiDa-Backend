@@ -16,8 +16,8 @@ import com.Udemy.YeoGiDa.domain.place.entity.Place;
 import com.Udemy.YeoGiDa.domain.place.exception.PlaceNotFoundException;
 import com.Udemy.YeoGiDa.domain.place.repository.PlaceRepository;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
+import com.Udemy.YeoGiDa.global.fcm.service.FirebaseCloudMessageService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,6 +38,7 @@ public class CommentService {
     private final PlaceRepository placeRepository;
     private final CommentRepository commentRepository;
     private final AlarmRepository alarmRepository;
+    private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     @Transactional(readOnly = true)
     public List<CommentListResponseDto> getCommentListByDesc(Long placeId){
@@ -67,7 +69,7 @@ public class CommentService {
 
     }
 
-    public CommentListResponseDto save(CommentSaveRequestDto commentSaveRequestDto, Long placeId, Member member) {
+    public CommentListResponseDto save(CommentSaveRequestDto commentSaveRequestDto, Long placeId, Member member) throws IOException {
         Place place = placeRepository.findById(placeId)
                 .orElseThrow(PlaceNotFoundException::new);
 
@@ -91,6 +93,10 @@ public class CommentService {
                 .placeId(placeId)
                 .targetId(comment.getId())
                 .build());
+
+        //푸쉬 알림 보내기
+        firebaseCloudMessageService.sendMessageTo(place.getTrip().getMember().getDeviceToken(),
+                "여기다", member.getNickname() + AlarmType.NEW_COMMENT.getAlarmText());
 
         return new CommentListResponseDto(saveComment);
     }

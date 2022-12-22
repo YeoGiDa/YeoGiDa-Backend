@@ -1,6 +1,5 @@
 package com.Udemy.YeoGiDa.domain.comment.controller;
 
-import com.Udemy.YeoGiDa.domain.comment.entity.Comment;
 import com.Udemy.YeoGiDa.domain.comment.request.CommentSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.comment.response.CommentListResponseDto;
 import com.Udemy.YeoGiDa.domain.comment.service.CommentService;
@@ -16,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -76,7 +76,7 @@ public class CommentController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity save(@PathVariable Long placeId,
                                @RequestBody CommentSaveRequestDto commentSaveRequestDto,
-                               @LoginMember Member member) {
+                               @LoginMember Member member) throws IOException {
         CommentListResponseDto commentListResponseDto = commentService.save(commentSaveRequestDto, placeId, member);
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("nickname", commentListResponseDto.getNickname());

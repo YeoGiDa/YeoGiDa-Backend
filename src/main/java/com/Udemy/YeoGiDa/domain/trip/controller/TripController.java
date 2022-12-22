@@ -15,10 +15,10 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +63,6 @@ public class TripController {
                 "여행지 상세 조회 성공", result), HttpStatus.OK);
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @ApiOperation("여행지 작성")
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
@@ -80,7 +79,6 @@ public class TripController {
                 "여행지 작성 성공", result), HttpStatus.CREATED);
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @ApiOperation("여행지 수정")
     @PutMapping("/{tripId}")
     @ResponseStatus(HttpStatus.OK)
@@ -97,7 +95,6 @@ public class TripController {
                 "여행지 수정 성공"), HttpStatus.OK);
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @ApiOperation("여행지 삭제")
     @DeleteMapping("/{tripId}")
     @ResponseStatus(HttpStatus.OK)
@@ -130,18 +127,16 @@ public class TripController {
                 "목록 조회 성공 - 월간 베스트 여행지(전부)", result), HttpStatus.OK);
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @ApiOperation("여행지 좋아요 누르기")
     @PostMapping("/{tripId}/heart")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity heart(@PathVariable Long tripId,
-                               @LoginMember Member member) {
+                               @LoginMember Member member) throws IOException {
         tripService.heart(tripId, member);
         return new ResponseEntity(DefaultResult.res(StatusCode.CREATED,
                 "여행지 좋아요 성공"), HttpStatus.CREATED);
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_USER"})
     @ApiOperation("여행지 좋아요 취소하기")
     @DeleteMapping("/{tripId}/heart")
     @ResponseStatus(HttpStatus.OK)
