@@ -41,7 +41,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
 
     @Override
     public List<Place> findAllPlaceByComment(Long memberId) {
-        return queryFactory.selectFrom(place)
+        return queryFactory.selectFrom(place).distinct()
                 .leftJoin(place.comments,comment).fetchJoin()
                 .where(comment.member.id.eq(memberId))
                 .orderBy(comment.id.desc())
@@ -75,6 +75,8 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
                 .orderBy(place.id.desc())
                 .fetch();
     }
+
+
 //
 //    @Override
 //    public List<Place> findAllByTripIdOrderByStar(Long tripId) {
@@ -123,4 +125,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
 //                .orderBy(place.comments.size().desc(),place.id.desc())
 //                .fetch();
 //    }
+
+
+
 }

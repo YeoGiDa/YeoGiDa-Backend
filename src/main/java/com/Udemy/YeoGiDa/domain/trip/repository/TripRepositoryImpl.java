@@ -83,4 +83,15 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
                 .orderBy(trip.id.desc())
                 .fetch();
     }
+
+    @Override
+    public List<Trip> findAllByMemberIdFetch(Long memberId,String condition) {
+        return queryFactory.selectFrom(trip)
+                .leftJoin(trip.tripImg, QTripImg.tripImg).fetchJoin()
+                .leftJoin(trip.member, member).fetchJoin()
+                .leftJoin(member.memberImg, QMemberImg.memberImg).fetchJoin()
+                .where(trip.member.id.eq(memberId))
+                .orderBy(conditionParam(condition))
+                .fetch();
+    }
 }

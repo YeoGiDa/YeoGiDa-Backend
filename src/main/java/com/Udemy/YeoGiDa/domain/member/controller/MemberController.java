@@ -3,16 +3,13 @@ package com.Udemy.YeoGiDa.domain.member.controller;
 import com.Udemy.YeoGiDa.domain.common.exception.WrongImgFormatException;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.member.request.MemberLoginRequest;
-import com.Udemy.YeoGiDa.domain.member.response.BestTravlerListResponse;
-import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
-import com.Udemy.YeoGiDa.domain.member.response.MemberLoginResponse;
+import com.Udemy.YeoGiDa.domain.member.response.*;
 import com.Udemy.YeoGiDa.global.response.DefaultResult;
 import com.Udemy.YeoGiDa.global.response.ResponseMessage;
 import com.Udemy.YeoGiDa.global.response.StatusCode;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.request.MemberJoinRequest;
 import com.Udemy.YeoGiDa.domain.member.request.MemberUpdateRequest;
-import com.Udemy.YeoGiDa.domain.member.response.MemberJoinResponse;
 import com.Udemy.YeoGiDa.domain.member.service.MemberService;
 import com.Udemy.YeoGiDa.global.security.annotation.LoginMember;
 import io.swagger.annotations.*;
@@ -155,5 +152,14 @@ public class MemberController {
         memberService.delete(member);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 ResponseMessage.DELETE_USER), HttpStatus.OK);
+    }
+
+    //마이페이지 상세 조회
+    @GetMapping("/my")
+    public ResponseEntity memberDetail(@LoginMember Member member){
+
+        MemberDetailResponseDto result = memberService.getMemberDetail(member);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "마이페이지 조회 성공 ", result), HttpStatus.OK);
     }
 }

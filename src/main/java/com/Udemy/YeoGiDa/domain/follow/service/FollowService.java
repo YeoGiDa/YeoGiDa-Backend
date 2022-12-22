@@ -8,9 +8,11 @@ import com.Udemy.YeoGiDa.domain.follow.entity.Follow;
 import com.Udemy.YeoGiDa.domain.follow.exception.AlreadyFollowException;
 import com.Udemy.YeoGiDa.domain.follow.exception.FollowNotFoundException;
 import com.Udemy.YeoGiDa.domain.follow.repository.FollowRepository;
+import com.Udemy.YeoGiDa.domain.follow.response.FollowMemberDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
 import com.Udemy.YeoGiDa.domain.member.repository.MemberRepository;
+import com.Udemy.YeoGiDa.domain.member.response.MemberDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
 import com.Udemy.YeoGiDa.global.fcm.service.FirebaseCloudMessageService;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +62,17 @@ public class FollowService {
                 .map(MemberDto::new)
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public FollowMemberDetailResponseDto getFindMemberDetail(Long findMemberId) {
+        Member member = Optional.ofNullable(memberRepository.findById(findMemberId)
+                .orElseThrow(MemberNotFoundException::new)).get();
+        FollowMemberDetailResponseDto followMemberDetailResponseDto = new FollowMemberDetailResponseDto(member);
+        followMemberDetailResponseDto.setFollowerCount(followRepository.findSizeFollower(member.getId()));
+        followMemberDetailResponseDto.setFollowingCount(followRepository.findSizeFollowing(member.getId()));
+        return followMemberDetailResponseDto;
+    }
+
 
     @Transactional
     public boolean addFollow(Long toMemberId, Long fromMemberId) throws IOException {
@@ -118,4 +131,19 @@ public class FollowService {
         return followRepository.findByToMemberIdAndFromMemberId(toMemberId, fromMemberId);
     }
 
+
+    @Transactional(readOnly = true)
+    public MemberDetailResponseDto getFollowMemberDetail(Member member) {
+
+
+
+        Member memberDetail = Optional.ofNullable(memberRepository.findById(member.getId())
+                .orElseThrow(MemberNotFoundException::new)).get();
+
+        MemberDetailResponseDto memberDetailResponseDto = new MemberDetailResponseDto(memberDetail);
+        memberDetailResponseDto.setFollowerCount(followRepository.findSizeFollower(member.getId()));
+        memberDetailResponseDto.setFollowingCount(followRepository.findSizeFollowing(member.getId()));
+
+        return memberDetailResponseDto;
+    }
 }

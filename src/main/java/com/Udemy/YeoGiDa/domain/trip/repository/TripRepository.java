@@ -19,4 +19,6 @@ public interface TripRepository extends JpaRepository<Trip, Long>, TripRepositor
     List<Trip> findAllSearch(@Param("keyword") String keyword);
 
     List<Trip> findAllByMember(Member member);
+
+    List<Trip> findAllByMemberId(Long memberId);
 }

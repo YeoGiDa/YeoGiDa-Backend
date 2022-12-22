@@ -2,6 +2,7 @@ package com.Udemy.YeoGiDa.domain.member.service;
 
 import com.Udemy.YeoGiDa.domain.common.exception.ImgNotFoundException;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
+import com.Udemy.YeoGiDa.domain.follow.repository.FollowRepository;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.entity.MemberImg;
 import com.Udemy.YeoGiDa.domain.member.exception.AlreadyExistsNicknameException;
@@ -13,10 +14,7 @@ import com.Udemy.YeoGiDa.domain.member.repository.MemberRepository;
 import com.Udemy.YeoGiDa.domain.member.request.MemberJoinRequest;
 import com.Udemy.YeoGiDa.domain.member.request.MemberLoginRequest;
 import com.Udemy.YeoGiDa.domain.member.request.MemberUpdateRequest;
-import com.Udemy.YeoGiDa.domain.member.response.BestTravlerListResponse;
-import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
-import com.Udemy.YeoGiDa.domain.member.response.MemberJoinResponse;
-import com.Udemy.YeoGiDa.domain.member.response.MemberLoginResponse;
+import com.Udemy.YeoGiDa.domain.member.response.*;
 import com.Udemy.YeoGiDa.global.jwt.Token;
 import com.Udemy.YeoGiDa.global.jwt.service.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,6 +38,7 @@ public class MemberService {
     private final S3Service s3Service;
     private final JwtProvider jwtProvider;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final FollowRepository followRepository;
 
     @Transactional(readOnly = true)
     public boolean isJoinMember(String email) {
@@ -187,5 +187,22 @@ public class MemberService {
         if( !passwordEncoder.matches(loginPassword, password) ){
             throw new PasswordMismatchException();
         }
+    }
+
+    @Transactional(readOnly = true)
+    public MemberDetailResponseDto getMemberDetail(Member member) {
+
+        if(member == null){
+            throw new MemberNotFoundException();
+        }
+
+        Member memberDetail = Optional.ofNullable(memberRepository.findById(member.getId())
+                .orElseThrow(MemberNotFoundException::new)).get();
+
+        MemberDetailResponseDto memberDetailResponseDto = new MemberDetailResponseDto(memberDetail);
+        memberDetailResponseDto.setFollowerCount(followRepository.findSizeFollower(member.getId()));
+        memberDetailResponseDto.setFollowingCount(followRepository.findSizeFollowing(member.getId()));
+
+        return memberDetailResponseDto;
     }
 }
