@@ -1,8 +1,6 @@
 package com.Udemy.YeoGiDa;
 
 import com.Udemy.YeoGiDa.domain.comment.entity.Comment;
-import com.Udemy.YeoGiDa.domain.follow.entity.Follow;
-import com.Udemy.YeoGiDa.domain.heart.entity.Heart;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.entity.MemberImg;
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
@@ -136,8 +134,8 @@ public class InitDb {
                     .content("뷰 좋음")
                     .star(5F)
                     .address("제주도 서귀포시 34-1")
-                    .latitude(123.312D)
-                    .longitude(213.2131D)
+                    .latitude(37.5730556D)
+                    .longitude(126.9833333D)
                     .tag("카페")
                     .trip(trip1)
                     .build();
@@ -147,8 +145,8 @@ public class InitDb {
                     .content("뷰 좋음 22")
                     .star(4F)
                     .address("제주도 제주시 34-1")
-                    .latitude(123.312D)
-                    .longitude(213.2131D)
+                    .latitude(37.5731157D)
+                    .longitude(126.9697643D)
                     .tag("숙소")
                     .trip(trip1)
                     .build();
@@ -158,10 +156,10 @@ public class InitDb {
                     .content("안주 맛집")
                     .star(3F)
                     .address("서울시 강남구 34-1")
-                    .latitude(123.312D)
-                    .longitude(213.2131D)
+                    .latitude(37.532287D)
+                    .longitude(126.8460833D)
                     .tag("술집")
-                    .trip(trip1)
+                    .trip(trip2)
                     .build();
 
             Place place4 = Place.builder()
@@ -183,7 +181,7 @@ public class InitDb {
                     .latitude(37.5656096)
                     .longitude(126.979413)
                     .tag("관광지")
-                    .trip(trip2)
+                    .trip(trip3)
                     .build();
 
             Place place6 = Place.builder()
@@ -224,10 +222,10 @@ public class InitDb {
                     .content("노래방 가기")
                     .star(2.5F)
                     .address("서울 강남 어디 34-1")
-                    .latitude(123.312D)
-                    .longitude(213.2131D)
+                    .latitude(37.7557287D)
+                    .longitude(128.8986147D)
                     .tag("카페")
-//                    .trip(trip2)
+                    .trip(trip2)
                     .build();
 
             Place place10 = Place.builder()
@@ -235,10 +233,10 @@ public class InitDb {
                     .content("공부하기")
                     .star(1.5F)
                     .address("서울 어디 34-1")
-                    .latitude(123.312D)
-                    .longitude(213.2131D)
+                    .latitude(37.7542451D)
+                    .longitude(128.8901757D)
                     .tag("쇼핑")
-//                    .trip(trip2)
+                    .trip(trip2)
                     .build();
 
             Place place11 = Place.builder()
@@ -246,10 +244,10 @@ public class InitDb {
                     .content("갯벌")
                     .star(4.5F)
                     .address("강릉 어디 34-1")
-                    .latitude(123.312D)
-                    .longitude(213.2131D)
+                    .latitude(33.3002515D)
+                    .longitude(126.5801543D)
                     .tag("기타")
-//                    .trip(trip2)
+                    .trip(trip2)
                     .build();
 
             Place place12 = Place.builder()
@@ -257,10 +255,10 @@ public class InitDb {
                     .content("지키기")
                     .star(5F)
                     .address("울릉도 어디 34-1")
-                    .latitude(123.312D)
-                    .longitude(213.2131D)
+                    .latitude(33.5139974D)
+                    .longitude(126.5489702D)
                     .tag("식당")
-//                    .trip(trip2)
+                    .trip(trip2)
                     .build();
 
             List<PlaceImg> placeImgs1 = new ArrayList<>();
@@ -336,57 +334,37 @@ public class InitDb {
             em.persist(comment8);
             em.persist(comment9);
 
-            Heart heart1 = new Heart(member1, trip1);
-            Heart heart2 = new Heart(member2, trip1);
-            Heart heart3 = new Heart(member3, trip1);
-            Heart heart4 = new Heart(member4, trip1);
-            Heart heart5 = new Heart(member5, trip1);
-            Heart heart6 = new Heart(member1, trip2);
-            Heart heart7 = new Heart(member2, trip2);
-            Heart heart8 = new Heart(member3, trip2);
-            Heart heart9 = new Heart(member4, trip2);
-            Heart heart10 = new Heart(member1, trip3);
-            Heart heart11 = new Heart(member2, trip3);
-            Heart heart12 = new Heart(member3, trip3);
-            Heart heart13 = new Heart(member1, trip4);
-            Heart heart14 = new Heart(member2, trip4);
-            Heart heart15 = new Heart(member1, trip5);
-
-            em.persist(heart1);
-            em.persist(heart2);
-            em.persist(heart3);
-            em.persist(heart4);
-            em.persist(heart5);
-            em.persist(heart6);
-            em.persist(heart7);
-            em.persist(heart8);
-            em.persist(heart9);
-            em.persist(heart10);
-            em.persist(heart11);
-            em.persist(heart12);
-            em.persist(heart13);
-            em.persist(heart14);
-            em.persist(heart15);
-
-            Follow follow1 = new Follow(member1.getId(), member2.getId());
-            Follow follow2 = new Follow(member3.getId(), member2.getId());
-            Follow follow3 = new Follow(member4.getId(), member2.getId());
-            Follow follow4 = new Follow(member5.getId(), member2.getId());
-            Follow follow5 = new Follow(member2.getId(), member1.getId());
-            Follow follow6 = new Follow(member3.getId(), member1.getId());
-            Follow follow7 = new Follow(member4.getId(), member1.getId());
-            Follow follow8 = new Follow(member1.getId(), member3.getId());
-            Follow follow9 = new Follow(member2.getId(), member3.getId());
-
-            em.persist(follow1);
-            em.persist(follow2);
-            em.persist(follow3);
-            em.persist(follow4);
-            em.persist(follow5);
-            em.persist(follow6);
-            em.persist(follow7);
-            em.persist(follow8);
-            em.persist(follow9);
+//            Heart heart1 = new Heart(member1, trip1);
+//            Heart heart2 = new Heart(member2, trip1);
+//            Heart heart3 = new Heart(member3, trip1);
+//            Heart heart4 = new Heart(member4, trip1);
+//            Heart heart5 = new Heart(member5, trip1);
+//            Heart heart6 = new Heart(member1, trip2);
+//            Heart heart7 = new Heart(member2, trip2);
+//            Heart heart8 = new Heart(member3, trip2);
+//            Heart heart9 = new Heart(member4, trip2);
+//            Heart heart10 = new Heart(member1, trip3);
+//            Heart heart11 = new Heart(member2, trip3);
+//            Heart heart12 = new Heart(member3, trip3);
+//            Heart heart13 = new Heart(member1, trip4);
+//            Heart heart14 = new Heart(member2, trip4);
+//            Heart heart15 = new Heart(member1, trip5);
+//
+//            em.persist(heart1);
+//            em.persist(heart2);
+//            em.persist(heart3);
+//            em.persist(heart4);
+//            em.persist(heart5);
+//            em.persist(heart6);
+//            em.persist(heart7);
+//            em.persist(heart8);
+//            em.persist(heart9);
+//            em.persist(heart10);
+//            em.persist(heart11);
+//            em.persist(heart12);
+//            em.persist(heart13);
+//            em.persist(heart14);
+//            em.persist(heart15);
         }
     }
 }

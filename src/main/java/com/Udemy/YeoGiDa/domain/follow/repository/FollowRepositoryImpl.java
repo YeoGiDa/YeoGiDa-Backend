@@ -1,9 +1,14 @@
 package com.Udemy.YeoGiDa.domain.follow.repository;
 
+import com.Udemy.YeoGiDa.domain.follow.entity.Follow;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 import static com.Udemy.YeoGiDa.domain.follow.entity.QFollow.follow;
+import static com.Udemy.YeoGiDa.domain.member.entity.QMember.member;
 
 @RequiredArgsConstructor
 public class FollowRepositoryImpl implements FollowRepositoryCustom{

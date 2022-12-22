@@ -1,12 +1,19 @@
 package com.Udemy.YeoGiDa.global.error;
 
+import com.Udemy.YeoGiDa.domain.alarm.exception.AlarmNotFoundException;
+import com.Udemy.YeoGiDa.domain.comment.exception.CommentNotFoundException;
+import com.Udemy.YeoGiDa.domain.common.exception.ImgNotFoundException;
+import com.Udemy.YeoGiDa.domain.common.exception.WrongImgFormatException;
 import com.Udemy.YeoGiDa.domain.follow.exception.AlreadyFollowException;
+import com.Udemy.YeoGiDa.domain.follow.exception.FollowNotFoundException;
+import com.Udemy.YeoGiDa.domain.follow.exception.NoOneFollowException;
 import com.Udemy.YeoGiDa.domain.heart.exception.AlreadyHeartException;
 import com.Udemy.YeoGiDa.domain.heart.exception.HeartNotFoundException;
 import com.Udemy.YeoGiDa.domain.member.exception.AlreadyExistsNicknameException;
 import com.Udemy.YeoGiDa.domain.member.exception.MemberDuplicateException;
 import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
 import com.Udemy.YeoGiDa.domain.place.exception.PlaceNotFoundException;
+import com.Udemy.YeoGiDa.domain.trip.exception.HeartTripNotFoundException;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripImgEssentialException;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
 import com.Udemy.YeoGiDa.global.error.dto.ErrorResult;
@@ -21,12 +28,9 @@ import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @Slf4j
@@ -130,8 +134,44 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler
+    protected ErrorResult handleNotFoundException(CommentNotFoundException e){
+        return new ErrorResult(404, "Comment NotFound Error!");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler
     protected ErrorResult handleNotFoundException(HeartNotFoundException e){
         return new ErrorResult(404, "Heart NotFound Error!");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler
+    protected ErrorResult handleNotFoundException(HeartTripNotFoundException e){
+        return new ErrorResult(404, "HeartedTrip NotFound Error!");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler
+    protected ErrorResult handleNotFoundException(AlarmNotFoundException e){
+        return new ErrorResult(404, "Alarm NotFound Error!");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler
+    protected ErrorResult handleNotFoundException(ImgNotFoundException e){
+        return new ErrorResult(404, "Img NotFound Error!");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler
+    protected ErrorResult handleNotFoundException(FollowNotFoundException e){
+        return new ErrorResult(404, "Follow NotFound Error!");
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler
+    protected ErrorResult handleNotFoundException(NoOneFollowException e){
+        return new ErrorResult(404, "No one Follow Error!");
     }
 
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
@@ -156,5 +196,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     protected ErrorResult handleException(Exception e){
         return new ErrorResult(500, "Global Exception Error!", e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler
+    protected ErrorResult handleException(WrongImgFormatException e){
+        return new ErrorResult(500, "WrongImgFormat Exception Error!", e.getMessage());
     }
 }

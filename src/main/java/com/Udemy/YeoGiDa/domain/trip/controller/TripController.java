@@ -174,7 +174,7 @@ public class TripController {
                 "여행지 목록 조회 성공 - 내가 좋아요한 ", result), HttpStatus.OK);
     }
 
-    //여행지 목록 검색
+    @ApiOperation("여행지 검색")
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getTripListSearch(@RequestParam("keyword") String keyword,
@@ -186,8 +186,19 @@ public class TripController {
                 "여행지 목록 검색 성공 ", result), HttpStatus.OK);
     }
 
+    @ApiOperation("좋아요한 여행지 지역별 필터")
+    @GetMapping("/my/heart/{region}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getMyHeartTripFilterList(@PathVariable String region,
+                                                   @LoginMember Member member) {
+        List<TripListResponseDto> trips = tripService.getMyHeartTripFilterList(member, region);
+        Map<String, Object> result = new HashMap<>();
+        result.put("tripList", trips);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "좋아요 여행지 필터 정렬 ", result), HttpStatus.OK);
+    }
 
-    //좋아요 한 여행지 검색
+    @ApiOperation("좋아요한 여행지 검색")
     @GetMapping("/my/heart/search")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getMyHeartTripSearchList(@RequestParam("keyword") String keyword,
@@ -197,6 +208,28 @@ public class TripController {
         result.put("tripList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "좋아요 여행지 목록 검색 성공 ", result), HttpStatus.OK);
+    }
+
+    @ApiOperation("팔로잉의 최근 여행지 - 기본 10개")
+    @GetMapping("/follow/basic")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getFollowingTripListBasic(@LoginMember Member member) {
+        List<TripListResponseDto> trips = tripService.getFollowingsTripListBasic(member);
+        Map<String, Object> result = new HashMap<>();
+        result.put("tripList", trips);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "팔로잉이 최근 올린 여행지 - 기본 10개 ", result), HttpStatus.OK);
+    }
+
+    @ApiOperation("팔로잉의 최근 여행지 - 전체")
+    @GetMapping("/follow/more")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getFollowingsTripListMore(@LoginMember Member member) {
+        List<TripListResponseDto> trips = tripService.getFollwingsTripListMore(member);
+        Map<String, Object> result = new HashMap<>();
+        result.put("tripList", trips);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "팔로잉이 최근 올린 여행지 - 전체 ", result), HttpStatus.OK);
     }
 
 }
