@@ -36,6 +36,8 @@ public class Member extends BaseEntity {
 
     private String refreshToken;
 
+    private String deviceToken;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Trip> trips = new ArrayList<>();
 
@@ -57,6 +59,10 @@ public class Member extends BaseEntity {
         this.refreshToken = refreshToken;
     }
 
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
+    }
+
     public void setMemberImg(MemberImg memberImg) {
         this.memberImg = memberImg;
     }
@@ -68,12 +74,4 @@ public class Member extends BaseEntity {
     public void minusHeartCount() {
         this.heartCount--;
     }
-
-//    public int getTotalHeartCount() {
-//        int totalHeartCount = 0;
-//        for (Trip trip : trips) {
-//            totalHeartCount += trip.getHearts().size();
-//        }
-//        return totalHeartCount;
-//    }
 }

@@ -56,8 +56,10 @@ public class MemberService {
         Token token = jwtProvider.generateToken(member);
 
         String refreshToken = token.getRefreshToken();
-
         member.setRefreshToken(refreshToken);
+
+        String deviceToken = memberLoginRequest.getDeviceToken();
+        member.setDeviceToken(deviceToken);
 
         return new MemberLoginResponse(member.getId(),token);
     }
