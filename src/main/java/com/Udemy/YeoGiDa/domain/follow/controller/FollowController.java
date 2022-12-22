@@ -74,7 +74,7 @@ public class FollowController {
 
     @DeleteMapping("/{toMemberId}")
     public ResponseEntity deleteFollowing(@PathVariable Long toMemberId,
-                                       @LoginMember Member member){
+                                          @LoginMember Member member){
 
         boolean result = followService.unFollow(toMemberId, member.getId());
 
@@ -83,7 +83,7 @@ public class FollowController {
     }
 
 
-    @GetMapping("/{findMemberId}")
+    @GetMapping("/{findMemberId}/detail")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getPlaceDetail(@PathVariable Long findMemberId) {
         FollowMemberDetailResponseDto result = followService.getFindMemberDetail(findMemberId);

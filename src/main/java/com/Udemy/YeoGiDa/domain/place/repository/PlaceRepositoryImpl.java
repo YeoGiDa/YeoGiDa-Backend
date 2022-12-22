@@ -41,7 +41,7 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
 
     @Override
     public List<Place> findAllPlaceByComment(Long memberId) {
-        return queryFactory.selectFrom(place)
+        return queryFactory.selectFrom(place).distinct()
                 .leftJoin(place.comments,comment).fetchJoin()
                 .where(comment.member.id.eq(memberId))
                 .orderBy(comment.id.desc())

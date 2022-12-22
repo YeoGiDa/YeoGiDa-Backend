@@ -14,6 +14,7 @@ import com.Udemy.YeoGiDa.domain.heart.exception.HeartNotFoundException;
 import com.Udemy.YeoGiDa.domain.heart.repository.HeartRepository;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
+import com.Udemy.YeoGiDa.domain.member.repository.MemberRepository;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.Udemy.YeoGiDa.domain.trip.entity.TripImg;
 import com.Udemy.YeoGiDa.domain.trip.exception.HeartTripNotFoundException;
@@ -48,6 +49,7 @@ public class TripService {
     private final HeartRepository heartRepository;
     private final AlarmRepository alarmRepository;
     private final FollowRepository followRepository;
+    private final MemberRepository memberRepository;
 
     public List<TripListResponseDto> getTripList(String condition) {
         return tripRepository.findAllByConditionFetch(condition)
@@ -226,6 +228,17 @@ public class TripService {
     //내가 작성한 여행지
     public List<TripListResponseDto> getMyTripList(Member member) {
         return tripRepository.findAllByMemberFetch(member)
+                .stream()
+                .map(TripListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+   //멤버 여행지
+    public List<TripListResponseDto> getMemberTripList(Long memberId,String condition) {
+
+        memberRepository.findById(memberId).orElseThrow(() -> new MemberNotFoundException());
+
+        return tripRepository.findAllByMemberIdFetch(memberId,condition)
                 .stream()
                 .map(TripListResponseDto::new)
                 .collect(Collectors.toList());
