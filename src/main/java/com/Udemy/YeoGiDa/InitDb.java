@@ -83,7 +83,7 @@ public class InitDb {
             em.persist(member5);
 
             Trip trip1 = Trip.builder()
-                    .region("제주도")
+                    .region("제주")
                     .title("공기맑은 제주")
                     .subTitle("제주도 혼저옵서예")
                     .member(member1)
@@ -104,7 +104,7 @@ public class InitDb {
                     .build();
 
             Trip trip4 = Trip.builder()
-                    .region("경주")
+                    .region("경상남도")
                     .title("경주")
                     .subTitle("경주 한국사 투어")
                     .member(member2)
