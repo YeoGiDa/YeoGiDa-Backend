@@ -23,11 +23,11 @@ public class AlarmRepositoryImpl implements AlarmRepositoryCustom{
     }
 
     @Override
-    public Alarm findHeartAlarmByMemberAndMakeMemberId(Member member, Long makeMemberId) {
+    public Alarm findHeartAlarmByMemberAndTripId(Member member, Long tripId) {
         return queryFactory.selectFrom(alarm)
                 .where(alarm.alarmType.eq(AlarmType.NEW_HEART),
                         alarm.member.eq(member),
-                        alarm.makeAlarmMemberId.eq(makeMemberId))
+                        alarm.targetId.eq(tripId))
                 .fetchOne();
     }
 

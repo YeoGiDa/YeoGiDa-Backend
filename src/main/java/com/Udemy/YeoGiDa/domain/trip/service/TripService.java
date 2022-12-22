@@ -26,11 +26,13 @@ import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripListResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripMonthBestListResponseDto;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
+import com.Udemy.YeoGiDa.global.fcm.service.FirebaseCloudMessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +51,7 @@ public class TripService {
     private final HeartRepository heartRepository;
     private final AlarmRepository alarmRepository;
     private final FollowRepository followRepository;
-    private final MemberRepository memberRepository;
+    private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     public List<TripListResponseDto> getTripList(String condition) {
         return tripRepository.findAllByConditionFetch(condition)
@@ -170,7 +172,7 @@ public class TripService {
     }
 
     @Transactional
-    public void heart(Long tripId, Member member) {
+    public void heart(Long tripId, Member member) throws IOException {
         if(member == null) {
             throw new MemberNotFoundException();
         }
@@ -198,6 +200,10 @@ public class TripService {
                 .placeId(null)
                 .targetId(trip.getId())
                 .build());
+
+        //푸쉬 알림 보내기
+        firebaseCloudMessageService.sendMessageTo(trip.getMember().getDeviceToken(),
+                "여기다", member.getNickname() + AlarmType.NEW_HEART.getAlarmText());
     }
 
     @Transactional
@@ -218,7 +224,7 @@ public class TripService {
         heartRepository.delete(heart);
 
         //알람 삭제
-        Alarm findAlarm = alarmRepository.findHeartAlarmByMemberAndMakeMemberId(trip.getMember(), member.getId());
+        Alarm findAlarm = alarmRepository.findHeartAlarmByMemberAndTripId(trip.getMember(), trip.getId());
         if(findAlarm == null) {
             throw new AlarmNotFoundException();
         }

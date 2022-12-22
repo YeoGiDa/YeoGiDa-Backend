@@ -14,10 +14,12 @@ import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
 import com.Udemy.YeoGiDa.domain.member.repository.MemberRepository;
 import com.Udemy.YeoGiDa.domain.member.response.MemberDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
+import com.Udemy.YeoGiDa.global.fcm.service.FirebaseCloudMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,6 +32,7 @@ public class FollowService {
     private final FollowRepository followRepository;
     private final MemberRepository memberRepository;
     private final AlarmRepository alarmRepository;
+    private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     public List<MemberDto> getFollowingList(Member member){
         return followRepository.findAllByFromMemberId(member.getId())
@@ -72,7 +75,7 @@ public class FollowService {
 
 
     @Transactional
-    public boolean addFollow(Long toMemberId, Long fromMemberId){
+    public boolean addFollow(Long toMemberId, Long fromMemberId) throws IOException {
         Member toMember = memberRepository.findById(toMemberId).orElseThrow(() -> new MemberNotFoundException());
         Member fromMember = memberRepository.findById(fromMemberId).orElseThrow(() -> new MemberNotFoundException());
 
@@ -93,6 +96,10 @@ public class FollowService {
                 .placeId(null)
                 .targetId(fromMemberId)
                 .build());
+
+        //푸쉬 알림 보내기
+        firebaseCloudMessageService.sendMessageTo(toMember.getDeviceToken(),
+                "여기다", toMember.getNickname() + AlarmType.NEW_FOLLOW.getAlarmText());
 
         return true;
     }

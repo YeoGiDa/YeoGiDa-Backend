@@ -56,7 +56,7 @@ dependencies {
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
 	// fcm 푸싱 관련
-    implementation 'com.google.firebase:firebase-admin:6.8.1'
+    implementation 'com.google.firebase:firebase-admin:9.1.1'
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
 }
 
