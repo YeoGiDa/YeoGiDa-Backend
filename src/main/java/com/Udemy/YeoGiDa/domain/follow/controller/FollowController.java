@@ -1,5 +1,6 @@
 package com.Udemy.YeoGiDa.domain.follow.controller;
 
+import com.Udemy.YeoGiDa.domain.follow.response.FollowMemberDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.follow.service.FollowService;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
@@ -79,5 +80,14 @@ public class FollowController {
 
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "팔로우 취소 성공", result), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/{findMemberId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getPlaceDetail(@PathVariable Long findMemberId) {
+        FollowMemberDetailResponseDto result = followService.getFindMemberDetail(findMemberId);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "유저 상세 조회 성공", result), HttpStatus.OK);
     }
 }
