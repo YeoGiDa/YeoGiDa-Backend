@@ -1,10 +1,11 @@
 package com.Udemy.YeoGiDa.domain.follow.entity;
 
 import com.Udemy.YeoGiDa.domain.common.entity.BaseEntity;
-import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,11 +24,12 @@ public class Follow extends BaseEntity {
 
     @Id
     @Column(name = "toMemberId", insertable = false, updatable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Long toMemberId;
-
 
     @Id
     @Column(name = "fromMemberId", insertable = false, updatable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Long fromMemberId;
 
     @Builder
@@ -40,5 +42,4 @@ public class Follow extends BaseEntity {
         Long toMemberId;
         Long fromMemberId;
     }
-
 }
