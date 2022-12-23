@@ -99,7 +99,8 @@ public class FollowService {
 
         //푸쉬 알림 보내기
         firebaseCloudMessageService.sendMessageTo(toMember.getDeviceToken(),
-                "여기다", fromMember.getNickname() + AlarmType.NEW_FOLLOW.getAlarmText());
+                "여기다", fromMember.getNickname() + AlarmType.NEW_FOLLOW.getAlarmText(),
+                "NEW_FOLLOW", fromMemberId.toString());
 
         return true;
     }
