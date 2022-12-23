@@ -11,7 +11,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +22,8 @@ public class FirebaseCloudMessageService {
     private String API_URL = "https://fcm.googleapis.com/v1/projects/yeogida-552d2/messages:send";
     private final ObjectMapper objectMapper;
 
-    public void sendMessageTo(String targetToken, String title, String body) throws IOException {
-        String message = makeMessage(targetToken, title, body);
+    public void sendMessageTo(String targetToken, String title, String body, String alarmType, String targetId) throws IOException {
+        String message = makeMessage(targetToken, title, body, alarmType, targetId);
 
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = RequestBody.create(message, MediaType.get("application/json; charset=utf-8"));
@@ -38,16 +40,23 @@ public class FirebaseCloudMessageService {
         System.out.println(response.body().string());
     }
 
-    private String makeMessage(String targetToken, String title, String body) throws JsonProcessingException {
+    private String makeMessage(String targetToken, String title, String body, String alarmType, String targetId) throws JsonProcessingException {
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("title", title);
+        data.put("body", body);
+        data.put("alarmType", alarmType);
+        data.put("targetId", targetId);
         FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
                         .token(targetToken)
-                        .notification(FcmMessage.Notification.builder()
-                                .title(title)
-                                .body(body)
-                                .image(null)
-                                .build()
-                        )
+//                        .notification(FcmMessage.Notification.builder()
+//                                .title(title)
+//                                .body(body)
+//                                .image(null)
+//                                .alarmType(alarmType)
+//                                .targetId(targetId)
+//                                .build()
+                        .data(data)
                         .build()
                 )
                 .validate_only(false)
