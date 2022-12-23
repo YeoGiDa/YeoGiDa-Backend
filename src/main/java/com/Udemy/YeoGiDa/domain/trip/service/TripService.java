@@ -52,6 +52,7 @@ public class TripService {
     private final AlarmRepository alarmRepository;
     private final FollowRepository followRepository;
     private final FirebaseCloudMessageService firebaseCloudMessageService;
+    private final MemberRepository memberRepository;
 
     public List<TripListResponseDto> getTripList(String condition) {
         return tripRepository.findAllByConditionFetch(condition)

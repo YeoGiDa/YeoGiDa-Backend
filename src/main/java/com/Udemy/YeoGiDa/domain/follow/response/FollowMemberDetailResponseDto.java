@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class FollowMemberDetailResponseDto {
 
-        private Long id;
+        private Long memberId;
         private String nickname;
         private String imgUrl;
         private Integer followerCount;
@@ -20,7 +20,7 @@ public class FollowMemberDetailResponseDto {
 
 
         public FollowMemberDetailResponseDto(Member member) {
-            this.id = member.getId();
+            this.memberId = member.getId();
             this.nickname = member.getNickname();
             if(member.getMemberImg() == null) {
                 imgUrl = null;
