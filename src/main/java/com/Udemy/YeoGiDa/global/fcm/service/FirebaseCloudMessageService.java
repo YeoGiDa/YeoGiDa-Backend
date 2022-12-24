@@ -17,6 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FirebaseCloudMessageService {
 
+    //YML
     private String API_URL = "https://fcm.googleapis.com/v1/projects/yeogida-552d2/messages:send";
     private final ObjectMapper objectMapper;
 
@@ -32,6 +33,7 @@ public class FirebaseCloudMessageService {
                 .addHeader(HttpHeaders.CONTENT_TYPE, "application/json; UTF-8")
                 .build();
 
+        //에러 처리
         Response response = client.newCall(request)
                 .execute();
 

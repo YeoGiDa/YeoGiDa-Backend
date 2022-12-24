@@ -3,16 +3,13 @@ package com.Udemy.YeoGiDa.domain.place.entity;
 
 import com.Udemy.YeoGiDa.domain.comment.entity.Comment;
 import com.Udemy.YeoGiDa.domain.common.entity.BaseEntity;
-import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.data.geo.Point;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,7 +20,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Place extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "place_id")
     private Long id;
     private String title;
@@ -36,7 +34,7 @@ public class Place extends BaseEntity {
     @JoinColumn(name = "trip_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Trip trip;
-    
+
     @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
     List<PlaceImg> placeImgs = new ArrayList<>();
 
@@ -44,8 +42,9 @@ public class Place extends BaseEntity {
     List<Comment> comments = new ArrayList<>();
 
     private String tag;
+
     @Builder
-    public Place(String title, String content, String address, Double longitude, Double latitude, Float star, Trip trip, String tag ) {
+    public Place(String title, String content, String address, Double longitude, Double latitude, Float star, Trip trip, String tag) {
         this.title = title;
         this.content = content;
         this.address = address;
@@ -56,7 +55,7 @@ public class Place extends BaseEntity {
         this.tag = tag;
     }
 
-    public void update(String title, String content, String address, Double longitude, Double latitude ,Float star,String tag){
+    public void update(String title, String content, String address, Double longitude, Double latitude, Float star, String tag) {
         this.title = title;
         this.content = content;
         this.address = address;

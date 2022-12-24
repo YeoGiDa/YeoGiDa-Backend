@@ -9,8 +9,6 @@ import com.Udemy.YeoGiDa.domain.place.response.PlaceListInMapResponseDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceListInTripResponseDto;
 import com.Udemy.YeoGiDa.domain.place.response.PlaceListResponseDto;
 import com.Udemy.YeoGiDa.domain.place.service.PlaceService;
-import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
-import com.Udemy.YeoGiDa.domain.trip.service.TripService;
 import com.Udemy.YeoGiDa.global.response.DefaultResult;
 import com.Udemy.YeoGiDa.global.response.StatusCode;
 import com.Udemy.YeoGiDa.global.security.annotation.LoginMember;
@@ -30,26 +28,27 @@ import java.util.*;
 public class PlaceController {
 
     private final PlaceService placeService;
-    private final TripService tripService;
     private final S3Service s3Service;
 
     /**
-     *
      * @param tripId
      * @param tag
      * @param condition
      * @return 장소 목록 조회
      */
 
+    //어그리게이션?
     @GetMapping("/{tripId}/places/{tag}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getPlaceListByTagTest(@PathVariable Long tripId,
                                                 @PathVariable String tag,
                                                 @RequestParam("condition") String condition){
         List<PlaceListResponseDto> places = placeService.getPlaceListByTagDefault(tripId,tag,condition);
-        Optional<Trip> trip = tripService.findById(tripId);
+
         Map<String, Object> result = new LinkedHashMap<>();
-        result.put("memberId", trip.get().getMember().getId());
+
+        //객체로 만들어서 사용하는 것이 좋다.
+        result.put("memberId", placeService.getMemberIdFromTripId(tripId));
         result.put("placeList", places);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 String.format("장소 목록 조회 성공 " + condition), result), HttpStatus.OK);

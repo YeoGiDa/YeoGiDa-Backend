@@ -35,5 +35,8 @@ public class AlarmController {
         result.put("alarmList", alarmListResponseDtos);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "알람 목록 조회 성공", result), HttpStatus.OK);
+
+        //response object to json
+        //jackson
     }
 }

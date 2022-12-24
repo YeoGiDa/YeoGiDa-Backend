@@ -42,13 +42,6 @@ public class PlaceService {
     private final TripRepository tripRepository;
 
 
-//    @Transactional(readOnly = true)
-//    public List<PlaceListResponseDto> getPlaceList(Long tripId,String condition){
-//        return placeRepository.findAllByTripIdAndCondition(tripId,condition)
-//                .stream()
-//                .map(PlaceListResponseDto::new)
-//                .collect(Collectors.toList());
-//    }
 
     @Transactional(readOnly = true)
     public List<PlaceListResponseDto> getPlaceListByTagDefault(Long tripId,String tag,String condition){
@@ -352,5 +345,10 @@ public class PlaceService {
 //        }
 
         placeRepository.delete(place);
+    }
+
+    public Long getMemberIdFromTripId(Long tripId){
+        Optional<Trip> trip = tripRepository.findById(tripId);
+        return trip.get().getMember().getId();
     }
 }

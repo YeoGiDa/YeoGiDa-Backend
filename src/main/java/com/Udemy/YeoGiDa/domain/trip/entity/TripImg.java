@@ -14,6 +14,11 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class TripImg extends BaseEntity {
 
+    //이미지를 엔티티에 포함
+    //컨버터 있음
+    //ListConverter -> AttributeConverter
+    //enum 안에 넣어도돔
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "trip_img_id")
     private Long id;
@@ -26,6 +31,8 @@ public class TripImg extends BaseEntity {
     @JsonIgnore
     private Trip trip;
 
+    //NULL 체크는 여기서 적용
+    //아예 못들어갈때는 여기서 체크
     public TripImg(String imgUrl, Trip trip) {
         this.imgUrl = imgUrl;
         this.trip = trip;

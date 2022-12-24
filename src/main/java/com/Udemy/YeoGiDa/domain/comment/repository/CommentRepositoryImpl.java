@@ -68,6 +68,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
         return new PageImpl<>(ResponseList, pageable, totalSize);
     }
 
+    // cursor의 위치를 기준점으로
     private OrderSpecifier conditionParam(String condition) {
         if (condition.equals("desc")) {
             return place.id.desc();

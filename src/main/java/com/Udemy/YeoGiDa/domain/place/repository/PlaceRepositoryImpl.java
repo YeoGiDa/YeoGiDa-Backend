@@ -19,16 +19,6 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
 
-//    @Override
-//    public List<Place> findAllByTripIdAndCondition(Long tripId, String condition) {
-//        return queryFactory.selectFrom(place)
-//                .leftJoin(place.trip, trip).fetchJoin()
-//                .leftJoin(trip.tripImg, QTripImg.tripImg).fetchJoin()
-//                .where(place.trip.id.eq(tripId))
-//                .orderBy(conditionParam(condition))
-//                .fetch();
-//    }
-
     @Override
     public List<Place> findAllByTripIdAndTagAndCondition(Long tripId, String tag, String condition) {
         return queryFactory.selectFrom(place)
@@ -107,25 +97,16 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
 //        return queryFactory.selectFrom(place)
 //                .where(place.tag.eq(tag), place.trip.id.eq(tripId))
 //                .orderBy(place.id.desc())
-//                .fetch();
-//    }
-//
-//    @Override
-//    public List<Place> findAllByTagOrderByStar(Long tripId,String tag) {
-//        return queryFactory.selectFrom(place)
-//                .where(place.tag.eq(tag), place.trip.id.eq(tripId))
-//                .orderBy(place.star.desc(),place.id.desc())
-//                .fetch();
-//    }
-//
-//    @Override
-//    public List<Place> findAllByTagOrderByComment(Long tripId,String tag) {
-//        return queryFactory.selectFrom(place)
-//                .where(place.tag.eq(tag), place.trip.id.eq(tripId))
-//                .orderBy(place.comments.size().desc(),place.id.desc())
-//                .fetch();
-//    }
 
 
+//    @Override
+//    public List<Place> findAllByTripIdAndCondition(Long tripId, String condition) {
+//        return queryFactory.selectFrom(place)
+//                .leftJoin(place.trip, trip).fetchJoin()
+//                .leftJoin(trip.tripImg, QTripImg.tripImg).fetchJoin()
+//                .where(place.trip.id.eq(tripId))
+//                .orderBy(conditionParam(condition))
+//                .fetch();
+//    }
 
 }
