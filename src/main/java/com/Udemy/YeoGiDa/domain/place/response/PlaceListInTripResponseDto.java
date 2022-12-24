@@ -11,6 +11,7 @@ import lombok.Setter;
 @Setter
 public class PlaceListInTripResponseDto {
 
+    private Long memberId;
     private String title;
     private String subTitle;
     private String imgUrl;
@@ -19,6 +20,7 @@ public class PlaceListInTripResponseDto {
 
 
     public PlaceListInTripResponseDto(Trip trip) {
+        this.memberId=trip.getMember().getId();
         this.title = trip.getTitle();
         this.subTitle = trip.getSubTitle();
         if(trip.getTripImg() == null) {
