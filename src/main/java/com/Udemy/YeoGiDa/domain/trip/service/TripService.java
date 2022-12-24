@@ -218,7 +218,8 @@ public class TripService {
 
         //푸쉬 알림 보내기
         firebaseCloudMessageService.sendMessageTo(trip.getMember().getDeviceToken(),
-                "여기다", member.getNickname() + AlarmType.NEW_HEART.getAlarmText());
+                "여기다", member.getNickname() + AlarmType.NEW_HEART.getAlarmText(),
+                "NEW_HEART", trip.getId().toString());
     }
 
     @Transactional

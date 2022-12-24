@@ -96,7 +96,8 @@ public class CommentService {
 
         //푸쉬 알림 보내기
         firebaseCloudMessageService.sendMessageTo(place.getTrip().getMember().getDeviceToken(),
-                "여기다", member.getNickname() + AlarmType.NEW_COMMENT.getAlarmText());
+                "여기다", member.getNickname() + AlarmType.NEW_COMMENT.getAlarmText(),
+                "NEW_COMMENT", place.getTrip().getId().toString() + "," + place.getId().toString());
 
         return new CommentListResponseDto(saveComment);
     }
