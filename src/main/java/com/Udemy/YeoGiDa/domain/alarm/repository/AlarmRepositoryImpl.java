@@ -11,6 +11,7 @@ import static com.Udemy.YeoGiDa.domain.alarm.entity.QAlarm.alarm;
 @RequiredArgsConstructor
 public class AlarmRepositoryImpl implements AlarmRepositoryCustom{
 
+    //롬복보단 생성자 주입 직접
     private final JPAQueryFactory queryFactory;
 
     @Override

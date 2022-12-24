@@ -29,6 +29,9 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
                 .fetch();
     }
 
+    /**
+     * id로 맵을 만들어서 사용
+     */
     @Override
     public List<Trip> findAllByRegionAndConditionFetch(String region, String condition) {
         return queryFactory.selectFrom(trip)

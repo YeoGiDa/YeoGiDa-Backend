@@ -42,6 +42,7 @@ public class Alarm extends BaseEntity {
      */
     private Long targetId;
 
+    //빌더를 빼고 생성자
     @Builder
     public Alarm(Member member, AlarmType alarmType, Long makeAlarmMemberId,
                  Long placeId, Long targetId) {

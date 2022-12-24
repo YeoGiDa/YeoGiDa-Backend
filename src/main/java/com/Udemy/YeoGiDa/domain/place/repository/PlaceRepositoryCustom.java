@@ -15,9 +15,9 @@ public interface PlaceRepositoryCustom {
     List<Place> findAllByTripId(Long tripId);
 
 
-//
+
 //    List<Place> findAllByTripIdOrderByStar(Long tripId);
-//
+
 //    List<Place> findAllByTripIdOrderByComment(Long tripId);
 
 //    List<Place> findAllByTagDefault(Long tripId,String tag);
