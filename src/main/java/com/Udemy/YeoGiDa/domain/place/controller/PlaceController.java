@@ -61,7 +61,13 @@ public class PlaceController {
     @GetMapping("/{tripId}/places/tripInfo")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getTripInfoInPlaceList(@PathVariable Long tripId){
-        PlaceListInTripResponseDto result = placeService.getTripDataInPlaceList(tripId);
+        PlaceListInTripResponseDto trip = placeService.getTripDataInPlaceList(tripId);
+
+        Map<String, Object> result = new LinkedHashMap<>();
+
+
+        result.put("memberId", placeService.getMemberIdFromTripId(tripId));
+        result.put("tripInfo",trip);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 정보 조회 성공 ", result), HttpStatus.OK);
     }
