@@ -62,8 +62,6 @@ public class PlaceController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getTripInfoInPlaceList(@PathVariable Long tripId){
         PlaceListInTripResponseDto result = placeService.getTripDataInPlaceList(tripId);
-
-
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 정보 조회 성공 ", result), HttpStatus.OK);
     }

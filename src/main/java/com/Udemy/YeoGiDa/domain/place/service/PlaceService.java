@@ -3,6 +3,7 @@ package com.Udemy.YeoGiDa.domain.place.service;
 
 import com.Udemy.YeoGiDa.domain.common.exception.ImgNotFoundException;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
+import com.Udemy.YeoGiDa.domain.heart.repository.HeartRepository;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
@@ -40,7 +41,7 @@ public class PlaceService {
     private final PlaceImgRepository placeImgRepository;
     private final S3Service s3Service;
     private final TripRepository tripRepository;
-
+    private final HeartRepository heartRepository;
 
 
     @Transactional(readOnly = true)
@@ -122,55 +123,6 @@ public class PlaceService {
         return result;
     }
 
-//
-//    @Transactional(readOnly = true)
-//    public List<PlaceListResponseDto> getPlaceListOrderByStar(Long tripId){
-//        return placeRepository.findAllByTripIdOrderByStar(tripId)
-//                .stream()
-//                .map(PlaceListResponseDto::new)
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public List<PlaceListResponseDto> getPlaceListByTagAsc(Long tripId,String tag){
-//        return placeRepository.findAllByTagDefault(tripId,tag)
-//                .stream()
-//                .map(PlaceListResponseDto::new)
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public List<PlaceListResponseDto> getPlaceListByTagDesc(Long tripId,String tag){
-//        return placeRepository.findAllByTagOrderById(tripId,tag)
-//                .stream()
-//                .map(PlaceListResponseDto::new)
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public List<PlaceListResponseDto> getPlaceListByTagStar(Long tripId,String tag){
-//        return placeRepository.findAllByTagOrderByStar(tripId,tag)
-//                .stream()
-//                .map(PlaceListResponseDto::new)
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public List<PlaceListResponseDto> getPlaceListByTagComment(Long tripId,String tag){
-//        return placeRepository.findAllByTagOrderByComment(tripId, tag)
-//                .stream()
-//                .map(PlaceListResponseDto::new)
-//                .collect(Collectors.toList());
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public List<PlaceListResponseDto> getPlaceListByComments(Long tripId){
-//        return placeRepository.findAllByTripIdOrderByComment(tripId)
-//                .stream()
-//                .map(PlaceListResponseDto::new)
-//                .collect(Collectors.toList());
-//    }
-
 
 
     @Transactional(readOnly = true)
@@ -185,8 +137,9 @@ public class PlaceService {
     public PlaceListInTripResponseDto getTripDataInPlaceList(Long tripId) {
         Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
                 .orElseThrow(TripNotFoundException::new)).get();
-
-        return new PlaceListInTripResponseDto(trip);
+        PlaceListInTripResponseDto result = new PlaceListInTripResponseDto(trip);
+        result.setTrip_like_cheek(heartRepository.existsByTripId(tripId));
+        return result;
     }
 
 
