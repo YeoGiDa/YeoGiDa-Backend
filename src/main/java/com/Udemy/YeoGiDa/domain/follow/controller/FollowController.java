@@ -1,9 +1,9 @@
 package com.Udemy.YeoGiDa.domain.follow.controller;
 
 import com.Udemy.YeoGiDa.domain.follow.response.FollowMemberDetailResponseDto;
+import com.Udemy.YeoGiDa.domain.follow.response.FollowResponseDto;
 import com.Udemy.YeoGiDa.domain.follow.service.FollowService;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
-import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
 import com.Udemy.YeoGiDa.global.response.DefaultResult;
 import com.Udemy.YeoGiDa.global.response.StatusCode;
 import com.Udemy.YeoGiDa.global.security.annotation.LoginMember;
@@ -26,7 +26,7 @@ public class FollowController {
 
     @GetMapping("/following")
     public ResponseEntity getFollowingListOrderById(@LoginMember Member member){
-        List<MemberDto> followingList = followService.getFollowingList(member);
+        List<FollowResponseDto> followingList = followService.getFollowingList(member);
         Map<String, Object> result = new HashMap<>();
         result.put("followingList",followingList);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
@@ -35,7 +35,7 @@ public class FollowController {
 
     @GetMapping("/follower")
     public ResponseEntity getFollowerListOrderById(@LoginMember Member member){
-        List<MemberDto> followerList = followService.getFollowerList(member);
+        List<FollowResponseDto> followerList = followService.getFollowerList(member);
         Map<String, Object> result = new HashMap<>();
         result.put("followerList",followerList);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
@@ -45,7 +45,7 @@ public class FollowController {
     @GetMapping("/search/following")
     public ResponseEntity getFollowingByNickname(@LoginMember Member member,
                                                  @RequestParam("nickname") String nickname){
-        List<MemberDto> followerList = followService.getFollowingListSearch(member.getId(),nickname);
+        List<FollowResponseDto> followerList = followService.getFollowingListSearch(member.getId(),nickname);
         Map<String, Object> result = new HashMap<>();
         result.put("followerList",followerList);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
@@ -55,7 +55,7 @@ public class FollowController {
     @GetMapping("/search/follower")
     public ResponseEntity getFollowerByNickname(@LoginMember Member member,
                                                  @RequestParam("nickname") String nickname){
-        List<MemberDto> followerList = followService.getFollowerListSearch(member.getId(),nickname);
+        List<FollowResponseDto> followerList = followService.getFollowerListSearch(member.getId(),nickname);
         Map<String, Object> result = new HashMap<>();
         result.put("followerList",followerList);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
