@@ -3,6 +3,7 @@ package com.Udemy.YeoGiDa.domain.place.service;
 
 import com.Udemy.YeoGiDa.domain.common.exception.ImgNotFoundException;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
+import com.Udemy.YeoGiDa.domain.heart.repository.HeartRepository;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
@@ -37,7 +38,7 @@ public class PlaceService {
     private final PlaceImgRepository placeImgRepository;
     private final S3Service s3Service;
     private final TripRepository tripRepository;
-
+    private final HeartRepository heartRepository;
 
 
     @Transactional(readOnly = true)
@@ -131,8 +132,9 @@ public class PlaceService {
     public PlaceListInTripResponseDto getTripDataInPlaceList(Long tripId) {
         Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
                 .orElseThrow(TripNotFoundException::new)).get();
-
-        return new PlaceListInTripResponseDto(trip);
+        PlaceListInTripResponseDto result = new PlaceListInTripResponseDto(trip);
+        result.setTrip_like_cheek(heartRepository.existsByTripId(tripId));
+        return result;
     }
 
 

@@ -9,11 +9,11 @@ import com.Udemy.YeoGiDa.domain.follow.exception.AlreadyFollowException;
 import com.Udemy.YeoGiDa.domain.follow.exception.FollowNotFoundException;
 import com.Udemy.YeoGiDa.domain.follow.repository.FollowRepository;
 import com.Udemy.YeoGiDa.domain.follow.response.FollowMemberDetailResponseDto;
+import com.Udemy.YeoGiDa.domain.follow.response.FollowResponseDto;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
 import com.Udemy.YeoGiDa.domain.member.repository.MemberRepository;
 import com.Udemy.YeoGiDa.domain.member.response.MemberDetailResponseDto;
-import com.Udemy.YeoGiDa.domain.member.response.MemberDto;
 import com.Udemy.YeoGiDa.global.fcm.service.FirebaseCloudMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,32 +34,32 @@ public class FollowService {
     private final AlarmRepository alarmRepository;
     private final FirebaseCloudMessageService firebaseCloudMessageService;
 
-    public List<MemberDto> getFollowingList(Member member){
+    public List<FollowResponseDto> getFollowingList(Member member){
         return followRepository.findAllByFromMemberId(member.getId())
                 .stream()
-                .map(MemberDto::new)
+                .map(FollowResponseDto::new)
                 .collect(Collectors.toList());
     }
 
-    public List<MemberDto> getFollowerList(Member member){
+    public List<FollowResponseDto> getFollowerList(Member member){
         return followRepository.findAllByToMemberId(member.getId())
                 .stream()
-                .map(MemberDto::new)
+                .map(FollowResponseDto::new)
                 .collect(Collectors.toList());
     }
 
 
-    public List<MemberDto> getFollowingListSearch(Long memberId,String nickname) {
+    public List<FollowResponseDto> getFollowingListSearch(Long memberId,String nickname) {
         return  followRepository.SearchFollowingMemberByNickname(memberId,nickname)
                 .stream()
-                .map(MemberDto::new)
+                .map(FollowResponseDto::new)
                 .collect(Collectors.toList());
     }
 
-    public List<MemberDto> getFollowerListSearch(Long memberId,String nickname) {
+    public List<FollowResponseDto> getFollowerListSearch(Long memberId,String nickname) {
         return  followRepository.SearchFollowerMemberByNickname(memberId,nickname)
                 .stream()
-                .map(MemberDto::new)
+                .map(FollowResponseDto::new)
                 .collect(Collectors.toList());
     }
 
