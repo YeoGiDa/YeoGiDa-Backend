@@ -4,10 +4,7 @@ import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceUpdateRequestDto;
-import com.Udemy.YeoGiDa.domain.place.response.PlaceDetailResponseDto;
-import com.Udemy.YeoGiDa.domain.place.response.PlaceListInMapResponseDto;
-import com.Udemy.YeoGiDa.domain.place.response.PlaceListInTripResponseDto;
-import com.Udemy.YeoGiDa.domain.place.response.PlaceListResponseDto;
+import com.Udemy.YeoGiDa.domain.place.response.*;
 import com.Udemy.YeoGiDa.domain.place.service.PlaceService;
 import com.Udemy.YeoGiDa.global.response.DefaultResult;
 import com.Udemy.YeoGiDa.global.response.StatusCode;
@@ -69,7 +66,6 @@ public class PlaceController {
     }
 
     /**
-     * 
      * @param member
      * @return 내가 댓글 단 장소 목록 조회
      */
@@ -168,7 +164,6 @@ public class PlaceController {
     }
 
     /**
-     *
      * @param placeId
      * @param member
      * @return 장소 삭제
@@ -180,5 +175,34 @@ public class PlaceController {
         placeService.delete(placeId, member);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "장소 삭제 성공"), HttpStatus.OK);
+    }
+
+    /**
+     * @return 지도에 장소 리스트 전체 반환
+     */
+    @GetMapping("/places/inMap")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity aroundViewPlace() {
+        List<PlaceAroundViewResponseDto> placeAroundViewResponseDtos = placeService.aroundViewPlace();
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("placeList", placeAroundViewResponseDtos);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "지도에 있는 모든 장소 리스트 반환 성공", result), HttpStatus.OK);
+    }
+
+    /**
+     * @param latitude
+     * @param longitude
+     * @return 지도에서 위도, 경도로 검색한 장소 리스트 반환
+     */
+    @GetMapping("/places/marker")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity aroundMarkerPlace(@RequestParam Double latitude,
+                                            @RequestParam Double longitude) {
+        List<PlaceAroundMarkerResponseDto> placeAroundMarkerResponseDtos = placeService.aroundMarkerPlace(latitude, longitude);
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("placeList", placeAroundMarkerResponseDtos);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "지도에서 위도, 경도로 검색한 장소 리스트 반환 성공", result), HttpStatus.OK);
     }
 }
