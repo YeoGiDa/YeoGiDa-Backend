@@ -33,4 +33,5 @@ public interface FollowRepository extends JpaRepository<Follow, Follow.PK>, Foll
     Long countByFromMemberId(Long memberId);
 
 
+    boolean existsByToMemberIdAndFromMemberId(Long toMemberId,Long fromMemberId);
 }
