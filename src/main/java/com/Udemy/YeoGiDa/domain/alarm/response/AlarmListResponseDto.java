@@ -20,8 +20,6 @@ public class AlarmListResponseDto {
 
     private AlarmType alarmType;
 
-    private Long makeMemberId;
-
     private Long targetId;
 
     private String text;
@@ -34,7 +32,6 @@ public class AlarmListResponseDto {
         this.nickname = member.getNickname();
         this.imgUrl = member.getMemberImg().getImgUrl();
         this.alarmType = alarm.getAlarmType();
-        this.makeMemberId = alarm.getMakeAlarmMemberId();
         this.targetId = alarm.getTargetId();
         this.text = alarm.getAlarmType().getAlarmText();
         this.createdTime = alarm.getCreatedTime();
