@@ -261,6 +261,17 @@ public class InitDb {
                     .trip(trip2)
                     .build();
 
+            Place place13 = Place.builder()
+                    .title("나도 울릉도2")
+                    .content("두번 지키기")
+                    .star(3.5F)
+                    .address("울릉도 어디 34-1")
+                    .latitude(33.5139974D)
+                    .longitude(126.5489702D)
+                    .tag("숙소")
+                    .trip(trip2)
+                    .build();
+
             List<PlaceImg> placeImgs1 = new ArrayList<>();
             placeImgs1.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place1.jpeg", place1));
             placeImgs1.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place2.jpeg", place1));
@@ -300,6 +311,9 @@ public class InitDb {
             List<PlaceImg> placeImgs12 = new ArrayList<>();
             placeImgs12.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place12.jpeg", place12));
             place12.setPlaceImgs(placeImgs12);
+            List<PlaceImg> placeImgs13 = new ArrayList<>();
+            placeImgs13.add(new PlaceImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/place12.jpeg", place13));
+            place13.setPlaceImgs(placeImgs13);
 
             em.persist(place1);
             em.persist(place2);
@@ -313,6 +327,7 @@ public class InitDb {
             em.persist(place10);
             em.persist(place11);
             em.persist(place12);
+            em.persist(place13);
 
             Comment comment1 = new Comment(member1, place3, "여기 짱");
             Comment comment2 = new Comment(member3, place3, "여기 짱2");

@@ -13,10 +13,7 @@ import com.Udemy.YeoGiDa.domain.place.repository.PlaceImgRepository;
 import com.Udemy.YeoGiDa.domain.place.repository.PlaceRepository;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceUpdateRequestDto;
-import com.Udemy.YeoGiDa.domain.place.response.PlaceDetailResponseDto;
-import com.Udemy.YeoGiDa.domain.place.response.PlaceListInMapResponseDto;
-import com.Udemy.YeoGiDa.domain.place.response.PlaceListInTripResponseDto;
-import com.Udemy.YeoGiDa.domain.place.response.PlaceListResponseDto;
+import com.Udemy.YeoGiDa.domain.place.response.*;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
 import com.Udemy.YeoGiDa.domain.trip.repository.TripRepository;
@@ -122,8 +119,6 @@ public class PlaceService {
 
         return result;
     }
-
-
 
     @Transactional(readOnly = true)
     public PlaceDetailResponseDto getPlaceDetail(Long placeId) {
@@ -283,25 +278,25 @@ public class PlaceService {
             throw new ForbiddenException();
         }
 
-//        List<PlaceImg> findPlaceImgs = placeImgRepository.findPlaceImgsByPlace(place);
-//        //default 이미지 한장일때
-//        String s3FileName = findPlaceImgs.get(0).getImgUrl().split("/")[3];
-//        if((findPlaceImgs.size() == 1) && (s3FileName.equals("default_place.png"))) {
-//            placeImgRepository.delete(findPlaceImgs.get(0));
-//        }
-//        else {
-//            for (PlaceImg findPlaceImg : findPlaceImgs) {
-//                String fileName = findPlaceImg.getImgUrl().split("/")[3];
-//                s3Service.deleteFile(fileName);
-//                placeImgRepository.delete(findPlaceImg);
-//            }
-//        }
-
         placeRepository.delete(place);
     }
 
-    public Long getMemberIdFromTripId(Long tripId){
-        Optional<Trip> trip = tripRepository.findById(tripId);
-        return trip.get().getMember().getId();
+    public List<PlaceAroundViewResponseDto> aroundViewPlace() {
+        return placeRepository.findAll()
+                .stream()
+                .map(PlaceAroundViewResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<PlaceAroundMarkerResponseDto> aroundMarkerPlace(Double latitude, Double longitude) {
+        return placeRepository.findAllByLatitudeAndLongitude(latitude, longitude)
+                .stream()
+                .map(PlaceAroundMarkerResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public Long getMemberIdFromTripId(Long tripId) {
+        Trip findTrip = tripRepository.findById(tripId).orElseThrow(TripNotFoundException::new);
+        return findTrip.getMember().getId();
     }
 }
