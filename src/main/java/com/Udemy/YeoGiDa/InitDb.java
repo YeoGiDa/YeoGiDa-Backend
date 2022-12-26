@@ -349,6 +349,22 @@ public class InitDb {
             em.persist(comment8);
             em.persist(comment9);
 
+//            Follow follow1 = new Follow(member1.getId(),member2.getId() );
+//            Follow follow2 = new Follow(member3.getId(),member2.getId() );
+//            Follow follow3 = new Follow(member4.getId(),member2.getId() );
+//            Follow follow4 = new Follow(member5.getId(),member2.getId() );
+//            Follow follow5 = new Follow(member2.getId(),member1.getId() );
+//            Follow follow6 = new Follow(member3.getId(),member1.getId() );
+//            Follow follow7 = new Follow(member4.getId(),member1.getId() );
+//
+//            em.persist(follow1);
+//            em.persist(follow2);
+//            em.persist(follow3);
+//            em.persist(follow4);
+//            em.persist(follow5);
+//            em.persist(follow6);
+//            em.persist(follow7);
+
 //            Heart heart1 = new Heart(member1, trip1);
 //            Heart heart2 = new Heart(member2, trip1);
 //            Heart heart3 = new Heart(member3, trip1);
@@ -380,6 +396,7 @@ public class InitDb {
 //            em.persist(heart13);
 //            em.persist(heart14);
 //            em.persist(heart15);
+
         }
     }
 }
