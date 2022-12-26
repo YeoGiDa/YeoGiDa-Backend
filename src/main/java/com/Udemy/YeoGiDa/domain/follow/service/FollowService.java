@@ -64,12 +64,13 @@ public class FollowService {
     }
 
     @Transactional(readOnly = true)
-    public FollowMemberDetailResponseDto getFindMemberDetail(Long findMemberId) {
+    public FollowMemberDetailResponseDto getFindMemberDetail(Long findMemberId,Long memberId) {
         Member member = Optional.ofNullable(memberRepository.findById(findMemberId)
                 .orElseThrow(MemberNotFoundException::new)).get();
         FollowMemberDetailResponseDto followMemberDetailResponseDto = new FollowMemberDetailResponseDto(member);
         followMemberDetailResponseDto.setFollowerCount(followRepository.findSizeFollower(member.getId()));
         followMemberDetailResponseDto.setFollowingCount(followRepository.findSizeFollowing(member.getId()));
+        followMemberDetailResponseDto.setIsFollow(followRepository.existsByToMemberIdAndFromMemberId(findMemberId,memberId));
         return followMemberDetailResponseDto;
     }
 

@@ -17,6 +17,7 @@ public class FollowMemberDetailResponseDto {
         private Integer followingCount;
         private Integer tripCount;
         private Integer heartCount;
+        private Boolean isFollow;
 
 
         public FollowMemberDetailResponseDto(Member member) {
@@ -31,6 +32,7 @@ public class FollowMemberDetailResponseDto {
             this.followingCount = null;
             this.tripCount = member.getTrips().size();
             this.heartCount= member.getHeartCount();
+            this.isFollow = null;
         }
 
 
