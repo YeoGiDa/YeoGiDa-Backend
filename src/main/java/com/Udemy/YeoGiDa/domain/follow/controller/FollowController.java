@@ -73,16 +73,26 @@ public class FollowController {
                 "팔로우 성공", result), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{toMemberId}")
+    @DeleteMapping("/{toMemberId}/following")
     public ResponseEntity deleteFollowing(@PathVariable Long toMemberId,
                                           @LoginMember Member member){
 
         boolean result = followService.unFollow(toMemberId, member.getId());
 
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "팔로우 취소 성공", result), HttpStatus.OK);
+                "팔로잉 취소 성공", result), HttpStatus.OK);
     }
 
+
+    @DeleteMapping("/{fromMemberId}/follower")
+    public ResponseEntity deleteFollower(@PathVariable Long fromMemberId,
+                                          @LoginMember Member member){
+
+        boolean result = followService.unFollow(member.getId(), fromMemberId);
+
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "팔로워 취소 성공", result), HttpStatus.OK);
+    }
 
     @GetMapping("/{findMemberId}/detail")
     @ResponseStatus(HttpStatus.OK)

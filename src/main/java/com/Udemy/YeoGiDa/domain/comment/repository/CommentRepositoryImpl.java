@@ -52,16 +52,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        int totalSize = queryFactory.select(Projections.fields(
-                        CommentListResponseDto.class,
-                        comment.id.as("commentId"),
-                        comment.member.id.as("memberId"),
-                        comment.member.memberImg.imgUrl,
-                        comment.member.nickname,
-                        comment.createdTime,
-                        comment.content
-                ))
-                .from(comment)
+        int totalSize = queryFactory.selectFrom(comment)
                 .where(comment.place.id.eq(placeId))
                 .fetch().size();
 
