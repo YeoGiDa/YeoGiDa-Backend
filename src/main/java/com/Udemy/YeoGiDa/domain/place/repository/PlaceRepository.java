@@ -12,5 +12,7 @@ public interface PlaceRepository extends JpaRepository<Place,Long>, PlaceReposit
     List<Place> findAll();
 
     List<Place> findAllByLatitudeAndLongitude(Double latitude, Double longitude);
+
+    List<Place> findAllByTripId(Long tripId);
 }
 
