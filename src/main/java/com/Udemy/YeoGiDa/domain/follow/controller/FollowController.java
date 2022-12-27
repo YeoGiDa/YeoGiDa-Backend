@@ -47,7 +47,7 @@ public class FollowController {
                                                  @RequestParam("nickname") String nickname){
         List<FollowResponseDto> followingList = followService.getFollowingListSearch(member.getId(),nickname);
         Map<String, Object> result = new HashMap<>();
-        result.put("followingList", followerList);
+        result.put("followingList", followingList);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "팔로잉 검색 목록 조회 성공", result), HttpStatus.OK);
     }
