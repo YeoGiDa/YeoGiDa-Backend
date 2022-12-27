@@ -290,11 +290,21 @@ public class TripService {
         if (findHeart.isEmpty()) {
             throw new HeartTripNotFoundException();
         }
-        List<Long> tripIds = findHeart.stream().map(h -> h.getTrip().getId()).collect(Collectors.toList());
+        //멘토님 리팩토링 코드
+//        List<Long> tripIds = findHeart.stream().map(h -> h.getTrip().getId()).collect(Collectors.toList());
+//        List<TripListWithRegionResponseDto> collect = tripRepository.findByIdIn(tripIds).stream().map(TripListWithRegionResponseDto::new).collect(Collectors.toList());
 
-        List<TripListWithRegionResponseDto> collect = tripRepository.findByIdIn(tripIds).stream().map(TripListWithRegionResponseDto::new).collect(Collectors.toList());
-        Collections.reverse(collect);
-        return collect;
+        //내 코드
+        List<TripListWithRegionResponseDto> tripListWithRegionResponseDto = new ArrayList<>();
+        for (Heart heart : findHeart) {
+            Long tripId = heart.getTrip().getId();
+            Trip trip = tripRepository.findById(tripId).orElseThrow(TripNotFoundException::new);
+            if (trip.getRegion().equals(region)) {
+                tripListWithRegionResponseDto.add(new TripListWithRegionResponseDto(trip));
+            }
+        }
+        Collections.reverse(tripListWithRegionResponseDto);
+        return tripListWithRegionResponseDto;
     }
 
     //좋아요한 여행지 검색
