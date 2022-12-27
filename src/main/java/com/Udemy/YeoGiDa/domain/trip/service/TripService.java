@@ -8,6 +8,7 @@ import com.Udemy.YeoGiDa.domain.common.exception.ImgNotFoundException;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.follow.exception.NoOneFollowException;
 import com.Udemy.YeoGiDa.domain.follow.repository.FollowRepository;
+import com.Udemy.YeoGiDa.domain.follow.response.FollowResponseDto;
 import com.Udemy.YeoGiDa.domain.heart.entity.Heart;
 import com.Udemy.YeoGiDa.domain.heart.exception.AlreadyHeartException;
 import com.Udemy.YeoGiDa.domain.heart.exception.HeartNotFoundException;
@@ -24,6 +25,7 @@ import com.Udemy.YeoGiDa.domain.trip.repository.TripRepository;
 import com.Udemy.YeoGiDa.domain.trip.request.TripSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripListResponseDto;
+import com.Udemy.YeoGiDa.domain.trip.response.TripListWithRegionResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripMonthBestListResponseDto;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import com.Udemy.YeoGiDa.global.fcm.service.FirebaseCloudMessageService;
@@ -212,7 +214,6 @@ public class TripService {
                 .member(trip.getMember())
                 .alarmType(AlarmType.NEW_HEART)
                 .makeAlarmMemberId(member.getId())
-                .placeId(null)
                 .targetId(trip.getId())
                 .build());
 
@@ -256,34 +257,34 @@ public class TripService {
     }
 
     //멤버 여행지
-    public List<TripListResponseDto> getMemberTripList(Long memberId, String condition) {
+    public List<TripListWithRegionResponseDto> getMemberTripList(Long memberId, String condition) {
 
         memberRepository.findById(memberId).orElseThrow(() -> new MemberNotFoundException());
 
         return tripRepository.findAllByMemberIdFetch(memberId, condition)
                 .stream()
-                .map(TripListResponseDto::new)
+                .map(TripListWithRegionResponseDto::new)
                 .collect(Collectors.toList());
     }
 
     //내가 좋아요한 여행지
-    public List<TripListResponseDto> getMyHeartTripList(Member member) {
+    public List<TripListWithRegionResponseDto> getMyHeartTripList(Member member) {
         List<Heart> findHeart = heartRepository.findAllByMemberAndHeartFetch(member);
         if (findHeart.isEmpty()) {
             throw new HeartTripNotFoundException();
         }
-        List<TripListResponseDto> tripListResponseDtos = new ArrayList<>();
+        List<TripListWithRegionResponseDto> tripListWithRegionResponseDtos = new ArrayList<>();
         for (Heart heart : findHeart) {
             Long tripId = heart.getTrip().getId();
             Trip trip = tripRepository.findById(tripId).orElseThrow(TripNotFoundException::new);
-            tripListResponseDtos.add(new TripListResponseDto(trip));
+            tripListWithRegionResponseDtos.add(new TripListWithRegionResponseDto(trip));
         }
-        Collections.reverse(tripListResponseDtos);
-        return tripListResponseDtos;
+        Collections.reverse(tripListWithRegionResponseDtos);
+        return tripListWithRegionResponseDtos;
     }
 
     //좋아요한 여행지 지역별 필터
-    public List<TripListResponseDto> getMyHeartTripFilterList(Member member, String region) {
+    public List<TripListWithRegionResponseDto> getMyHeartTripFilterList(Member member, String region) {
         List<Heart> findHeart = heartRepository.findAllByMemberAndHeartFetch(member);
         //CollectionUtils.isNullOrEmpty()
         if (findHeart.isEmpty()) {
@@ -291,25 +292,27 @@ public class TripService {
         }
         List<Long> tripIds = findHeart.stream().map(h -> h.getTrip().getId()).collect(Collectors.toList());
 
-        return tripRepository.findByIdIn(tripIds).stream().map(TripListResponseDto::new).collect(Collectors.toList());
+        List<TripListWithRegionResponseDto> collect = tripRepository.findByIdIn(tripIds).stream().map(TripListWithRegionResponseDto::new).collect(Collectors.toList());
+        Collections.reverse(collect);
+        return collect;
     }
 
     //좋아요한 여행지 검색
-    public List<TripListResponseDto> getMyHeartTripSearchList(Member member, String keyword) {
+    public List<TripListWithRegionResponseDto> getMyHeartTripSearchList(Member member, String keyword) {
         List<Heart> findHeart = heartRepository.findAllByMemberAndHeartFetch(member);
         if (findHeart.isEmpty()) {
             throw new HeartTripNotFoundException();
         }
-        List<TripListResponseDto> tripListResponseDtos = new ArrayList<>();
+        List<TripListWithRegionResponseDto> tripListWithRegionResponseDto = new ArrayList<>();
         for (Heart heart : findHeart) {
             Long tripId = heart.getTrip().getId();
             Trip trip = tripRepository.findById(tripId).orElseThrow(TripNotFoundException::new);
             if (trip.getTitle().contains(keyword) || trip.getSubTitle().contains(keyword)) {
-                tripListResponseDtos.add(new TripListResponseDto(trip));
+                tripListWithRegionResponseDto.add(new TripListWithRegionResponseDto(trip));
             }
         }
-        Collections.reverse(tripListResponseDtos);
-        return tripListResponseDtos;
+        Collections.reverse(tripListWithRegionResponseDto);
+        return tripListWithRegionResponseDto;
     }
 
     //팔로잉의 최근 여행지 10개
@@ -354,6 +357,20 @@ public class TripService {
             }
         }
         return tripListResponseDtos;
+    }
+
+    //여행지에 좋아요한 유저들 목록 반환
+    public List<FollowResponseDto> getHeartMemberList(Long tripId) {
+        List<Heart> allByTripId = heartRepository.findAllByTripId(tripId);
+        List<Member> memberList = new ArrayList<>();
+        for (Heart heart : allByTripId) {
+            memberList.add(heart.getMember());
+        }
+        List<FollowResponseDto> followResponseDtos = new ArrayList<>();
+        for (Member member : memberList) {
+            followResponseDtos.add(new FollowResponseDto(member));
+        }
+        return followResponseDtos;
     }
 
     //@Scheduler에서 매달 1일마다 하트 변화량을 0으로 수정

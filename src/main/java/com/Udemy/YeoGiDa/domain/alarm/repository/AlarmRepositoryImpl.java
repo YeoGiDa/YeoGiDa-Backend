@@ -33,13 +33,11 @@ public class AlarmRepositoryImpl implements AlarmRepositoryCustom{
     }
 
     @Override
-    public Alarm findCommentAlarmByMemberAndMakeMemberIdAndCommentId(Member member, Long makeMemberId,
-                                                                     Long placeId, Long commentId) {
+    public Alarm findCommentAlarmByMemberAndMakeMemberIdAndCommentId(Member member, Long makeMemberId, Long commentId) {
         return queryFactory.selectFrom(alarm)
                 .where(alarm.alarmType.eq(AlarmType.NEW_COMMENT),
                         alarm.member.eq(member),
                         alarm.makeAlarmMemberId.eq(makeMemberId),
-                        alarm.placeId.eq(placeId),
                         alarm.targetId.eq(commentId))
                 .fetchOne();
     }

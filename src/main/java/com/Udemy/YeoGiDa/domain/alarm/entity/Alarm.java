@@ -33,8 +33,6 @@ public class Alarm extends BaseEntity {
 
     private Long makeAlarmMemberId;
 
-    private Long placeId;
-
     /*
     NEW_FOLLOW: followerId;
     NEW_COMMENT: commentId;
@@ -44,12 +42,10 @@ public class Alarm extends BaseEntity {
 
     //빌더를 빼고 생성자
     @Builder
-    public Alarm(Member member, AlarmType alarmType, Long makeAlarmMemberId,
-                 Long placeId, Long targetId) {
+    public Alarm(Member member, AlarmType alarmType, Long makeAlarmMemberId, Long targetId) {
         this.member = member;
         this.alarmType = alarmType;
         this.makeAlarmMemberId = makeAlarmMemberId;
-        this.placeId = placeId;
         this.targetId = targetId;
     }
 }

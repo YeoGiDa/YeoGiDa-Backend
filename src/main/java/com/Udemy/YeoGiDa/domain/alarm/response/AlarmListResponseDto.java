@@ -24,7 +24,7 @@ public class AlarmListResponseDto {
 
     private String text;
 
-    @JsonFormat(pattern = "yyyy년 MM월 dd일")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'hh:mm:ss")
     private LocalDateTime createdTime;
 
     @Builder

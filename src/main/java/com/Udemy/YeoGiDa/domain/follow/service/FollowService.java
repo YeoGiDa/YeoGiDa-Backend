@@ -94,7 +94,6 @@ public class FollowService {
                 .member(toMember)
                 .alarmType(AlarmType.NEW_FOLLOW)
                 .makeAlarmMemberId(fromMemberId)
-                .placeId(null)
                 .targetId(fromMemberId)
                 .build());
 

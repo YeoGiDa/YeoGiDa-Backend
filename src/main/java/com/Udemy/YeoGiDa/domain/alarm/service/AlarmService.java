@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -34,6 +35,7 @@ public class AlarmService {
                             .orElseThrow(MemberNotFoundException::new);
             alarmListResponseDtos.add(new AlarmListResponseDto(alarm, makeMember));
         }
+        Collections.reverse(alarmListResponseDtos);
         return alarmListResponseDtos;
     }
 }
