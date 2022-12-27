@@ -19,7 +19,7 @@ public class CommentListResponseDto {
     private String imgUrl;
     private String nickname;
 
-    @JsonFormat(pattern = "yyyy년 MM월 dd일")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdTime;
 
     private String content;

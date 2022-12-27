@@ -30,11 +30,11 @@ public class SlackMessage {
         this.channel = channel;
         this.botName = botName;
 
-        if (!StringUtils.isEmpty(iconEmoji)) {
+        if (StringUtils.hasText(iconEmoji)) {
             this.iconEmoji = iconEmoji;
         }
 
-        if (!StringUtils.isEmpty(iconUrl)) {
+        if (StringUtils.hasText(iconUrl)) {
             this.iconUrl = iconUrl;
         }
     }
