@@ -133,7 +133,7 @@ public class PlaceService {
         Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
                 .orElseThrow(TripNotFoundException::new)).get();
         PlaceListInTripResponseDto result = new PlaceListInTripResponseDto(trip);
-        result.setTrip_like_cheek(heartRepository.existsByTripId(tripId));
+        result.setTrip_like_check(heartRepository.existsByTripId(tripId));
         return result;
     }
 
