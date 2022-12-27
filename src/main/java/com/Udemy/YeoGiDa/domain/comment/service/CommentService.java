@@ -90,7 +90,6 @@ public class CommentService {
                 .member(place.getTrip().getMember())
                 .alarmType(AlarmType.NEW_COMMENT)
                 .makeAlarmMemberId(member.getId())
-                .placeId(placeId)
                 .targetId(comment.getId())
                 .build());
 
@@ -125,7 +124,7 @@ public class CommentService {
 
         //알림 삭제
         Alarm findAlarm = alarmRepository.findCommentAlarmByMemberAndMakeMemberIdAndCommentId(
-                place.getTrip().getMember(), member.getId(), place.getId(), commentId);
+                place.getTrip().getMember(), member.getId(), commentId);
         if(findAlarm == null) {
             throw new AlarmNotFoundException();
         }

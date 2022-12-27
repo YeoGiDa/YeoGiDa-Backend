@@ -47,9 +47,9 @@ public class FollowController {
                                                  @RequestParam("nickname") String nickname){
         List<FollowResponseDto> followerList = followService.getFollowingListSearch(member.getId(),nickname);
         Map<String, Object> result = new HashMap<>();
-        result.put("followingList",followerList);
+        result.put("followingList", followerList);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "팔로잉 검색 목록 조회 성공", followerList), HttpStatus.OK);
+                "팔로잉 검색 목록 조회 성공", result), HttpStatus.OK);
     }
 
     @GetMapping("/search/follower")
@@ -57,9 +57,9 @@ public class FollowController {
                                                  @RequestParam("nickname") String nickname){
         List<FollowResponseDto> followerList = followService.getFollowerListSearch(member.getId(),nickname);
         Map<String, Object> result = new HashMap<>();
-        result.put("followerList",followerList);
+        result.put("followerList", followerList);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "팔로워 검색 목록 조회 성공", followerList), HttpStatus.OK);
+                "팔로워 검색 목록 조회 성공", result), HttpStatus.OK);
     }
 
 

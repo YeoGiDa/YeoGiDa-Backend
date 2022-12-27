@@ -212,7 +212,6 @@ public class TripService {
                 .member(trip.getMember())
                 .alarmType(AlarmType.NEW_HEART)
                 .makeAlarmMemberId(member.getId())
-                .placeId(null)
                 .targetId(trip.getId())
                 .build());
 

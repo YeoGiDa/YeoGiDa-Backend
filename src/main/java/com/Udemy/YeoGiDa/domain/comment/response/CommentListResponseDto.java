@@ -33,6 +33,5 @@ public class CommentListResponseDto {
         this.nickname = comment.getMember().getNickname();
         this.createdTime = comment.getCreatedTime();
         this.content = comment.getContent();
-
     }
 }
