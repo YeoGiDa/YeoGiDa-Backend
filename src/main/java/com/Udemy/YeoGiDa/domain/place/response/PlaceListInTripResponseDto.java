@@ -14,7 +14,7 @@ public class PlaceListInTripResponseDto {
     private Long memberId;
     private String nickname;
     private String member_imgUrl;
-    private Boolean trip_like_cheek;
+    private Boolean trip_like_check;
     private String title;
     private String subTitle;
     private String imgUrl;
@@ -25,7 +25,7 @@ public class PlaceListInTripResponseDto {
         this.memberId=trip.getMember().getId();
         this.nickname=trip.getMember().getNickname();
         this.member_imgUrl=trip.getMember().getMemberImg().getImgUrl();
-        this.trip_like_cheek = Boolean.FALSE;
+        this.trip_like_check = Boolean.FALSE;
         this.title = trip.getTitle();
         this.subTitle = trip.getSubTitle();
         if(trip.getTripImg() == null) {
