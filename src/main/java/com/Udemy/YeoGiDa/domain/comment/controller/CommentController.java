@@ -40,23 +40,6 @@ public class CommentController {
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "댓글 목록 조회 성공 - 최신순", result), HttpStatus.OK);
     }
-    
-    //무한페이징 적용
-    @GetMapping("/{placeId}/comments")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity getComments(@PathVariable Long placeId,
-                                      @RequestParam("condition") String condition,
-                                      @RequestParam int page,
-                                      @RequestParam int size){
-        Page<CommentListResponseDto> comments = commentService.getTest(placeId,page,size,condition);
-        Map<String, Object> result = new HashMap<>();
-        result.put("commentCounts",comments.getTotalElements());
-        result.put("commentList", comments.getContent());
-
-        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "댓글 목록 조회 성공", result), HttpStatus.OK);
-    }
-
 
     @ApiOperation("댓글 목록 조회 - 작성순")
     @GetMapping("/{placeId}/comments/idAsc")
@@ -69,6 +52,26 @@ public class CommentController {
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "댓글 목록 조회 성공 - 작성순", result), HttpStatus.OK);
     }
+
+
+    //무한페이징 적용
+    @GetMapping("/{placeId}/comments")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getComments(@PathVariable Long placeId,
+                                      @RequestParam("condition") String condition,
+                                      @RequestParam int page,
+                                      @RequestParam int size){
+        Page<CommentListResponseDto> comments = commentService.getTest(placeId,page,size,condition);
+        Map<String, Object> result = new HashMap<>();
+        result.put("next",comments.hasNext());
+        result.put("commentCounts",comments.getTotalElements());
+        result.put("commentList", comments.getContent());
+
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "댓글 목록 조회 성공", result), HttpStatus.OK);
+    }
+
+
 
 
     @ApiOperation("댓글 작성")

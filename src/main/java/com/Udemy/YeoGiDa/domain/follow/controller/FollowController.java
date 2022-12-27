@@ -45,7 +45,7 @@ public class FollowController {
     @GetMapping("/search/following")
     public ResponseEntity getFollowingByNickname(@LoginMember Member member,
                                                  @RequestParam("nickname") String nickname){
-        List<FollowResponseDto> followerList = followService.getFollowingListSearch(member.getId(),nickname);
+        List<FollowResponseDto> followingList = followService.getFollowingListSearch(member.getId(),nickname);
         Map<String, Object> result = new HashMap<>();
         result.put("followingList", followerList);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
@@ -96,8 +96,9 @@ public class FollowController {
 
     @GetMapping("/{findMemberId}/detail")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity getPlaceDetail(@PathVariable Long findMemberId) {
-        FollowMemberDetailResponseDto result = followService.getFindMemberDetail(findMemberId);
+    public ResponseEntity getPlaceDetail(@PathVariable Long findMemberId,
+                                         @LoginMember Member member) {
+        FollowMemberDetailResponseDto result = followService.getFindMemberDetail(findMemberId,member.getId());
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "유저 상세 조회 성공", result), HttpStatus.OK);
     }

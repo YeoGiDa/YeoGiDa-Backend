@@ -23,7 +23,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.util.List;
@@ -60,9 +59,9 @@ public class CommentService {
 
     @Transactional
     public Page<CommentListResponseDto> getTest(Long placeId,
-                                                @RequestParam int page,
-                                                @RequestParam int size,
-                                                @RequestParam String condition){
+                                                int page,
+                                                int size,
+                                                String condition){
 
         Pageable pageable = PageRequest.of(page, size);
         return commentRepository.test(placeId,pageable,condition);
