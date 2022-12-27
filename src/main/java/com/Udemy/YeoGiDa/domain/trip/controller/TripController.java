@@ -1,11 +1,13 @@
 package com.Udemy.YeoGiDa.domain.trip.controller;
 
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
+import com.Udemy.YeoGiDa.domain.follow.response.FollowResponseDto;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripImgEssentialException;
 import com.Udemy.YeoGiDa.domain.trip.request.TripSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripListResponseDto;
+import com.Udemy.YeoGiDa.domain.trip.response.TripListWithRegionResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripMonthBestListResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.service.TripService;
 import com.Udemy.YeoGiDa.global.response.DefaultResult;
@@ -163,7 +165,7 @@ public class TripController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getMemberTripList(@PathVariable Long memberId,
                                             @RequestParam String condition) {
-        List<TripListResponseDto> trips = tripService.getMemberTripList(memberId,condition);
+        List<TripListWithRegionResponseDto> trips = tripService.getMemberTripList(memberId,condition);
         Map<String, Object> result = new HashMap<>();
         result.put("tripList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
@@ -175,7 +177,7 @@ public class TripController {
     @GetMapping("/my/heart")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getMyHeartTripList(@LoginMember Member member) {
-        List<TripListResponseDto> trips = tripService.getMyHeartTripList(member);
+        List<TripListWithRegionResponseDto> trips = tripService.getMyHeartTripList(member);
         Map<String, Object> result = new HashMap<>();
         result.put("tripList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
@@ -199,7 +201,7 @@ public class TripController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getMyHeartTripFilterList(@PathVariable String region,
                                                    @LoginMember Member member) {
-        List<TripListResponseDto> trips = tripService.getMyHeartTripFilterList(member, region);
+        List<TripListWithRegionResponseDto> trips = tripService.getMyHeartTripFilterList(member, region);
         Map<String, Object> result = new HashMap<>();
         result.put("tripList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
@@ -211,7 +213,7 @@ public class TripController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getMyHeartTripSearchList(@RequestParam("keyword") String keyword,
                                                  @LoginMember Member member) {
-        List<TripListResponseDto> trips = tripService.getMyHeartTripSearchList(member,keyword);
+        List<TripListWithRegionResponseDto> trips = tripService.getMyHeartTripSearchList(member,keyword);
         Map<String, Object> result = new HashMap<>();
         result.put("tripList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
@@ -240,4 +242,14 @@ public class TripController {
                 "팔로잉이 최근 올린 여행지 - 전체 ", result), HttpStatus.OK);
     }
 
+    @ApiOperation("여행지에 좋아요 누른 회원 목록")
+    @GetMapping("/{tripId}/heartMembers")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getHeartMemberList(@PathVariable Long tripId) {
+        List<FollowResponseDto> heartMemberList = tripService.getHeartMemberList(tripId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("memberList", heartMemberList);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "여행지에 좋아요 누른 회원 목록", result), HttpStatus.OK);
+    }
 }
