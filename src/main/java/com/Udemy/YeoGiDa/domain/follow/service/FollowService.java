@@ -70,7 +70,7 @@ public class FollowService {
         FollowMemberDetailResponseDto followMemberDetailResponseDto = new FollowMemberDetailResponseDto(member);
 //        followMemberDetailResponseDto.setFollowerCount(followRepository.findSizeFollower(member.getId()));
 //        followMemberDetailResponseDto.setFollowingCount(followRepository.findSizeFollowing(member.getId()));
-        followMemberDetailResponseDto.setFollowingCount(followRepository.findSizeFollowing(member.getId()));
+        followMemberDetailResponseDto.setFollowingCount(followRepository.findSizeFollower(member.getId()));
         followMemberDetailResponseDto.setFollowerCount(followRepository.findSizeFollowing(member.getId()));
         followMemberDetailResponseDto.setIsFollow(followRepository.existsByToMemberIdAndFromMemberId(findMemberId,memberId));
         return followMemberDetailResponseDto;
