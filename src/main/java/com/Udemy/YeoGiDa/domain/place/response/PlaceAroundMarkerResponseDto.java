@@ -9,6 +9,8 @@ import lombok.Setter;
 @Setter
 public class PlaceAroundMarkerResponseDto {
 
+    private Long tripId;
+
     private Long placeId;
 
     private String imgUrl;
@@ -19,6 +21,7 @@ public class PlaceAroundMarkerResponseDto {
 
     @Builder
     public PlaceAroundMarkerResponseDto(Place place) {
+        this.tripId = place.getTrip().getId();
         this.placeId = place.getId();
         this.imgUrl = place.getPlaceImgs().get(0).getImgUrl();
         this.nickname = place.getTrip().getMember().getNickname();

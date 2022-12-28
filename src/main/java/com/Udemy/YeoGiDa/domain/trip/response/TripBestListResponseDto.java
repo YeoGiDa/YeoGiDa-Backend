@@ -8,7 +8,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class TripMonthBestListResponseDto {
+public class TripBestListResponseDto {
 
     private Long tripId;
     private Long memberId;
@@ -16,7 +16,7 @@ public class TripMonthBestListResponseDto {
     private String imgUrl;
     private String nickname;
 
-    public TripMonthBestListResponseDto(Trip trip) {
+    public TripBestListResponseDto(Trip trip) {
         this.tripId = trip.getId();
         this.memberId = trip.getMember().getId();
         this.title = trip.getTitle();

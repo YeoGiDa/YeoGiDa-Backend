@@ -8,7 +8,7 @@ import com.Udemy.YeoGiDa.domain.trip.request.TripSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripListResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripListWithRegionResponseDto;
-import com.Udemy.YeoGiDa.domain.trip.response.TripMonthBestListResponseDto;
+import com.Udemy.YeoGiDa.domain.trip.response.TripBestListResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.service.TripService;
 import com.Udemy.YeoGiDa.global.response.DefaultResult;
 import com.Udemy.YeoGiDa.global.response.StatusCode;
@@ -111,7 +111,7 @@ public class TripController {
     @GetMapping("/monthly-best/basic")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getMonthBestTripBasic() {
-        List<TripMonthBestListResponseDto> trips = tripService.getMonthBestTripBasic();
+        List<TripBestListResponseDto> trips = tripService.getMonthBestTripBasic();
         Map<String, Object> result = new HashMap<>();
         result.put("tripList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
@@ -122,7 +122,7 @@ public class TripController {
     @GetMapping("/monthly-best/more")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getMonthBestTripMore() {
-        List<TripMonthBestListResponseDto> trips = tripService.getMonthBestTripMore();
+        List<TripBestListResponseDto> trips = tripService.getMonthBestTripMore();
         Map<String, Object> result = new HashMap<>();
         result.put("tripList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
@@ -236,7 +236,7 @@ public class TripController {
     @GetMapping("/follow/basic")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getFollowingTripListBasic(@LoginMember Member member) {
-        List<TripListResponseDto> trips = tripService.getFollowingsTripListBasic(member);
+        List<TripBestListResponseDto> trips = tripService.getFollowingsTripListBasic(member);
         Map<String, Object> result = new HashMap<>();
         result.put("tripList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
@@ -247,7 +247,7 @@ public class TripController {
     @GetMapping("/follow/more")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getFollowingsTripListMore(@LoginMember Member member) {
-        List<TripListResponseDto> trips = tripService.getFollwingsTripListMore(member);
+        List<TripBestListResponseDto> trips = tripService.getFollwingsTripListMore(member);
         Map<String, Object> result = new HashMap<>();
         result.put("tripList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
