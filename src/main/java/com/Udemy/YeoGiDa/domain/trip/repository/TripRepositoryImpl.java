@@ -5,6 +5,7 @@ import com.Udemy.YeoGiDa.domain.member.entity.QMemberImg;
 import com.Udemy.YeoGiDa.domain.trip.entity.QTripImg;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -88,7 +89,18 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
     }
 
     @Override
-    public List<Trip> findAllByMemberIdFetch(Long memberId,String condition) {
+    public List<Trip> findAllByMemberIdFetch(Long memberId,String tag, String condition) {
+        return queryFactory.selectFrom(trip)
+                .leftJoin(trip.tripImg, QTripImg.tripImg).fetchJoin()
+                .leftJoin(trip.member, member).fetchJoin()
+                .leftJoin(member.memberImg, QMemberImg.memberImg).fetchJoin()
+                .where(trip.member.id.eq(memberId),whereCondition(tag))
+                .orderBy(conditionParam(condition))
+                .fetch();
+    }
+
+    @Override
+    public List<Trip> findAllByMemberIdFetch2(Long memberId, String condition) {
         return queryFactory.selectFrom(trip)
                 .leftJoin(trip.tripImg, QTripImg.tripImg).fetchJoin()
                 .leftJoin(trip.member, member).fetchJoin()
@@ -97,4 +109,11 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
                 .orderBy(conditionParam(condition))
                 .fetch();
     }
+
+    private BooleanExpression whereCondition(String tag) {
+        if(tag.equals("nothing")){
+            return null;
+        } return trip.region.eq(tag);
+    }
+
 }

@@ -256,12 +256,23 @@ public class TripService {
                 .collect(Collectors.toList());
     }
 
-    //멤버 여행지
-    public List<TripListWithRegionResponseDto> getMemberTripList(Long memberId, String condition) {
+    //멤버 여행지 지역 조건 o, 정렬
+    public List<TripListWithRegionResponseDto> getMemberTripList(Long memberId, String region, String condition) {
 
         memberRepository.findById(memberId).orElseThrow(() -> new MemberNotFoundException());
 
-        return tripRepository.findAllByMemberIdFetch(memberId, condition)
+        return tripRepository.findAllByMemberIdFetch(memberId,region,condition)
+                .stream()
+                .map(TripListWithRegionResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    //멤버 여행지 지역 조건 x, 정렬
+    public List<TripListWithRegionResponseDto> getMemberTripList2(Long memberId, String condition) {
+
+        memberRepository.findById(memberId).orElseThrow(() -> new MemberNotFoundException());
+
+        return tripRepository.findAllByMemberIdFetch2(memberId,condition)
                 .stream()
                 .map(TripListWithRegionResponseDto::new)
                 .collect(Collectors.toList());
