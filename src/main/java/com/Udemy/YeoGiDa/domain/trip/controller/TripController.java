@@ -161,16 +161,28 @@ public class TripController {
     }
 
     //멤버별 여행지 리스트
-    @GetMapping("/member/{memberId}")
+    @GetMapping("/member/{memberId}/{region}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getMemberTripList(@PathVariable Long memberId,
+                                            @PathVariable String region,
                                             @RequestParam String condition) {
-        List<TripListWithRegionResponseDto> trips = tripService.getMemberTripList(memberId,condition);
+        List<TripListWithRegionResponseDto> trips = tripService.getMemberTripList(memberId,region,condition);
         Map<String, Object> result = new HashMap<>();
         result.put("tripList", trips);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지 목록 조회 성공 - 멤버 "+condition, result), HttpStatus.OK);
     }
+
+//    @GetMapping("/member/{memberId}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity getMemberTripListAll(@PathVariable Long memberId,
+//                                            @RequestParam String condition) {
+//        List<TripListWithRegionResponseDto> trips = tripService.getMemberTripList2(memberId,condition);
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("tripList", trips);
+//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+//                "여행지 목록 조회 성공 - 멤버 "+condition, result), HttpStatus.OK);
+//    }
 
 
     @ApiOperation("내가 좋아요한 여행지")
