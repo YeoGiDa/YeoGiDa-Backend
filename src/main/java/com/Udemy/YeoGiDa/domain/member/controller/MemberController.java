@@ -60,9 +60,9 @@ public class MemberController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity memberList() {
-        List<Member> members =  memberService.memberList();
+        List<BestTravlerListResponse> bestTravlerListResponses = memberService.memberList();
         Map<String, Object> result = new HashMap<>();
-        result.put("memberList", members);
+        result.put("memberList", bestTravlerListResponses);
 
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "회원 목록 조회 성공", result), HttpStatus.OK);

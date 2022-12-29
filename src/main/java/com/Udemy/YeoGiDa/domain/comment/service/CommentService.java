@@ -89,11 +89,11 @@ public class CommentService {
                 .member(place.getTrip().getMember())
                 .alarmType(AlarmType.NEW_COMMENT)
                 .makeAlarmMemberId(member.getId())
-                .targetId(comment.getId())
+                .targetId(comment.getPlace().getId())
                 .build());
 
         //푸쉬 알림 보내기
-        if(place.getTrip().getMember() != member) {
+        if(!place.getTrip().getMember().getNickname().equals(member.getNickname())) {
             firebaseCloudMessageService.sendMessageTo(place.getTrip().getMember().getDeviceToken(),
                     "여기다", member.getNickname() + AlarmType.NEW_COMMENT.getAlarmText(),
                     "NEW_COMMENT", place.getTrip().getId().toString() + "," + place.getId().toString());

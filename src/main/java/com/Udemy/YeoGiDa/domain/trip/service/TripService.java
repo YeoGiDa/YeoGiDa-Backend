@@ -221,7 +221,7 @@ public class TripService {
                 .build());
 
         //푸쉬 알림 보내기
-        if(trip.getMember() != member) {
+        if(!trip.getMember().getNickname().equals(member.getNickname())) {
             firebaseCloudMessageService.sendMessageTo(trip.getMember().getDeviceToken(),
                     "여기다", member.getNickname() + AlarmType.NEW_HEART.getAlarmText(),
                     "NEW_HEART", trip.getId().toString());
@@ -259,6 +259,19 @@ public class TripService {
                 .stream()
                 .map(TripListResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    //내가 작성한 여행지 검색
+    public List<TripListResponseDto> getMyTripListSearch(Member member, String keyword) {
+        List<Trip> trips = tripRepository.findAllByMemberFetch(member);
+        List<TripListResponseDto> tripListResponseDtos = new ArrayList<>();
+        for (Trip trip : trips) {
+            if (trip.getTitle().contains(keyword) || trip.getSubTitle().contains(keyword)) {
+                tripListResponseDtos.add(new TripListResponseDto(trip));
+            }
+        }
+        Collections.reverse(tripListResponseDtos);
+        return tripListResponseDtos;
     }
 
     //멤버 여행지 지역 조건 o, 정렬
