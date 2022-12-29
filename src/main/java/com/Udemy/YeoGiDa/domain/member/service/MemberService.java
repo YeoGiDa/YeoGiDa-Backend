@@ -78,17 +78,16 @@ public class MemberService {
         isValidateDuplicateMember(member);
         isValidateDuplicateNickname(member);
 
-        Member savedMember = memberRepository.save(member);
-
         //회원 이미지 저장 로직
         if(imgPath == null) {
             imgPath = "https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/default_member.png";
         }
-        MemberImg memberImg = new MemberImg(imgPath, savedMember);
-        memberImgRepository.save(memberImg);
-        savedMember.setMemberImg(memberImg);
+        MemberImg memberImg = new MemberImg(imgPath, member);
+        member.setMemberImg(memberImg);
+        memberRepository.save(member);
+//        memberImgRepository.save(memberImg);
 
-        MemberDto memberDto = new MemberDto(savedMember);
+        MemberDto memberDto = new MemberDto(member);
         return new MemberJoinResponse(memberDto);
     }
 
@@ -125,6 +124,7 @@ public class MemberService {
         member.setMemberImg(memberImg);
 
         member.update(memberUpdateRequest.getNickname());
+        memberRepository.save(member);
     }
 
     public void delete(Member member) {

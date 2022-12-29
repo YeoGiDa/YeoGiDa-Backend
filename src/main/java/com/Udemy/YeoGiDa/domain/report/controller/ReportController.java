@@ -76,7 +76,6 @@ public class ReportController {
     @RequestMapping(value = "/test", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity delete(@RequestParam String payload) throws IOException {
-        log.info("여기까지 옴");
         // Json String -> BlockActionPayload 변경
         BlockActionPayload blockActionPayload =
                 GsonFactory.createSnakeCase()
@@ -85,24 +84,20 @@ public class ReportController {
         // Block 수정
         blockActionPayload.getMessage().getBlocks().remove(0);
         blockActionPayload.getActions().forEach(action -> {
-            log.info("blockActionPaylad={}", blockActionPayload);
             String[] value = action.getValue().split(",");
             String type = value[0];
             Long targetId = Long.parseLong(value[1]);
-            log.info("value={}", value);
-            log.info("type={}", type);
-            log.info("targetId={}", targetId);
 
             if (action.getActionId().equals("action_pass")) {
                 blockActionPayload.getMessage().getBlocks().add(0,
                         section(section ->
-                                section.text(markdownText("신고를 보류하였습니다."))
+                                section.text(markdownText("신고를 *보류*하였습니다."))
                         )
                 );
             } else {
                 blockActionPayload.getMessage().getBlocks().add(0,
                         section(section ->
-                                section.text(markdownText("해당 신고물을 삭제하였습니다."))
+                                section.text(markdownText("해당 신고물을 *삭제*하였습니다."))
                         )
                 );
                 if (type.equals("MEMBER")) {
@@ -124,7 +119,7 @@ public class ReportController {
         // 재전송할 응답 객체 생성
         ActionResponse response =
                 ActionResponse.builder()
-                        .replaceOriginal(false)
+                        .replaceOriginal(true)
                         .blocks(blockActionPayload.getMessage().getBlocks())
                         .build();
 

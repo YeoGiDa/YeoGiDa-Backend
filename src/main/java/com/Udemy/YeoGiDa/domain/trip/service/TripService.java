@@ -111,17 +111,15 @@ public class TripService {
                 .member(member)
                 .build();
 
-        //SAVETRIP 의미없음
-        Trip saveTrip = tripRepository.save(trip);
-
         //여행지 이미지 저장 로직
         TripImg tripImg = new TripImg(imgPath, trip);
         if (imgPath == null) {
             throw new ImgNotFoundException();
         }
-        tripImgRepository.save(tripImg);
         trip.setTripImg(tripImg);
-        return new TripDetailResponseDto(saveTrip);
+        tripRepository.save(trip);
+//        tripImgRepository.save(tripImg);
+        return new TripDetailResponseDto(trip);
     }
 
     @Transactional
