@@ -160,6 +160,18 @@ public class TripController {
                 "여행지 목록 조회 성공 - 내가 작성한 ", result), HttpStatus.OK);
     }
 
+    @ApiOperation("내가 작성한 여행지")
+    @GetMapping("/my/search")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity getMyTripListSearch(@LoginMember Member member,
+                                              @RequestParam String keyword) {
+        List<TripListResponseDto> trips = tripService.getMyTripListSearch(member, keyword);
+        Map<String, Object> result = new HashMap<>();
+        result.put("tripList", trips);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "여행지 목록 조회 성공 - 내가 작성한 검색 ", result), HttpStatus.OK);
+    }
+
     //멤버별 여행지 리스트
     @GetMapping("/member/{memberId}/{region}")
     @ResponseStatus(HttpStatus.OK)
