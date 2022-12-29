@@ -169,6 +169,11 @@ public class TripService {
         s3Service.deleteFile(fileName);
         tripImgRepository.delete(findTripImg);
 
+        int size = heartRepository.findAllByTripId(tripId).size();
+        for (int i=0; i<size; i++){
+            trip.getMember().minusHeartCount();
+        }
+
         tripRepository.delete(trip);
     }
 

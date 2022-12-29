@@ -3,6 +3,8 @@ package com.Udemy.YeoGiDa.domain.member.service;
 import com.Udemy.YeoGiDa.domain.common.exception.ImgNotFoundException;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.follow.repository.FollowRepository;
+import com.Udemy.YeoGiDa.domain.heart.entity.Heart;
+import com.Udemy.YeoGiDa.domain.heart.repository.HeartRepository;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.entity.MemberImg;
 import com.Udemy.YeoGiDa.domain.member.exception.AlreadyExistsNicknameException;
@@ -40,6 +42,7 @@ public class MemberService {
     private final JwtProvider jwtProvider;
     private final BCryptPasswordEncoder passwordEncoder;
     private final FollowRepository followRepository;
+    private final HeartRepository heartRepository;
 
     @Transactional(readOnly = true)
     public boolean isJoinMember(String email) {
@@ -160,6 +163,12 @@ public class MemberService {
             s3Service.deleteFile(fileName);
         }
         memberImgRepository.delete(findMemberImg);
+
+        List<Heart> hearts = heartRepository.findAllByMember(member);
+        for (Heart heart : hearts) {
+            heart.getTrip().getMember().minusHeartCount();
+            heart.getTrip().minusChangeHeartCount();
+        }
 
         memberRepository.delete(member);
     }
