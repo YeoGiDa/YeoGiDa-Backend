@@ -6,6 +6,7 @@ import com.Udemy.YeoGiDa.domain.comment.repository.CommentRepository;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
 import com.Udemy.YeoGiDa.domain.member.repository.MemberRepository;
+import com.Udemy.YeoGiDa.domain.member.service.MemberService;
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
 import com.Udemy.YeoGiDa.domain.place.exception.PlaceNotFoundException;
 import com.Udemy.YeoGiDa.domain.place.repository.PlaceRepository;
@@ -45,32 +46,34 @@ public class ReportController {
     private final TripRepository tripRepository;
     private final PlaceRepository placeRepository;
     private final CommentRepository commentRepository;
+    private final MemberService memberService;
 
-    public ReportController(ReportService reportService, SlackService slackService, MemberRepository memberRepository, TripRepository tripRepository, PlaceRepository placeRepository, CommentRepository commentRepository) {
+    public ReportController(ReportService reportService, SlackService slackService, MemberRepository memberRepository, TripRepository tripRepository, PlaceRepository placeRepository, CommentRepository commentRepository, MemberService memberService) {
         this.reportService = reportService;
         this.slackService = slackService;
         this.memberRepository = memberRepository;
         this.tripRepository = tripRepository;
         this.placeRepository = placeRepository;
         this.commentRepository = commentRepository;
+        this.memberService = memberService;
     }
+
+//    @PostMapping("/report")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity report(@LoginMember Member member,
+//                                 @RequestBody ReportRequestDto reportRequestDto) throws IOException {
+//        reportService.report(member, reportRequestDto);
+//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+//                "슬랙 보내기 성공 "), HttpStatus.OK);
+//    }
 
     @PostMapping("/report")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity report(@LoginMember Member member,
-                                 @RequestBody ReportRequestDto reportRequestDto) throws IOException {
-        reportService.report(member, reportRequestDto);
-        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "슬랙 보내기 성공 "), HttpStatus.OK);
-    }
-
-    @PostMapping("/report2")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity report2(@LoginMember Member member,
                                   @RequestBody ReportRequestDto reportRequestDto) throws IOException {
         reportService.report(member, reportRequestDto);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "슬랙 보내기2 성공 "), HttpStatus.OK);
+                "신고 성공 "), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/test", method = RequestMethod.POST,
@@ -91,18 +94,19 @@ public class ReportController {
             if (action.getActionId().equals("action_pass")) {
                 blockActionPayload.getMessage().getBlocks().add(0,
                         section(section ->
-                                section.text(markdownText("신고를 *보류*하였습니다."))
+                                section.text(markdownText("신고를 *보류* 하였습니다."))
                         )
                 );
             } else {
                 blockActionPayload.getMessage().getBlocks().add(0,
                         section(section ->
-                                section.text(markdownText("해당 신고물을 *삭제*하였습니다."))
+                                section.text(markdownText("해당 신고물을 *삭제* 하였습니다."))
                         )
                 );
                 if (type.equals("MEMBER")) {
                     Member reportedMember = memberRepository.findById(targetId).orElseThrow(MemberNotFoundException::new);
-                    memberRepository.delete(reportedMember);
+                    memberService.setDefaultNicknameAndImage(reportedMember);
+//                    memberRepository.delete(reportedMember);
                 } else if (type.equals("TRIP")) {
                     Trip reportedTrip = tripRepository.findById(targetId).orElseThrow(TripNotFoundException::new);
                     tripRepository.delete(reportedTrip);

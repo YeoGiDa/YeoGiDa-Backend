@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,6 +92,25 @@ public class MemberService {
         return new MemberJoinResponse(memberDto);
     }
 
+    public void setDefaultNicknameAndImage(Member member) {
+        if (member == null) {
+            throw new MemberNotFoundException();
+        }
+
+        //기본 닉네임으로 변경
+        member.update(UUID.randomUUID().toString().substring(0, 8));
+        //회원 이미지 로직
+        MemberImg findMemberImg = memberImgRepository.findMemberImgByMember(member);
+        String fileName = findMemberImg.getImgUrl().split("/")[3];
+        if (!fileName.equals("default_member.png")) {
+            s3Service.deleteFile(fileName);
+            memberImgRepository.delete(findMemberImg);
+            MemberImg memberImg = new MemberImg("https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/default_member.png", member);
+            member.setMemberImg(memberImg);
+        }
+        memberRepository.save(member);
+    }
+
     public void update(Member member, MemberUpdateRequest memberUpdateRequest, String imgPath) {
 
         if(member == null) {
@@ -145,8 +165,10 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public List<Member> memberList() {
-        return memberRepository.findAll();
+    public List<BestTravlerListResponse> memberList() {
+        return memberRepository.findAll()
+                .stream().map(BestTravlerListResponse::new)
+                .collect(Collectors.toList());
     }
 
     private void isValidateDuplicateMember(Member member){
