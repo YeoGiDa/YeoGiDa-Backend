@@ -1,6 +1,5 @@
 package com.Udemy.YeoGiDa.domain.member.service;
 
-import com.Udemy.YeoGiDa.domain.common.exception.ImgNotFoundException;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.follow.repository.FollowRepository;
 import com.Udemy.YeoGiDa.domain.heart.entity.Heart;
@@ -131,9 +130,6 @@ public class MemberService {
         //원래 default_image일 때
         if(fileName.equals("default_member.png")) {
             memberImgRepository.delete(findMemberImg);
-            if(imgPath == null) {
-                throw new ImgNotFoundException();
-            }
         }
         else {
             s3Service.deleteFile(fileName);
