@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Report {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "report_id")
     private Long id;
 
