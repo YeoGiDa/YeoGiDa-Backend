@@ -168,9 +168,12 @@ public class TripService {
         String fileName = findTripImg.getImgUrl().split("/")[3];
         s3Service.deleteFile(fileName);
         tripImgRepository.delete(findTripImg);
-        if(heartRepository.existsByTripIdAndMemberId(tripId, member.getId())){
-            member.minusHeartCount();
+
+        int size = heartRepository.findAllByTripId(tripId).size();
+        for (int i=0; i<size; i++){
+            trip.getMember().minusHeartCount();
         }
+
         tripRepository.delete(trip);
     }
 

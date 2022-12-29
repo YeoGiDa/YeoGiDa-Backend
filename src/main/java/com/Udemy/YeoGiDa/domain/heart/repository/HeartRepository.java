@@ -18,7 +18,7 @@ public interface HeartRepository extends JpaRepository<Heart, Long>, HeartReposi
 
     boolean existsByTripId(Long tripId);
 
-    boolean existsByTripIdAndMemberId(Long tripId,Long memberId);
-
     List<Trip> findByIdIn(List<Long> tripIds);
+
+    List<Heart> findAllByMember(Member member);
 }
