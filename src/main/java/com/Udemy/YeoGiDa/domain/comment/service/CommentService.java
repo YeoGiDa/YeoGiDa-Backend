@@ -124,11 +124,13 @@ public class CommentService {
         commentRepository.delete(comment);
 
         //알림 삭제
-        Alarm findAlarm = alarmRepository.findCommentAlarmByMemberAndMakeMemberIdAndCommentId(
-                place.getTrip().getMember(), member.getId(), commentId);
-        if(findAlarm == null) {
-            throw new AlarmNotFoundException();
+        if(!place.getTrip().getMember().getNickname().equals(member.getNickname())) {
+            Alarm findAlarm = alarmRepository.findCommentAlarmByMemberAndMakeMemberIdAndCommentId(
+                    place.getTrip().getMember(), member.getId(), commentId);
+            if (findAlarm == null) {
+                throw new AlarmNotFoundException();
+            }
+            alarmRepository.delete(findAlarm);
         }
-        alarmRepository.delete(findAlarm);
     }
 }
