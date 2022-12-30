@@ -28,7 +28,7 @@ public class JwtProvider {
 
     private Key key;
 
-    long tokenPeriod = 1000L * 60L * 100L; //100분
+    long tokenPeriod = 1000L * 60L * 60L * 24L; //24시간
     long refreshPeriod = 1000L * 60L * 60L * 24L * 30L * 3L; //3달
 
     @Autowired
