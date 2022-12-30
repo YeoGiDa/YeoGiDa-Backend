@@ -1,4 +1,4 @@
-package com.Udemy.YeoGiDa.global.response;
+package com.Udemy.YeoGiDa.global.response.success;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
