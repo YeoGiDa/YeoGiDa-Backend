@@ -120,7 +120,7 @@ public class MemberService {
         }
 
         if(memberRepository.existsByNickname(memberUpdateRequest.getNickname()) == true &&
-            member.getNickname() != memberUpdateRequest.getNickname()) {
+            !member.getNickname().equals(memberUpdateRequest.getNickname())) {
             throw new AlreadyExistsNicknameException();
         }
 
@@ -135,6 +135,7 @@ public class MemberService {
             s3Service.deleteFile(fileName);
             memberImgRepository.delete(findMemberImg);
         }
+
         if(imgPath == null) {
             imgPath = "https://yeogida-bucket.s3.ap-northeast-2.amazonaws.com/default_member.png";
         }

@@ -129,11 +129,11 @@ public class PlaceService {
     }
 
     @Transactional(readOnly = true)
-    public PlaceListInTripResponseDto getTripDataInPlaceList(Long tripId) {
+    public PlaceListInTripResponseDto getTripDataInPlaceList(Long tripId, Member member) {
         Trip trip = Optional.ofNullable(tripRepository.findById(tripId)
                 .orElseThrow(TripNotFoundException::new)).get();
         PlaceListInTripResponseDto result = new PlaceListInTripResponseDto(trip);
-        result.setTrip_like_check(heartRepository.existsByTripId(tripId));
+        result.setTrip_like_check(heartRepository.existsByTripIdAndMember(tripId, member));
         return result;
     }
 
