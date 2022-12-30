@@ -227,8 +227,12 @@ public class MemberService {
                 .orElseThrow(MemberNotFoundException::new)).get();
 
         MemberDetailResponseDto memberDetailResponseDto = new MemberDetailResponseDto(memberDetail);
-        memberDetailResponseDto.setFollowerCount(followRepository.findSizeFollower(member.getId()));
-        memberDetailResponseDto.setFollowingCount(followRepository.findSizeFollowing(member.getId()));
+
+//        memberDetailResponseDto.setFollowerCount(followRepository.findSizeFollower(member.getId()));
+//        memberDetailResponseDto.setFollowerCount(followRepository.findSizeFollower(member.getId()));
+
+        memberDetailResponseDto.setFollowingCount(followRepository.findSizeFollower(member.getId()));
+        memberDetailResponseDto.setFollowerCount(followRepository.findSizeFollowing(member.getId()));
 
         return memberDetailResponseDto;
     }
