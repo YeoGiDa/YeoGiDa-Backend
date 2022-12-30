@@ -2,7 +2,6 @@ package com.Udemy.YeoGiDa.domain.alarm.entity;
 
 import com.Udemy.YeoGiDa.domain.common.entity.BaseEntity;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -31,21 +30,23 @@ public class Alarm extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private AlarmType alarmType;
 
-    private Long makeAlarmMemberId;
+    private Long makeMemberId;
 
-    /*
-    NEW_FOLLOW: followerId;
-    NEW_COMMENT: commentId;
-    NEW_HEART: tripId;
-     */
-    private Long targetId;
+    private Long followerId;
 
-    //빌더를 빼고 생성자
-    @Builder
-    public Alarm(Member member, AlarmType alarmType, Long makeAlarmMemberId, Long targetId) {
+    private Long tripId;
+
+    private Long placeId;
+
+    private Long commentId;
+
+    public Alarm(Member member, AlarmType alarmType, Long makeMemberId, Long followerId, Long tripId, Long placeId, Long commentId) {
         this.member = member;
         this.alarmType = alarmType;
-        this.makeAlarmMemberId = makeAlarmMemberId;
-        this.targetId = targetId;
+        this.makeMemberId = makeMemberId;
+        this.followerId = followerId;
+        this.tripId = tripId;
+        this.placeId = placeId;
+        this.commentId = commentId;
     }
 }

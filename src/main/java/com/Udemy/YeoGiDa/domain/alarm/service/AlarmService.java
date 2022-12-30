@@ -30,7 +30,7 @@ public class AlarmService {
         List<Alarm> alarms = alarmRepository.findAllByMember(member);
         List<AlarmListResponseDto> alarmListResponseDtos = new ArrayList<>();
         for (Alarm alarm : alarms) {
-            Long makeAlarmMemberId = alarm.getMakeAlarmMemberId();
+            Long makeAlarmMemberId = alarm.getMakeMemberId();
             Member makeMember = memberRepository.findById(makeAlarmMemberId)
                             .orElseThrow(MemberNotFoundException::new);
             alarmListResponseDtos.add(new AlarmListResponseDto(alarm, makeMember));
