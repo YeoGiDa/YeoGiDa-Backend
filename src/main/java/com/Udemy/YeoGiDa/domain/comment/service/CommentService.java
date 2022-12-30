@@ -84,15 +84,17 @@ public class CommentService {
         Comment saveComment = commentRepository.save(comment);
 
         //알람 추가
-        alarmRepository.save(new Alarm(
-                place.getTrip().getMember(),
-                AlarmType.NEW_COMMENT,
-                member.getId(),
-                null,
-                null,
-                placeId,
-                comment.getId()
-        ));
+        if(!place.getTrip().getMember().getNickname().equals(member.getNickname())) {
+            alarmRepository.save(new Alarm(
+                    place.getTrip().getMember(),
+                    AlarmType.NEW_COMMENT,
+                    member.getId(),
+                    null,
+                    null,
+                    placeId,
+                    comment.getId()
+            ));
+        }
 
         //푸쉬 알림 보내기
         if(!place.getTrip().getMember().getNickname().equals(member.getNickname())) {

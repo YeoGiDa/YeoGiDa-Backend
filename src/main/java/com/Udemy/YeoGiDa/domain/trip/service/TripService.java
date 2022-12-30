@@ -213,15 +213,17 @@ public class TripService {
                 .build());
 
         //알람 추가
-        alarmRepository.save(new Alarm(
-                trip.getMember(),
-                AlarmType.NEW_HEART,
-                member.getId(),
-                null,
-                tripId,
-                null,
-                null
-        ));
+        if(!trip.getMember().getNickname().equals(member.getNickname())) {
+            alarmRepository.save(new Alarm(
+                    trip.getMember(),
+                    AlarmType.NEW_HEART,
+                    member.getId(),
+                    null,
+                    tripId,
+                    null,
+                    null
+            ));
+        }
 
         //푸쉬 알림 보내기
         if(!trip.getMember().getNickname().equals(member.getNickname())) {
