@@ -69,7 +69,7 @@ public class ReportController {
 
     @PostMapping("/report")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity report2(@LoginMember Member member,
+    public ResponseEntity report(@LoginMember Member member,
                                   @RequestBody ReportRequestDto reportRequestDto) throws IOException {
         reportService.report(member, reportRequestDto);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
