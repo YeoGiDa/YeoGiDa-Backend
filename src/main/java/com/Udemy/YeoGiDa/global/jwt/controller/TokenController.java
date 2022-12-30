@@ -1,11 +1,9 @@
 package com.Udemy.YeoGiDa.global.jwt.controller;
 
-import com.Udemy.YeoGiDa.global.jwt.exception.TokenHasExpiredException;
 import com.Udemy.YeoGiDa.global.jwt.exception.TokenIsInvalidException;
 import com.Udemy.YeoGiDa.global.jwt.service.JwtProvider;
-import com.Udemy.YeoGiDa.global.response.DefaultResult;
-import com.Udemy.YeoGiDa.global.response.ResponseMessage;
-import com.Udemy.YeoGiDa.global.response.StatusCode;
+import com.Udemy.YeoGiDa.global.response.success.DefaultResult;
+import com.Udemy.YeoGiDa.global.response.success.StatusCode;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

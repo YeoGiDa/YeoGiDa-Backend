@@ -1,16 +1,16 @@
-package com.Udemy.YeoGiDa.global.error.dto;
+package com.Udemy.YeoGiDa.global.response.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ErrorResult<T> {
+public class DefaultErrorResult<T> {
     private int code;
     private String message;
     private T data;
 
-    public ErrorResult(int code, String message) {
+    public DefaultErrorResult(int code, String message) {
         this.code = code;
         this.message = message;
         this.data = null;
