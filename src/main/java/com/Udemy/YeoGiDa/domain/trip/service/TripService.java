@@ -23,10 +23,10 @@ import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
 import com.Udemy.YeoGiDa.domain.trip.repository.TripImgRepository;
 import com.Udemy.YeoGiDa.domain.trip.repository.TripRepository;
 import com.Udemy.YeoGiDa.domain.trip.request.TripSaveRequestDto;
+import com.Udemy.YeoGiDa.domain.trip.response.TripBestListResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripListResponseDto;
 import com.Udemy.YeoGiDa.domain.trip.response.TripListWithRegionResponseDto;
-import com.Udemy.YeoGiDa.domain.trip.response.TripBestListResponseDto;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import com.Udemy.YeoGiDa.global.fcm.service.FirebaseCloudMessageService;
 import lombok.extern.slf4j.Slf4j;
@@ -213,18 +213,22 @@ public class TripService {
                 .build());
 
         //알람 추가
-        alarmRepository.save(Alarm.builder()
-                .member(trip.getMember())
-                .alarmType(AlarmType.NEW_HEART)
-                .makeAlarmMemberId(member.getId())
-                .targetId(trip.getId())
-                .build());
+        alarmRepository.save(new Alarm(
+                trip.getMember(),
+                AlarmType.NEW_HEART,
+                member.getId(),
+                null,
+                tripId,
+                null,
+                null
+        ));
 
         //푸쉬 알림 보내기
         if(!trip.getMember().getNickname().equals(member.getNickname())) {
             firebaseCloudMessageService.sendMessageTo(trip.getMember().getDeviceToken(),
                     "여기다", member.getNickname() + AlarmType.NEW_HEART.getAlarmText(),
-                    "NEW_HEART", trip.getId().toString());
+                    "NEW_HEART",
+                    tripId.toString());
         }
     }
 
@@ -246,10 +250,8 @@ public class TripService {
         heartRepository.delete(heart);
 
         //알람 삭제
-        Alarm findAlarm = alarmRepository.findHeartAlarmByMemberAndTripId(trip.getMember(), trip.getId());
-        if (findAlarm == null) {
-            throw new AlarmNotFoundException();
-        }
+        Alarm findAlarm = alarmRepository.findAlarmByTripIdAndMakeMemberId(trip.getId(), member.getId())
+                .orElseThrow(AlarmNotFoundException::new);
         alarmRepository.delete(findAlarm);
     }
 
