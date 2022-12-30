@@ -71,7 +71,7 @@ public class PlaceController {
     @GetMapping("/places/commented")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity getPlaceListByComment(@LoginMember Member member){
-        List<PlaceListResponseDto> places = placeService.getPlaceByComment(member.getId());
+        List<PlaceListResponseDto> places = placeService.getPlaceByComment(member);
         Map<String, Object> result = new HashMap<>();
         result.put("placeList", places);
 
