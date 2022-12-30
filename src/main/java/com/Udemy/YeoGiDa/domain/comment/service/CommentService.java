@@ -3,7 +3,6 @@ package com.Udemy.YeoGiDa.domain.comment.service;
 
 import com.Udemy.YeoGiDa.domain.alarm.entity.Alarm;
 import com.Udemy.YeoGiDa.domain.alarm.entity.AlarmType;
-import com.Udemy.YeoGiDa.domain.alarm.exception.AlarmNotFoundException;
 import com.Udemy.YeoGiDa.domain.alarm.repository.AlarmRepository;
 import com.Udemy.YeoGiDa.domain.comment.entity.Comment;
 import com.Udemy.YeoGiDa.domain.comment.exception.CommentNotFoundException;
@@ -85,18 +84,22 @@ public class CommentService {
         Comment saveComment = commentRepository.save(comment);
 
         //알람 추가
-        alarmRepository.save(Alarm.builder()
-                .member(place.getTrip().getMember())
-                .alarmType(AlarmType.NEW_COMMENT)
-                .makeAlarmMemberId(member.getId())
-                .targetId(comment.getPlace().getId())
-                .build());
+        alarmRepository.save(new Alarm(
+                place.getTrip().getMember(),
+                AlarmType.NEW_COMMENT,
+                member.getId(),
+                null,
+                null,
+                placeId,
+                comment.getId()
+        ));
 
         //푸쉬 알림 보내기
         if(!place.getTrip().getMember().getNickname().equals(member.getNickname())) {
             firebaseCloudMessageService.sendMessageTo(place.getTrip().getMember().getDeviceToken(),
                     "여기다", member.getNickname() + AlarmType.NEW_COMMENT.getAlarmText(),
-                    "NEW_COMMENT", place.getTrip().getId().toString() + "," + place.getId().toString());
+                    "NEW_COMMENT",
+                    place.getTrip().getId().toString() + "," + place.getId().toString());
         }
 
         return new CommentListResponseDto(saveComment);
@@ -125,11 +128,8 @@ public class CommentService {
 
         //알림 삭제
         if(!place.getTrip().getMember().getNickname().equals(member.getNickname())) {
-            Alarm findAlarm = alarmRepository.findCommentAlarmByMemberAndMakeMemberIdAndCommentId(
-                    place.getTrip().getMember(), member.getId(), commentId);
-            if (findAlarm == null) {
-                throw new AlarmNotFoundException();
-            }
+            Alarm findAlarm = alarmRepository.findAlarmByCommentIdAndMakeMemberId(commentId, member.getId())
+                    .orElseThrow(CommentNotFoundException::new);
             alarmRepository.delete(findAlarm);
         }
     }

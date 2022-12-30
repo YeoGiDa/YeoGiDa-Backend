@@ -15,8 +15,8 @@ import com.Udemy.YeoGiDa.domain.report.service.ReportService;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
 import com.Udemy.YeoGiDa.domain.trip.repository.TripRepository;
-import com.Udemy.YeoGiDa.global.response.DefaultResult;
-import com.Udemy.YeoGiDa.global.response.StatusCode;
+import com.Udemy.YeoGiDa.global.response.success.DefaultResult;
+import com.Udemy.YeoGiDa.global.response.success.StatusCode;
 import com.Udemy.YeoGiDa.global.security.annotation.LoginMember;
 import com.Udemy.YeoGiDa.global.slack.service.SlackService;
 import com.slack.api.Slack;
@@ -57,15 +57,6 @@ public class ReportController {
         this.commentRepository = commentRepository;
         this.memberService = memberService;
     }
-
-//    @PostMapping("/report")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ResponseEntity report(@LoginMember Member member,
-//                                 @RequestBody ReportRequestDto reportRequestDto) throws IOException {
-//        reportService.report(member, reportRequestDto);
-//        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-//                "슬랙 보내기 성공 "), HttpStatus.OK);
-//    }
 
     @PostMapping("/report")
     @ResponseStatus(HttpStatus.OK)

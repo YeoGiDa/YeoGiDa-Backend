@@ -20,7 +20,15 @@ public class AlarmListResponseDto {
 
     private AlarmType alarmType;
 
-    private Long targetId;
+    private Long makeMemberId;
+
+    private Long followerId;
+
+    private Long tripId;
+
+    private Long placeId;
+
+    private Long commentId;
 
     private String text;
 
@@ -32,7 +40,11 @@ public class AlarmListResponseDto {
         this.nickname = member.getNickname();
         this.imgUrl = member.getMemberImg().getImgUrl();
         this.alarmType = alarm.getAlarmType();
-        this.targetId = alarm.getTargetId();
+        this.makeMemberId = alarm.getMakeMemberId();
+        this.followerId = alarm.getFollowerId();
+        this.tripId = alarm.getTripId();
+        this.placeId = alarm.getPlaceId();
+        this.commentId = alarm.getCommentId();
         this.text = alarm.getAlarmType().getAlarmText();
         this.createdTime = alarm.getCreatedTime();
     }

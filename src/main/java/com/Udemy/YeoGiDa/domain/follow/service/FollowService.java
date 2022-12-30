@@ -68,8 +68,6 @@ public class FollowService {
         Member member = Optional.ofNullable(memberRepository.findById(findMemberId)
                 .orElseThrow(MemberNotFoundException::new)).get();
         FollowMemberDetailResponseDto followMemberDetailResponseDto = new FollowMemberDetailResponseDto(member);
-//        followMemberDetailResponseDto.setFollowerCount(followRepository.findSizeFollower(member.getId()));
-//        followMemberDetailResponseDto.setFollowingCount(followRepository.findSizeFollowing(member.getId()));
         followMemberDetailResponseDto.setFollowingCount(followRepository.findSizeFollower(member.getId()));
         followMemberDetailResponseDto.setFollowerCount(followRepository.findSizeFollowing(member.getId()));
         followMemberDetailResponseDto.setIsFollow(followRepository.existsByToMemberIdAndFromMemberId(findMemberId,memberId));
@@ -88,58 +86,55 @@ public class FollowService {
             throw new AlreadyFollowException();
         }
 
-
         followRepository.save(new Follow(toMemberId, fromMemberId));
 
         //알람 추가
-        alarmRepository.save(Alarm.builder()
-                .member(toMember)
-                .alarmType(AlarmType.NEW_FOLLOW)
-                .makeAlarmMemberId(fromMemberId)
-                .targetId(fromMemberId)
-                .build());
+        alarmRepository.save(new Alarm(
+                toMember,
+                AlarmType.NEW_FOLLOW,
+                fromMemberId,
+                fromMemberId,
+                null,
+                null,
+                null
+        ));
 
         //푸쉬 알림 보내기
         firebaseCloudMessageService.sendMessageTo(toMember.getDeviceToken(),
                 "여기다", fromMember.getNickname() + AlarmType.NEW_FOLLOW.getAlarmText(),
-                "NEW_FOLLOW", fromMemberId.toString());
+                "NEW_FOLLOW",
+                fromMemberId.toString());
 
         return true;
     }
 
     @Transactional
-    public boolean unFollow(Long toMemberId, Long fromMemberId){
+    public boolean unFollow(Long toMemberId, Long fromMemberId) {
         Member toMember = memberRepository.findById(toMemberId).orElseThrow(() -> new MemberNotFoundException());
         Member fromMember = memberRepository.findById(fromMemberId).orElseThrow(() -> new MemberNotFoundException());
 
         Optional<Follow> relation = getFollowRelation(toMember.getId(), fromMember.getId());
 
-        if(relation.isEmpty()) {
+        if (relation.isEmpty()) {
             throw new FollowNotFoundException();
         }
 
         followRepository.delete(relation.get());
 
         //알람 삭제
-        Alarm findAlarm = alarmRepository.findFollowAlarmByMemberAndMakeMemberId(toMember, fromMemberId);
-        if(findAlarm == null) {
-            throw new AlarmNotFoundException();
-        }
+        Alarm findAlarm = alarmRepository.findAlarmByMemberAndFollowerId(toMember, fromMemberId)
+                .orElseThrow(AlarmNotFoundException::new);
+
         alarmRepository.delete(findAlarm);
         return true;
     }
-
 
     private Optional<Follow> getFollowRelation(Long toMemberId, Long fromMemberId) {
         return followRepository.findByToMemberIdAndFromMemberId(toMemberId, fromMemberId);
     }
 
-
     @Transactional(readOnly = true)
     public MemberDetailResponseDto getFollowMemberDetail(Member member) {
-
-
-
         Member memberDetail = Optional.ofNullable(memberRepository.findById(member.getId())
                 .orElseThrow(MemberNotFoundException::new)).get();
 
