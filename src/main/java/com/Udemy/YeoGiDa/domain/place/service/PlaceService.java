@@ -1,6 +1,7 @@
 package com.Udemy.YeoGiDa.domain.place.service;
 
 
+import com.Udemy.YeoGiDa.domain.comment.repository.CommentRepository;
 import com.Udemy.YeoGiDa.domain.common.exception.ImgNotFoundException;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.heart.repository.HeartRepository;
@@ -17,6 +18,7 @@ import com.Udemy.YeoGiDa.domain.place.response.*;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
 import com.Udemy.YeoGiDa.domain.trip.repository.TripRepository;
+import com.Udemy.YeoGiDa.domain.trip.response.TripListWithRegionResponseDto;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +41,7 @@ public class PlaceService {
     private final S3Service s3Service;
     private final TripRepository tripRepository;
     private final HeartRepository heartRepository;
-
+    private final CommentRepository commentRepository;
 
     @Transactional(readOnly = true)
     public List<PlaceListResponseDto> getPlaceListByTagDefault(Long tripId,String tag,String condition){
@@ -50,12 +52,22 @@ public class PlaceService {
     }
 
    @Transactional(readOnly = true)
-    public List<PlaceListResponseDto> getPlaceByComment(Long memberId){
-        return placeRepository.findAllPlaceByComment(memberId)
-                .stream()
-                .map(PlaceListResponseDto::new)
-                .collect(Collectors.toList());
-    }
+    public List<PlaceListResponseDto> getPlaceByComment(Member member){
+
+
+       List<PlaceListResponseDto> collect = placeRepository.findAllByComment(member)
+               .stream()
+               .map(PlaceListResponseDto::new)
+               .collect(Collectors.toList());
+
+       for (PlaceListResponseDto placeListResponseDto : collect) {
+
+           placeListResponseDto.setCommentCount(commentRepository.totalSize(placeListResponseDto.getPlaceId()));
+
+       }
+
+       return collect;
+   }
 
     //지도 위의 장소
     @Transactional(readOnly = true)

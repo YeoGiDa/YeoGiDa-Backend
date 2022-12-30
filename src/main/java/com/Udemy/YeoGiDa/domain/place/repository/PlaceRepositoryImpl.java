@@ -1,5 +1,6 @@
 package com.Udemy.YeoGiDa.domain.place.repository;
 
+import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.place.entity.Place;
 import com.Udemy.YeoGiDa.domain.trip.entity.QTripImg;
 import com.querydsl.core.types.OrderSpecifier;
@@ -30,10 +31,10 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
     }
 
     @Override
-    public List<Place> findAllPlaceByComment(Long memberId) {
+    public List<Place> findAllByComment(Member member) {
         return queryFactory.selectFrom(place).distinct()
                 .leftJoin(place.comments,comment).fetchJoin()
-                .where(comment.member.id.eq(memberId))
+                .where(comment.member.id.eq(member.getId()))
                 .orderBy(comment.id.desc())
                 .fetch();
     }

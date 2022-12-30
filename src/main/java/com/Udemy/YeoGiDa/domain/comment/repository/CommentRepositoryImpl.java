@@ -59,6 +59,13 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
         return new PageImpl<>(ResponseList, pageable, totalSize);
     }
 
+    @Override
+    public int totalSize(Long placeId) {
+        return queryFactory.selectFrom(comment)
+                .where(comment.place.id.eq(placeId))
+                .fetch().size();
+    }
+
     // cursor의 위치를 기준점으로
     private OrderSpecifier conditionParam(String condition) {
         if (condition.equals("desc")) {

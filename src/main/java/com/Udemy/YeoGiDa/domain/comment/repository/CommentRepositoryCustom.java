@@ -16,5 +16,5 @@ public interface CommentRepositoryCustom {
 
     Page<CommentListResponseDto> test(Long placeId, Pageable pageable,String condition);
 
-
+    int totalSize(Long placeId);
 }
