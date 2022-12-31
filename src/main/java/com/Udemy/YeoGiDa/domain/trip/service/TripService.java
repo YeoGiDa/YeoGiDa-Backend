@@ -252,9 +252,11 @@ public class TripService {
         heartRepository.delete(heart);
 
         //알람 삭제
-        Alarm findAlarm = alarmRepository.findAlarmByTripIdAndMakeMemberId(trip.getId(), member.getId())
-                .orElseThrow(AlarmNotFoundException::new);
-        alarmRepository.delete(findAlarm);
+        if(!trip.getMember().getNickname().equals(member.getNickname())) {
+            Alarm findAlarm = alarmRepository.findAlarmByTripIdAndMakeMemberId(trip.getId(), member.getId())
+                    .orElseThrow(AlarmNotFoundException::new);
+            alarmRepository.delete(findAlarm);
+        }
     }
 
     //내가 작성한 여행지
