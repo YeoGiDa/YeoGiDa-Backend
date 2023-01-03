@@ -94,9 +94,9 @@ public class FollowService {
                 AlarmType.NEW_FOLLOW,
                 fromMemberId,
                 fromMemberId,
-                null,
-                null,
-                null
+                0L,
+                0L,
+                0L
         ));
 
         //푸쉬 알림 보내기
