@@ -89,8 +89,8 @@ public class CommentService {
                     place.getTrip().getMember(),
                     AlarmType.NEW_COMMENT,
                     member.getId(),
-                    0L,
-                    0L,
+                    null,
+                    null,
                     placeId,
                     comment.getId()
             ));

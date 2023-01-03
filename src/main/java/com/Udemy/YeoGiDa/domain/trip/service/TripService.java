@@ -218,10 +218,10 @@ public class TripService {
                     trip.getMember(),
                     AlarmType.NEW_HEART,
                     member.getId(),
-                    0L,
+                    null,
                     tripId,
-                    0L,
-                    0L
+                    null,
+                    null
             ));
         }
 
