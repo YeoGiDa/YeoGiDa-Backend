@@ -67,47 +67,11 @@ public class PlaceRepositoryImpl implements PlaceRepositoryCustom{
                 .fetch();
     }
 
-
-//
-//    @Override
-//    public List<Place> findAllByTripIdOrderByStar(Long tripId) {
-//        return queryFactory.selectFrom(place)
-//                .where(place.trip.id.eq(tripId))
-//                .orderBy(place.star.desc(),place.id.desc())
-//                .fetch();
-//    }
-//
-//    @Override
-//    public List<Place> findAllByTripIdOrderByComment(Long tripId) {
-//        return queryFactory.selectFrom(place)
-//                .where(place.trip.id.eq(tripId))
-//                .orderBy(place.comments.size().desc(),place.id.desc())
-//                .fetch();
-//    }
-
-//    @Override
-//    public List<Place> findAllByTagDefault(Long tripId, String tag) {
-//        return queryFactory.selectFrom(place)
-//                .where(place.tag.eq(tag) , place.trip.id.eq(tripId))
-//                .orderBy(place.id.asc())
-//                .fetch();
-//    }
-//
-//    @Override
-//    public List<Place> findAllByTagOrderById(Long tripId, String tag) {
-//        return queryFactory.selectFrom(place)
-//                .where(place.tag.eq(tag), place.trip.id.eq(tripId))
-//                .orderBy(place.id.desc())
-
-
-//    @Override
-//    public List<Place> findAllByTripIdAndCondition(Long tripId, String condition) {
-//        return queryFactory.selectFrom(place)
-//                .leftJoin(place.trip, trip).fetchJoin()
-//                .leftJoin(trip.tripImg, QTripImg.tripImg).fetchJoin()
-//                .where(place.trip.id.eq(tripId))
-//                .orderBy(conditionParam(condition))
-//                .fetch();
-//    }
-
+    @Override
+    public List<Place> findAllByKeyword(String keyword) {
+        return queryFactory.selectFrom(place)
+                .where(place.address.contains(keyword).or(place.title.contains(keyword)))
+                .orderBy(place.id.desc())
+                .fetch();
+    }
 }

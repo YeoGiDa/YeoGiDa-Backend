@@ -204,4 +204,19 @@ public class PlaceController {
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "지도에서 위도, 경도로 검색한 장소 리스트 반환 성공", result), HttpStatus.OK);
     }
+
+    /**
+     * @param keyword
+     * @return 지도에서 위도, 경도로 검색한 장소 리스트 반환
+     */
+    @GetMapping("/places/search")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity aroundMarkerPlace(@RequestParam String keyword) {
+        List<Double> doubles = placeService.aroundViewSearchGetCentralGeoCoordinate(keyword);
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("meanLat", doubles.get(0));
+        result.put("meanLng", doubles.get(1));
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "둘러보기에서 검색한 장소들의 중앙 좌표", result), HttpStatus.OK);
+    }
 }
