@@ -20,8 +20,6 @@ public class AlarmListResponseDto {
 
     private AlarmType alarmType;
 
-    private Long makeMemberId;
-
     private Long followerId;
 
     private Long tripId;
@@ -40,7 +38,6 @@ public class AlarmListResponseDto {
         this.nickname = member.getNickname();
         this.imgUrl = member.getMemberImg().getImgUrl();
         this.alarmType = alarm.getAlarmType();
-        this.makeMemberId = alarm.getMakeMemberId();
         this.followerId = alarm.getFollowerId();
         this.tripId = alarm.getTripId();
         this.placeId = alarm.getPlaceId();
