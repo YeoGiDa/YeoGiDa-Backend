@@ -18,7 +18,6 @@ import com.Udemy.YeoGiDa.domain.place.response.*;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
 import com.Udemy.YeoGiDa.domain.trip.repository.TripRepository;
-import com.Udemy.YeoGiDa.domain.trip.response.TripListWithRegionResponseDto;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -305,6 +304,15 @@ public class PlaceService {
                 .stream()
                 .map(PlaceAroundMarkerResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    public List<Double> aroundViewSearchGetCentralGeoCoordinate(String keyword) {
+        List<PlaceListInMapResponseDto> placeListInMapResponseDtos = placeRepository.findAllByKeyword(keyword)
+                .stream()
+                .map(PlaceListInMapResponseDto::new)
+                .collect(Collectors.toList());
+
+        return getCentralGeoCoordinate(placeListInMapResponseDtos);
     }
 
     public Long getMemberIdFromTripId(Long tripId) {
