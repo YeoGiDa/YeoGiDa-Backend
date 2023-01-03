@@ -17,6 +17,7 @@ public class PlaceListInTripResponseDto {
     private Boolean trip_like_check;
     private String title;
     private String subTitle;
+    private String region;
     private String imgUrl;
     private Integer heartCount;
     private Integer placeCount;
@@ -28,6 +29,7 @@ public class PlaceListInTripResponseDto {
         this.trip_like_check = Boolean.FALSE;
         this.title = trip.getTitle();
         this.subTitle = trip.getSubTitle();
+        this.region = trip.getRegion();
         if(trip.getTripImg() == null) {
             this.imgUrl = null;
         } else {
