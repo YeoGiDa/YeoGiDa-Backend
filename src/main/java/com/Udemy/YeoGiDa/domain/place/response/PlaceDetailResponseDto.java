@@ -23,8 +23,6 @@ public class PlaceDetailResponseDto {
     private Long memberId;
     private String title;
     private String address;
-    private Double longitude;
-    private Double latitude;
     private Float star;
     private String content;
     private List<PlaceImg> placeImgs = new ArrayList<>();
@@ -39,8 +37,6 @@ public class PlaceDetailResponseDto {
         this.memberId= place.getTrip().getMember().getId();
         this.title = place.getTitle();
         this.address = place.getAddress();
-        this.latitude = place.getLatitude();
-        this.longitude = place.getLongitude();
         this.star = place.getStar();
         this.content = place.getContent();
         this.placeImgs = place.getPlaceImgs();
