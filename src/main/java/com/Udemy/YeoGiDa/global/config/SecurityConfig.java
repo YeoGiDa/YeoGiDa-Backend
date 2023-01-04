@@ -1,17 +1,18 @@
 package com.Udemy.YeoGiDa.global.config;
 
 import com.Udemy.YeoGiDa.global.jwt.filter.JwtAuthenticationFilter;
-import com.Udemy.YeoGiDa.global.jwt.service.JwtProvider;
+import com.Udemy.YeoGiDa.global.jwt.service.JwtTokenProvider;
+import com.Udemy.YeoGiDa.global.security.CustomAuthenticationEntryPoint;
 import com.Udemy.YeoGiDa.global.security.CustomPrincipalDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -21,13 +22,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
+    private final JwtTokenProvider jwtTokenProvider;
     private final CustomPrincipalDetailsService principalDetailsService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final JwtProvider jwtProvider;
-
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(principalDetailsService).passwordEncoder(bCryptPasswordEncoder);
-    }
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -36,13 +33,19 @@ public class SecurityConfig {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                    .formLogin().disable()
-                    .authorizeRequests()
-                    .antMatchers("/**").permitAll()
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint)
                 .and()
-                    .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, principalDetailsService),
-                        UsernamePasswordAuthenticationFilter.class);
-
+                .authorizeRequests()
+                .antMatchers("/api/v1/members/login", "/api/v1/members/join", "/api/v1/token/validate").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, principalDetailsService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }

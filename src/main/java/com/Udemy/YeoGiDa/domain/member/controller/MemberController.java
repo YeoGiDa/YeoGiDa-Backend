@@ -50,8 +50,8 @@ public class MemberController {
         MemberLoginResponse memberLoginResponse = memberService.login(memberLoginRequest);
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("memberId", memberLoginResponse.getMemberId());
-        result.put("accessToken", memberLoginResponse.getToken().getAccessToken());
-        result.put("refreshToken", memberLoginResponse.getToken().getRefreshToken());
+        result.put("accessToken", memberLoginResponse.getTokenInfo().getAccessToken());
+        result.put("refreshToken", memberLoginResponse.getTokenInfo().getRefreshToken());
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 ResponseMessage.LOGIN_SUCCESS, result), HttpStatus.OK);
     }

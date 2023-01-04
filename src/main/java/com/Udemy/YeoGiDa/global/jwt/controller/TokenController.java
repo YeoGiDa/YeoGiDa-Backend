@@ -1,7 +1,6 @@
 package com.Udemy.YeoGiDa.global.jwt.controller;
 
-import com.Udemy.YeoGiDa.global.jwt.exception.TokenIsInvalidException;
-import com.Udemy.YeoGiDa.global.jwt.service.JwtProvider;
+import com.Udemy.YeoGiDa.global.jwt.service.JwtTokenProvider;
 import com.Udemy.YeoGiDa.global.response.success.DefaultResult;
 import com.Udemy.YeoGiDa.global.response.success.StatusCode;
 import io.swagger.annotations.ApiOperation;
@@ -23,15 +22,14 @@ import java.util.Map;
 @RequestMapping("/api/v1/token")
 public class TokenController {
 
-    private final JwtProvider jwtProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    @ApiOperation("토큰 유효성 검사 (accessToken, refreshToken) Json에 보내주세요.")
+    @ApiOperation("토큰 유효성 검사")
     @PostMapping("/validate")
-    public ResponseEntity validateToken(@RequestBody HashMap<String, String> bodyJson) throws TokenIsInvalidException {
-        log.info("refresh controller 실행");
+    public ResponseEntity validateToken(@RequestBody HashMap<String, String> bodyJson) {
         String oldAccessToken = bodyJson.get("accessToken");
         boolean isAccessTokenValid = false;
-        isAccessTokenValid = jwtProvider.validateAccessToken(oldAccessToken);
+        isAccessTokenValid = jwtTokenProvider.validateToken(oldAccessToken);
 
         if(isAccessTokenValid == true) {
             log.info("accessToken 유효함 클라이언트에서 처리");
@@ -41,7 +39,7 @@ public class TokenController {
         } else {
             log.info("isAccessTokenValid = {}", isAccessTokenValid);
             String refreshToken = bodyJson.get("refreshToken");
-            String newAccessToken = jwtProvider.validateRefreshTokenAndReissueAccessToken(refreshToken);
+            String newAccessToken = jwtTokenProvider.validateRefreshTokenAndReissueAccessToken(refreshToken);
             Map<String, Object> result = new HashMap<>();
             result.put("newAccessToken", newAccessToken);
             result.put("refreshToken", refreshToken);
