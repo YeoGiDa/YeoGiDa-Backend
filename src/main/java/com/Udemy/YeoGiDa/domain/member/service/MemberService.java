@@ -16,10 +16,11 @@ import com.Udemy.YeoGiDa.domain.member.request.MemberJoinRequest;
 import com.Udemy.YeoGiDa.domain.member.request.MemberLoginRequest;
 import com.Udemy.YeoGiDa.domain.member.request.MemberUpdateRequest;
 import com.Udemy.YeoGiDa.domain.member.response.*;
-import com.Udemy.YeoGiDa.global.jwt.Token;
-import com.Udemy.YeoGiDa.global.jwt.service.JwtProvider;
+import com.Udemy.YeoGiDa.global.jwt.dto.TokenInfo;
+import com.Udemy.YeoGiDa.global.jwt.service.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,10 +39,11 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberImgRepository memberImgRepository;
     private final S3Service s3Service;
-    private final JwtProvider jwtProvider;
+    private final JwtTokenProvider jwtTokenProvider;
     private final BCryptPasswordEncoder passwordEncoder;
     private final FollowRepository followRepository;
     private final HeartRepository heartRepository;
+    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     @Transactional(readOnly = true)
     public boolean isJoinMember(String email) {
@@ -49,22 +51,20 @@ public class MemberService {
     }
 
     public MemberLoginResponse login(MemberLoginRequest memberLoginRequest) {
-        Member member = memberRepository.findByEmailFetch(memberLoginRequest.getEmail());
-        if(member == null) {
-            throw new MemberNotFoundException();
-        }
+        Member member = memberRepository.findMemberByEmail(memberLoginRequest.getEmail())
+                .orElseThrow(MemberNotFoundException::new);
+
+        TokenInfo tokenInfo = jwtTokenProvider.generateToken(member);
 
         checkPassword(memberLoginRequest.getKakaoId(), member.getPassword());
 
-        Token token = jwtProvider.generateToken(member);
-
-        String refreshToken = token.getRefreshToken();
+        String refreshToken = tokenInfo.getRefreshToken();
         member.setRefreshToken(refreshToken);
 
         String deviceToken = memberLoginRequest.getDeviceToken();
         member.setDeviceToken(deviceToken);
 
-        return new MemberLoginResponse(member.getId(),token);
+        return new MemberLoginResponse(member.getId(), tokenInfo);
     }
 
     public MemberJoinResponse join(MemberJoinRequest memberJoinRequest, String imgPath) {
@@ -212,7 +212,7 @@ public class MemberService {
     }
 
     private void checkPassword(String loginPassword, String password) {
-        if( !passwordEncoder.matches(loginPassword, password) ){
+        if(!passwordEncoder.matches(loginPassword, password) ){
             throw new PasswordMismatchException();
         }
     }

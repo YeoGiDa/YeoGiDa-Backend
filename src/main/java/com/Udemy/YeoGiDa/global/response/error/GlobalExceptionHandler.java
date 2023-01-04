@@ -98,8 +98,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler
     protected DefaultErrorResult handleTokenHasExpiredException(TokenHasExpiredException e){
-        return new DefaultErrorResult(401, "TokenHasExpired Error!");
+        return new DefaultErrorResult(403, "TokenHasExpired Error!");
     }
+
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler
