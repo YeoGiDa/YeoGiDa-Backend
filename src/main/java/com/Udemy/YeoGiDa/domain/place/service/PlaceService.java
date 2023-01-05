@@ -2,7 +2,6 @@ package com.Udemy.YeoGiDa.domain.place.service;
 
 
 import com.Udemy.YeoGiDa.domain.comment.repository.CommentRepository;
-import com.Udemy.YeoGiDa.domain.common.exception.ImgNotFoundException;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.heart.repository.HeartRepository;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
@@ -223,14 +222,13 @@ public class PlaceService {
     public void update(PlaceUpdateRequestDto placeUpdateRequestDto,
                        Long placeId, Member member, List<String> imgPaths) {
 
-        Place place = Optional.ofNullable(placeRepository.findById(placeId)
-                .orElseThrow(() -> new PlaceNotFoundException())).get();
+        Place place = placeRepository.findById(placeId).orElseThrow(PlaceNotFoundException::new);
 
         if(member == null){
             throw new MemberNotFoundException();
         }
 
-        if(place.getTrip().getMember().getId() != member.getId()){
+        if(!place.getTrip().getMember().getNickname().equals(member.getNickname())){
             throw new ForbiddenException();
         }
 
@@ -240,9 +238,6 @@ public class PlaceService {
         String s3FileName = findPlaceImgs.get(0).getImgUrl().split("/")[3];
         if((findPlaceImgs.size() == 1) && (s3FileName.equals("default_place.png"))) {
             placeImgRepository.delete(findPlaceImgs.get(0));
-            if(imgPaths == null) {
-                throw new ImgNotFoundException();
-            }
         }
         else {
             for (PlaceImg findPlaceImg : findPlaceImgs) {
@@ -270,9 +265,8 @@ public class PlaceService {
             place.setPlaceImgs(placeImgs);
         }
 
-        place.update(placeUpdateRequestDto.getTitle(), placeUpdateRequestDto.getAddress(),
-                placeUpdateRequestDto.getContent(),placeUpdateRequestDto.getLongitude(),
-                placeUpdateRequestDto.getLatitude(), placeUpdateRequestDto.getStar(),
+        place.update(placeUpdateRequestDto.getContent(),
+                placeUpdateRequestDto.getStar(),
                 placeUpdateRequestDto.getTag());
     }
 

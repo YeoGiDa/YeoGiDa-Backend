@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,9 +22,9 @@ public class TokenController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @ApiOperation("토큰 유효성 검사")
-    @PostMapping("/validate")
-    public ResponseEntity validateToken(@RequestBody HashMap<String, String> bodyJson) {
-        String oldAccessToken = bodyJson.get("accessToken");
+    @GetMapping("/validate")
+    public ResponseEntity validateToken(@RequestHeader HashMap<String, String> hashMap) {
+        String oldAccessToken = hashMap.get("accesstoken");
         boolean isAccessTokenValid = false;
         isAccessTokenValid = jwtTokenProvider.validateToken(oldAccessToken);
 
@@ -37,13 +34,11 @@ public class TokenController {
             return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                     "유효한 accessToken 입니다."), HttpStatus.OK);
         } else {
-            log.info("isAccessTokenValid = {}", isAccessTokenValid);
-            String refreshToken = bodyJson.get("refreshToken");
-            String newAccessToken = jwtTokenProvider.validateRefreshTokenAndReissueAccessToken(refreshToken);
+            String refreshToken = hashMap.get("refreshtoken");
+            String accessToken = jwtTokenProvider.validateRefreshTokenAndReissueAccessToken(refreshToken);
             Map<String, Object> result = new HashMap<>();
-            result.put("newAccessToken", newAccessToken);
+            result.put("newAccessToken", accessToken);
             result.put("refreshToken", refreshToken);
-            log.info("새로운 accessToken = {}", newAccessToken);
 
             return new ResponseEntity(DefaultResult.res(StatusCode.CREATED,
                     "새로운 accessToken 발행 성공", result), HttpStatus.CREATED);

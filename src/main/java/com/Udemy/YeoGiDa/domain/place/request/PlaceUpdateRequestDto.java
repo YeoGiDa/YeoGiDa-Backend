@@ -1,14 +1,14 @@
 package com.Udemy.YeoGiDa.domain.place.request;
 
-import lombok.*;
-import org.springframework.data.geo.Point;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class PlaceUpdateRequestDto {
-
-
 
     private String content;
     private Float star;
@@ -16,7 +16,6 @@ public class PlaceUpdateRequestDto {
 
     @Builder
     public PlaceUpdateRequestDto(String content, Float star, String tag) {
-
         this.content = content;
         this.star = star;
         this.tag = tag;
