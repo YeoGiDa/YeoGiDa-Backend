@@ -19,8 +19,10 @@ public class JwtTokenProvider {
 
     private final Key key;
 
-    long accessTokenPeriod = 1000L * 60L * 60L * 24L; //24시간
-    long refreshTokenPeriod = 1000L * 60L * 60L * 24L * 30L; //1달
+//    long accessTokenPeriod = 1000L * 60L * 60L * 24L; //24시간
+    long accessTokenPeriod = 1000L * 30L; //30초
+//    long refreshTokenPeriod = 1000L * 60L * 60L * 24L * 30L; //1달
+    long refreshTokenPeriod = 1000L * 60L; //3분
 
     public JwtTokenProvider(
             @Value("${jwt.secret}") String secretKey) {
@@ -68,13 +70,13 @@ public class JwtTokenProvider {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token", e);
+            log.error("Invalid JWT Token");
         } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token", e);
+            log.error("Expired JWT Token");
         } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token", e);
+            log.error("Unsupported JWT Token");
         } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty.", e);
+            log.error("JWT claims string is empty.");
         }
         return false;
     }

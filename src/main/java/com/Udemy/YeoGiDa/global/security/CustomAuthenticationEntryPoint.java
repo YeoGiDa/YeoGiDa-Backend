@@ -25,7 +25,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest httpServletRequest,
                          HttpServletResponse httpServletResponse,
                          AuthenticationException e) throws IOException {
-        log.error("UnAuthorizaed!!! message : " + e.getMessage());
+        log.error("UnAuthorized!!! message : " + e.getMessage());
         //response에 넣기
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
         httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
