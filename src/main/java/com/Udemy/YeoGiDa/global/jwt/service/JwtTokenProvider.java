@@ -19,10 +19,10 @@ public class JwtTokenProvider {
 
     private final Key key;
 
-//    long accessTokenPeriod = 1000L * 60L * 60L * 24L; //24시간
-    long accessTokenPeriod = 1000L * 30L; //30초
-//    long refreshTokenPeriod = 1000L * 60L * 60L * 24L * 30L; //1달
-    long refreshTokenPeriod = 1000L * 60L; //3분
+    long accessTokenPeriod = 1000L * 60L * 60L * 24L; //24시간
+//    long accessTokenPeriod = 1000L * 30L; //30초
+    long refreshTokenPeriod = 1000L * 60L * 60L * 24L * 30L; //1달
+//    long refreshTokenPeriod = 1000L * 60L; //3분
 
     public JwtTokenProvider(
             @Value("${jwt.secret}") String secretKey) {
