@@ -220,7 +220,7 @@ public class PlaceService {
         return placeDetailResponseDto;
     }
 
-    public void update(PlaceUpdateRequestDto placeUpdateRequestDto,
+    public Place update(PlaceUpdateRequestDto placeUpdateRequestDto,
                        Long placeId, Member member, List<String> imgPaths) {
 
         Place place = Optional.ofNullable(placeRepository.findById(placeId)
@@ -236,6 +236,8 @@ public class PlaceService {
 
         //여행지 이미지 수정 로직
         List<PlaceImg> findPlaceImgs = placeImgRepository.findPlaceImgsByPlaceFetch(place);
+
+
         //default_image일때
         String s3FileName = findPlaceImgs.get(0).getImgUrl().split("/")[3];
         if((findPlaceImgs.size() == 1) && (s3FileName.equals("default_place.png"))) {
@@ -243,8 +245,7 @@ public class PlaceService {
             if(imgPaths == null) {
                 throw new ImgNotFoundException();
             }
-        }
-        else {
+        } else {
             for (PlaceImg findPlaceImg : findPlaceImgs) {
                 String fileName = findPlaceImg.getImgUrl().split("/")[3];
                 s3Service.deleteFile(fileName);
@@ -260,8 +261,7 @@ public class PlaceService {
             placeImgRepository.save(placeImg);
             placeImgs.add(placeImg);
             place.setPlaceImgs(placeImgs);
-        }
-        else {
+        } else {
             for (String imgPath : imgPaths) {
                 PlaceImg placeImg = new PlaceImg(imgPath, place);
                 placeImgRepository.save(placeImg);
@@ -270,10 +270,11 @@ public class PlaceService {
             place.setPlaceImgs(placeImgs);
         }
 
-        place.update(placeUpdateRequestDto.getTitle(), placeUpdateRequestDto.getAddress(),
-                placeUpdateRequestDto.getContent(),placeUpdateRequestDto.getLongitude(),
-                placeUpdateRequestDto.getLatitude(), placeUpdateRequestDto.getStar(),
+        place.update(placeUpdateRequestDto.getContent(), placeUpdateRequestDto.getStar(),
                 placeUpdateRequestDto.getTag());
+
+        return Optional.ofNullable(placeRepository.findById(placeId)
+                .orElseThrow(() -> new PlaceNotFoundException())).get();
     }
 
     public void delete(Long placeId, Member member) {

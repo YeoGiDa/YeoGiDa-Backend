@@ -55,12 +55,8 @@ public class Place extends BaseEntity {
         this.tag = tag;
     }
 
-    public void update(String title, String content, String address, Double longitude, Double latitude, Float star, String tag) {
-        this.title = title;
+    public void update(String content,Float star, String tag) {
         this.content = content;
-        this.address = address;
-        this.longitude = longitude;
-        this.latitude = latitude;
         this.star = star;
         this.tag = tag;
     }

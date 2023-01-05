@@ -276,4 +276,17 @@ public class TripController {
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "여행지에 좋아요 누른 회원 목록", result), HttpStatus.OK);
     }
+
+    @GetMapping("/search/ranking")
+    public ResponseEntity getRankingTrips(){
+        List<String> rankingList = tripService.getRankingList();
+        Map<String, Object> result = new HashMap<>();
+        result.put("rankList", rankingList);
+
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "최신 검색어 목록", result), HttpStatus.OK);
+    }
+
+
+
 }
