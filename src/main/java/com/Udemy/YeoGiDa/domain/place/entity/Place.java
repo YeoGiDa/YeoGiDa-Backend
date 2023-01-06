@@ -55,7 +55,7 @@ public class Place extends BaseEntity {
         this.tag = tag;
     }
 
-    public void update(String content,Float star, String tag) {
+    public void update(String content, Float star, String tag) {
         this.content = content;
         this.star = star;
         this.tag = tag;

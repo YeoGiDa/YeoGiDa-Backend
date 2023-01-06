@@ -1,6 +1,7 @@
 package com.Udemy.YeoGiDa.global.security;
 
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
+import com.Udemy.YeoGiDa.domain.member.exception.MemberNotFoundException;
 import com.Udemy.YeoGiDa.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,8 +16,9 @@ public class CustomPrincipalDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = memberRepository.findByEmailFetch(username);
-        return PrincipalDetails.of(member);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Member memberByEmail = memberRepository.findMemberByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+        return PrincipalDetails.of(memberByEmail);
     }
 }

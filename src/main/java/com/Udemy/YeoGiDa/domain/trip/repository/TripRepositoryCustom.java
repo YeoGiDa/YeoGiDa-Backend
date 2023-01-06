@@ -26,6 +26,9 @@ public interface TripRepositoryCustom {
     //유저가 작성한 여행지 목록, 지역 조건, 정렬
     List<Trip> findAllByMemberIdFetch(Long memberId,String region,String condition);
 
+    //전체 여행지 검색, 정렬
+    List<Trip> findAllTripSearchAndSort(String keyword, String condition);
+
     //유저가 작성한 여행지 목록 전체, 정렬
     List<Trip> findAllByMemberIdFetch2(Long memberId,String condition);
     //친구의 최근 여행지 목록 기본 10개

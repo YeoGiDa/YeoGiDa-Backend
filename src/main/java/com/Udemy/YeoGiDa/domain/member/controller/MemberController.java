@@ -50,8 +50,8 @@ public class MemberController {
         MemberLoginResponse memberLoginResponse = memberService.login(memberLoginRequest);
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("memberId", memberLoginResponse.getMemberId());
-        result.put("accessToken", memberLoginResponse.getToken().getAccessToken());
-        result.put("refreshToken", memberLoginResponse.getToken().getRefreshToken());
+        result.put("accessToken", memberLoginResponse.getTokenInfo().getAccessToken());
+        result.put("refreshToken", memberLoginResponse.getTokenInfo().getRefreshToken());
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 ResponseMessage.LOGIN_SUCCESS, result), HttpStatus.OK);
     }
@@ -161,5 +161,15 @@ public class MemberController {
         MemberDetailResponseDto result = memberService.getMemberDetail(member);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "마이페이지 조회 성공 ", result), HttpStatus.OK);
+    }
+
+    //전체 유저 닉네임 검색
+    @GetMapping("/search")
+    public ResponseEntity memberSearchByNickname(@RequestParam String nickname) {
+        List<MemberResponseDto> memberResponseDtos = memberService.memberSearchByNickname(nickname);
+        Map<String, Object> result = new HashMap<>();
+        result.put("memberList", memberResponseDtos);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "전체 유저 닉네임 검색 성공", result), HttpStatus.OK);
     }
 }

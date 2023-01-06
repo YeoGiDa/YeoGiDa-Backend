@@ -2,7 +2,6 @@ package com.Udemy.YeoGiDa.domain.place.service;
 
 
 import com.Udemy.YeoGiDa.domain.comment.repository.CommentRepository;
-import com.Udemy.YeoGiDa.domain.common.exception.ImgNotFoundException;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.heart.repository.HeartRepository;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
@@ -220,32 +219,27 @@ public class PlaceService {
         return placeDetailResponseDto;
     }
 
-    public Place update(PlaceUpdateRequestDto placeUpdateRequestDto,
+    public void update(PlaceUpdateRequestDto placeUpdateRequestDto,
                        Long placeId, Member member, List<String> imgPaths) {
 
-        Place place = Optional.ofNullable(placeRepository.findById(placeId)
-                .orElseThrow(() -> new PlaceNotFoundException())).get();
+        Place place = placeRepository.findById(placeId).orElseThrow(PlaceNotFoundException::new);
 
         if(member == null){
             throw new MemberNotFoundException();
         }
 
-        if(place.getTrip().getMember().getId() != member.getId()){
+        if(!place.getTrip().getMember().getNickname().equals(member.getNickname())){
             throw new ForbiddenException();
         }
 
         //여행지 이미지 수정 로직
         List<PlaceImg> findPlaceImgs = placeImgRepository.findPlaceImgsByPlaceFetch(place);
-
-
         //default_image일때
         String s3FileName = findPlaceImgs.get(0).getImgUrl().split("/")[3];
         if((findPlaceImgs.size() == 1) && (s3FileName.equals("default_place.png"))) {
             placeImgRepository.delete(findPlaceImgs.get(0));
-            if(imgPaths == null) {
-                throw new ImgNotFoundException();
-            }
-        } else {
+        }
+        else {
             for (PlaceImg findPlaceImg : findPlaceImgs) {
                 String fileName = findPlaceImg.getImgUrl().split("/")[3];
                 s3Service.deleteFile(fileName);
@@ -261,7 +255,8 @@ public class PlaceService {
             placeImgRepository.save(placeImg);
             placeImgs.add(placeImg);
             place.setPlaceImgs(placeImgs);
-        } else {
+        }
+        else {
             for (String imgPath : imgPaths) {
                 PlaceImg placeImg = new PlaceImg(imgPath, place);
                 placeImgRepository.save(placeImg);
@@ -270,11 +265,9 @@ public class PlaceService {
             place.setPlaceImgs(placeImgs);
         }
 
-        place.update(placeUpdateRequestDto.getContent(), placeUpdateRequestDto.getStar(),
+        place.update(placeUpdateRequestDto.getContent(),
+                placeUpdateRequestDto.getStar(),
                 placeUpdateRequestDto.getTag());
-
-        return Optional.ofNullable(placeRepository.findById(placeId)
-                .orElseThrow(() -> new PlaceNotFoundException())).get();
     }
 
     public void delete(Long placeId, Member member) {

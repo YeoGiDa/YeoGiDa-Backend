@@ -1,6 +1,6 @@
 package com.Udemy.YeoGiDa.domain.member.response;
 
-import com.Udemy.YeoGiDa.global.jwt.Token;
+import com.Udemy.YeoGiDa.global.jwt.dto.TokenInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,5 +9,5 @@ import lombok.Data;
 public class MemberLoginResponse {
 
     private Long memberId;
-    private Token token;
+    private TokenInfo tokenInfo;
 }

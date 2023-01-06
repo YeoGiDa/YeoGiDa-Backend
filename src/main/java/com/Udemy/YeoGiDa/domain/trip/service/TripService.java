@@ -298,6 +298,14 @@ public class TripService {
         return tripListResponseDtos;
     }
 
+    //전체 여행지 검색
+    public List<TripListResponseDto> tripAllSearchAndSort(String keyword, String condition) {
+        List<Trip> trips = tripRepository.findAllTripSearchAndSort(keyword, condition);
+        return trips.stream()
+                .map(TripListResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
     //멤버 여행지 지역 조건 o, 정렬
     public List<TripListWithRegionResponseDto> getMemberTripList(Long memberId, String region, String condition) {
 
