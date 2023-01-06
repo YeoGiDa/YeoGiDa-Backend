@@ -2,6 +2,7 @@ package com.Udemy.YeoGiDa.domain.place.controller;
 
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
+import com.Udemy.YeoGiDa.domain.place.entity.Place;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.place.request.PlaceUpdateRequestDto;
 import com.Udemy.YeoGiDa.domain.place.response.*;
@@ -151,15 +152,18 @@ public class PlaceController {
                                  @RequestPart(name = "imgUrls", required = false) List<MultipartFile> multipartFiles,
                                  @LoginMember Member member) {
         List<String> imgPaths = new ArrayList<>();
+
         if(multipartFiles.size() == 1 && multipartFiles.get(0).isEmpty()) {
             imgPaths = null;
         }
         else {
             imgPaths = s3Service.upload(multipartFiles);
         }
+
         placeService.update(placeUpdateRequestDto, placeId, member, imgPaths);
+
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "여행지 수정 성공"), HttpStatus.OK);
+                "장소 수정 성공"), HttpStatus.OK);
     }
 
     /**

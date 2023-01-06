@@ -15,7 +15,7 @@ public class PlaceUpdateRequestDto {
     private String tag;
 
     @Builder
-    public PlaceUpdateRequestDto(String content, Float star, String tag) {
+    public PlaceUpdateRequestDto(String title, String address,  Double longitude, Double latitude, String content, Float star, String tag) {
         this.content = content;
         this.star = star;
         this.tag = tag;

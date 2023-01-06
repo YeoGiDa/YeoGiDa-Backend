@@ -23,26 +23,26 @@ import com.Udemy.YeoGiDa.domain.trip.exception.TripNotFoundException;
 import com.Udemy.YeoGiDa.domain.trip.repository.TripImgRepository;
 import com.Udemy.YeoGiDa.domain.trip.repository.TripRepository;
 import com.Udemy.YeoGiDa.domain.trip.request.TripSaveRequestDto;
-import com.Udemy.YeoGiDa.domain.trip.response.TripBestListResponseDto;
-import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
-import com.Udemy.YeoGiDa.domain.trip.response.TripListResponseDto;
-import com.Udemy.YeoGiDa.domain.trip.response.TripListWithRegionResponseDto;
+import com.Udemy.YeoGiDa.domain.trip.response.*;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import com.Udemy.YeoGiDa.global.fcm.service.FirebaseCloudMessageService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 @Slf4j
+
 public class TripService {
 
     //NOArgs(private)
@@ -55,8 +55,9 @@ public class TripService {
     private final FollowRepository followRepository;
     private final FirebaseCloudMessageService firebaseCloudMessageService;
     private final MemberRepository memberRepository;
+    private final StringRedisTemplate redisTemplate;
 
-    public TripService(TripRepository tripRepository, TripImgRepository tripImgRepository, S3Service s3Service, HeartRepository heartRepository, AlarmRepository alarmRepository, FollowRepository followRepository, FirebaseCloudMessageService firebaseCloudMessageService, MemberRepository memberRepository) {
+    public TripService(TripRepository tripRepository, TripImgRepository tripImgRepository, S3Service s3Service, HeartRepository heartRepository, AlarmRepository alarmRepository, FollowRepository followRepository, FirebaseCloudMessageService firebaseCloudMessageService, MemberRepository memberRepository,StringRedisTemplate redisTemplate) {
         this.tripRepository = tripRepository;
         this.tripImgRepository = tripImgRepository;
         this.s3Service = s3Service;
@@ -65,6 +66,7 @@ public class TripService {
         this.followRepository = followRepository;
         this.firebaseCloudMessageService = firebaseCloudMessageService;
         this.memberRepository = memberRepository;
+        this.redisTemplate = redisTemplate;
     }
 
 
@@ -83,6 +85,22 @@ public class TripService {
     }
 
     public List<TripListResponseDto> getTripListSearch(String keyword) {
+
+        String key = "rank";
+        ZSetOperations<String,String> stringStringZSetOperations = redisTemplate.opsForZSet();
+
+
+        Double score = 0.0;
+        try {
+            // 검색을하면 해당검색어를 value에 저장하고, score를 1 준다
+            redisTemplate.opsForZSet().incrementScore(key, keyword,1);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        //score를 1씩 올려준다.
+        redisTemplate.opsForZSet().incrementScore(key, keyword, score);
+
+
         return tripRepository.findAllSearch(keyword)
                 .stream()
                 .map(TripListResponseDto::new)
@@ -434,6 +452,25 @@ public class TripService {
             //reset
             trip.initChangeHeartCount();
         }
+    }
+
+    @Transactional
+    public List<TripRankResponseDto> getRankingList() {
+        String key = "rank";
+        ZSetOperations<String, String> stringStringZSetOperations = redisTemplate.opsForZSet();
+        Set<ZSetOperations.TypedTuple<String>> typedTuples = stringStringZSetOperations.reverseRangeWithScores(key, 0, 9);
+        List<TripRankResponseDto> rankList = new ArrayList<>();
+
+        for (ZSetOperations.TypedTuple<String> typedTuple : typedTuples) {
+            rankList.add(new TripRankResponseDto(typedTuple.getValue(),typedTuple.getScore()));
+        }
+
+        return rankList;
+    }
+
+    @Transactional
+    public void resetRank(){
+        redisTemplate.delete("rank");
     }
 
 }
