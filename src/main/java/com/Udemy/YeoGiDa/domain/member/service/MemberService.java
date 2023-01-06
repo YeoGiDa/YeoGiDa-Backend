@@ -204,6 +204,12 @@ public class MemberService {
                 .collect(Collectors.toList());
     }
 
+    public List<MemberResponseDto> memberSearchByNickname(String nickname) {
+        return memberRepository.findMembersByNickname(nickname)
+                .stream().map(MemberResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
 
     private void isValidateDuplicateNickname(Member member) {
         if(memberRepository.existsByNickname(member.getNickname()) == true) {

@@ -162,4 +162,14 @@ public class MemberController {
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "마이페이지 조회 성공 ", result), HttpStatus.OK);
     }
+
+    //전체 유저 닉네임 검색
+    @GetMapping("/search")
+    public ResponseEntity memberSearchByNickname(@RequestParam String nickname) {
+        List<MemberResponseDto> memberResponseDtos = memberService.memberSearchByNickname(nickname);
+        Map<String, Object> result = new HashMap<>();
+        result.put("memberList", memberResponseDtos);
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "전체 유저 닉네임 검색 성공", result), HttpStatus.OK);
+    }
 }
