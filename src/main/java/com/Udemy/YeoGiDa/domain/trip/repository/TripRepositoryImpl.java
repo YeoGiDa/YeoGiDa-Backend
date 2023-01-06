@@ -110,6 +110,17 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public List<Trip> findAllTripSearchAndSort(String keyword, String condition) {
+        return queryFactory.selectFrom(trip)
+                .leftJoin(trip.tripImg, QTripImg.tripImg).fetchJoin()
+                .leftJoin(trip.member, member).fetchJoin()
+                .leftJoin(member.memberImg, QMemberImg.memberImg).fetchJoin()
+                .where(trip.title.contains(keyword).or(trip.subTitle.contains(keyword)))
+                .orderBy(conditionParam(condition))
+                .fetch();
+    }
+
     private BooleanExpression whereCondition(String tag) {
         if(tag.equals("nothing")){
             return null;
