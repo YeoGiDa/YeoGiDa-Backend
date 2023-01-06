@@ -15,4 +15,10 @@ public class Scheduler {
     public void initTripChangeHeartCount() {
         tripService.initTripChangeHeartCount();
     }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void resetRank(){
+        tripService.resetRank();
+    }
+
 }

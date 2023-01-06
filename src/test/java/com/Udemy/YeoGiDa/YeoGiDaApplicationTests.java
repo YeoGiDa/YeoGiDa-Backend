@@ -8,10 +8,13 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.ZSetOperations;
 
+import java.util.Arrays;
+import java.util.Set;
+
 
 @SpringBootTest
 class YeoGiDaApplicationTests {
-//
+
 //    @Autowired
 //    StringRedisTemplate redisTemplate;
 //
@@ -44,7 +47,7 @@ class YeoGiDaApplicationTests {
 //        stringStringZSetOperations.add(key,"l",10);
 //        stringStringZSetOperations.add(key,"l",15);
 //        stringStringZSetOperations.add(key,"o",20);
-//
+
 
 
 //        Double score = stringStringZSetOperations.score(key, "l");
@@ -67,18 +70,18 @@ class YeoGiDaApplicationTests {
 //        System.out.println(stringStringZSetOperations.score(key,"l"));
 //        redisTemplate.opsForZSet().incrementScore(key, "asda", score);
 //        System.out.println(stringStringZSetOperations.score(key,"asda"));
-
-
-
+//
+//
+//
 //        Long size = stringStringZSetOperations.size(key);
-
+//
 //        System.out.println("size = " + size);
-
+//
 //        Set<String> scoreRange = stringStringZSetOperations.rangeByScore(key, 0, 13);
-
+//
 //        System.out.println("scoreRange = " + Arrays.toString(scoreRange.toArray()));
-
-
+//
+//
 //    }
 
 }

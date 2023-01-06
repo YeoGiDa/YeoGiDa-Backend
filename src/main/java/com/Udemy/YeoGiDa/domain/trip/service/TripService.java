@@ -446,17 +446,23 @@ public class TripService {
         }
     }
 
-    public List<String> getRankingList() {
+    @Transactional
+    public List<TripRankResponseDto> getRankingList() {
         String key = "rank";
         ZSetOperations<String, String> stringStringZSetOperations = redisTemplate.opsForZSet();
         Set<ZSetOperations.TypedTuple<String>> typedTuples = stringStringZSetOperations.reverseRangeWithScores(key, 0, 9);
-        List<String> rankList = new ArrayList<>();
+        List<TripRankResponseDto> rankList = new ArrayList<>();
 
         for (ZSetOperations.TypedTuple<String> typedTuple : typedTuples) {
-            rankList.add(typedTuple.getValue());
+            rankList.add(new TripRankResponseDto(typedTuple.getValue(),typedTuple.getScore()));
         }
 
         return rankList;
+    }
+
+    @Transactional
+    public void resetRank(){
+        redisTemplate.delete("rank");
     }
 
 }

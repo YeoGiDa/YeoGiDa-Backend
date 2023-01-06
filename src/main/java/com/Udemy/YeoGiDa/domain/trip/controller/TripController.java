@@ -5,10 +5,7 @@ import com.Udemy.YeoGiDa.domain.follow.response.FollowResponseDto;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripImgEssentialException;
 import com.Udemy.YeoGiDa.domain.trip.request.TripSaveRequestDto;
-import com.Udemy.YeoGiDa.domain.trip.response.TripDetailResponseDto;
-import com.Udemy.YeoGiDa.domain.trip.response.TripListResponseDto;
-import com.Udemy.YeoGiDa.domain.trip.response.TripListWithRegionResponseDto;
-import com.Udemy.YeoGiDa.domain.trip.response.TripBestListResponseDto;
+import com.Udemy.YeoGiDa.domain.trip.response.*;
 import com.Udemy.YeoGiDa.domain.trip.service.TripService;
 import com.Udemy.YeoGiDa.global.response.success.DefaultResult;
 import com.Udemy.YeoGiDa.global.response.success.StatusCode;
@@ -279,12 +276,12 @@ public class TripController {
 
     @GetMapping("/search/ranking")
     public ResponseEntity getRankingTrips(){
-        List<String> rankingList = tripService.getRankingList();
+        List<TripRankResponseDto> rankingList = tripService.getRankingList();
         Map<String, Object> result = new HashMap<>();
         result.put("rankList", rankingList);
 
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "최신 검색어 목록", result), HttpStatus.OK);
+                "인기 검색어 목록", result), HttpStatus.OK);
     }
 
 
