@@ -41,6 +41,13 @@ public class PlaceService {
     private final HeartRepository heartRepository;
     private final CommentRepository commentRepository;
 
+    /**
+     * 장소 전체 조회 (tag(지역),condition(정렬조건))
+     * @param tripId
+     * @param tag
+     * @param condition
+     * @return
+     */
     @Transactional(readOnly = true)
     public List<PlaceListResponseDto> getPlaceListByTagDefault(Long tripId,String tag,String condition){
         return placeRepository.findAllByTripIdAndTagAndCondition(tripId,tag,condition)
@@ -49,15 +56,21 @@ public class PlaceService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 내가 댓글 쓴 장소 조회
+     * @param member
+     * @return
+     */
    @Transactional(readOnly = true)
     public List<PlaceListResponseDto> getPlaceByComment(Member member){
-
 
        List<PlaceListResponseDto> collect = placeRepository.findAllByComment(member)
                .stream()
                .map(PlaceListResponseDto::new)
                .collect(Collectors.toList());
 
+
+       // 마이페이지에서 장소 별 댓글 수 재설정 - 다른 사람이 나의 글에 작성 했을 때, 댓글 전체 갯수 추가가 안되는 문제 해결을 위해
        for (PlaceListResponseDto placeListResponseDto : collect) {
 
            placeListResponseDto.setCommentCount(commentRepository.totalSize(placeListResponseDto.getPlaceId()));
