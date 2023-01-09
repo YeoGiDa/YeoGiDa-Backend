@@ -46,7 +46,7 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
 
     private OrderSpecifier conditionParam(String condition) {
         if (StringUtils.isNullOrEmpty(condition)) {
-            return trip.id.asc();
+            return trip.id.desc();
         } else if (condition.equals("id")) {
             return trip.id.desc();
         } else if (condition.equals("heart")) {
