@@ -19,6 +19,7 @@ import com.Udemy.YeoGiDa.domain.member.response.*;
 import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.Udemy.YeoGiDa.global.jwt.dto.TokenInfo;
 import com.Udemy.YeoGiDa.global.jwt.service.JwtTokenProvider;
+import com.amazonaws.util.CollectionUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -250,10 +251,14 @@ public class MemberService {
         for (Member member : all) {
             Integer heartCount = 0;
             List<Trip> trips = member.getTrips();
-            for (Trip trip : trips) {
-                heartCount += trip.getHearts().size();
+            if(CollectionUtils.isNullOrEmpty(trips)) {
+                member.setHeartCount(0);
+            } else {
+                for (Trip trip : trips) {
+                    heartCount += trip.getHearts().size();
+                }
+                member.setHeartCount(heartCount);
             }
-            member.setHeartCount(heartCount);
         }
     }
 }
