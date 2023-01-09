@@ -5,7 +5,6 @@ import com.Udemy.YeoGiDa.domain.follow.response.FollowResponseDto;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.trip.exception.TripImgEssentialException;
 import com.Udemy.YeoGiDa.domain.trip.request.TripSaveRequestDto;
-import com.Udemy.YeoGiDa.domain.trip.request.TripSearchRequestDto;
 import com.Udemy.YeoGiDa.domain.trip.response.*;
 import com.Udemy.YeoGiDa.domain.trip.service.TripService;
 import com.Udemy.YeoGiDa.global.response.success.DefaultResult;
@@ -209,8 +208,9 @@ public class TripController {
     @ApiOperation("여행지 검색")
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity getTripListSearch(@RequestBody TripSearchRequestDto tripSearchRequestDto) {
-        List<TripListResponseDto> tripListResponseDtos = tripService.tripAllSearchAndSort(tripSearchRequestDto.getKeyword(), tripSearchRequestDto.getCondition());
+    public ResponseEntity getTripListSearch(@RequestParam String keyword,
+                                            @RequestParam String condition) {
+        List<TripListResponseDto> tripListResponseDtos = tripService.tripAllSearchAndSort(keyword, condition);
         Map<String, Object> result = new HashMap<>();
         result.put("tripList", tripListResponseDtos);
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
@@ -283,7 +283,4 @@ public class TripController {
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "인기 검색어 목록", result), HttpStatus.OK);
     }
-
-
-
 }
