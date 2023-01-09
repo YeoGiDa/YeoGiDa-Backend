@@ -301,6 +301,20 @@ public class TripService {
     //전체 여행지 검색
     public List<TripListResponseDto> tripAllSearchAndSort(String keyword, String condition) {
         List<Trip> trips = tripRepository.findAllTripSearchAndSort(keyword, condition);
+
+        String key = "rank";
+        ZSetOperations<String,String> stringStringZSetOperations = redisTemplate.opsForZSet();
+
+
+        Double score = 0.0;
+        try {
+            // 검색을하면 해당검색어를 value에 저장하고, score를 1 준다
+            redisTemplate.opsForZSet().incrementScore(key, keyword,1);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+        //score를 1씩 올려준다.
+        redisTemplate.opsForZSet().incrementScore(key, keyword, score);
         return trips.stream()
                 .map(TripListResponseDto::new)
                 .collect(Collectors.toList());
@@ -468,9 +482,9 @@ public class TripService {
         return rankList;
     }
 
-    @Transactional
-    public void resetRank(){
-        redisTemplate.delete("rank");
-    }
+//    @Transactional
+//    public void resetRank(){
+//        redisTemplate.delete("rank");
+//    }
 
 }

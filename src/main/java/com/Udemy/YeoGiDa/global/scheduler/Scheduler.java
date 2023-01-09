@@ -16,9 +16,9 @@ public class Scheduler {
         tripService.initTripChangeHeartCount();
     }
 
-    @Scheduled(cron = "0 0 0 * * *")
-    public void resetRank(){
-        tripService.resetRank();
-    }
+//    @Scheduled(cron = "0 0 0 * * *")
+//    public void resetRank(){
+//        tripService.resetRank();
+//    }
 
 }
