@@ -1,5 +1,6 @@
 package com.Udemy.YeoGiDa.global.scheduler;
 
+import com.Udemy.YeoGiDa.domain.member.service.MemberService;
 import com.Udemy.YeoGiDa.domain.trip.service.TripService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class Scheduler {
 
+    private final MemberService memberService;
     private final TripService tripService;
 
     @Scheduled(cron = "0 0 0 1 * *")
@@ -21,4 +23,8 @@ public class Scheduler {
         tripService.resetRank();
     }
 
+    @Scheduled(cron = "0 0 0/1 * * *")
+    public void synchronizingHeartCount() {
+        memberService.synchronizingHeartCount();
+    }
 }
