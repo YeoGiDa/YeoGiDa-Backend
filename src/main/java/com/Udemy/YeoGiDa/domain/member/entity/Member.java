@@ -74,4 +74,8 @@ public class Member extends BaseEntity {
     public void minusHeartCount() {
         this.heartCount--;
     }
+
+    public void setHeartCount(Integer heartCount) {
+        this.heartCount = heartCount;
+    }
 }

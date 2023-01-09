@@ -16,6 +16,7 @@ import com.Udemy.YeoGiDa.domain.member.request.MemberJoinRequest;
 import com.Udemy.YeoGiDa.domain.member.request.MemberLoginRequest;
 import com.Udemy.YeoGiDa.domain.member.request.MemberUpdateRequest;
 import com.Udemy.YeoGiDa.domain.member.response.*;
+import com.Udemy.YeoGiDa.domain.trip.entity.Trip;
 import com.Udemy.YeoGiDa.global.jwt.dto.TokenInfo;
 import com.Udemy.YeoGiDa.global.jwt.service.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -242,5 +243,17 @@ public class MemberService {
         memberDetailResponseDto.setFollowerCount(followRepository.findSizeFollowing(member.getId()));
 
         return memberDetailResponseDto;
+    }
+
+    public void synchronizingHeartCount() {
+        List<Member> all = memberRepository.findAll();
+        for (Member member : all) {
+            Integer heartCount = 0;
+            List<Trip> trips = member.getTrips();
+            for (Trip trip : trips) {
+                heartCount += trip.getHearts().size();
+            }
+            member.setHeartCount(heartCount);
+        }
     }
 }
