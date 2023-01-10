@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -34,9 +35,8 @@ public class AlarmService {
         List<AlarmListResponseDto> alarmListResponseDtos = new ArrayList<>();
         for (Alarm alarm : alarms) {
             Long makeAlarmMemberId = alarm.getMakeMemberId();
-            Member makeMember = memberRepository.findById(makeAlarmMemberId)
-                            .orElseThrow(MemberNotFoundException::new);
-            alarmListResponseDtos.add(new AlarmListResponseDto(alarm, makeMember));
+            Optional<Member> makeMember = memberRepository.findById(makeAlarmMemberId);
+            makeMember.ifPresent(value -> alarmListResponseDtos.add(new AlarmListResponseDto(alarm, value)));
         }
         Collections.reverse(alarmListResponseDtos);
         return alarmListResponseDtos;

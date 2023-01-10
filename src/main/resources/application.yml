@@ -14,5 +14,5 @@ spring:
 
 logging:
   level:
-#    org.hibernate.type.descriptor.sql: trace
+    org.hibernate.type.descriptor.sql: ERROR
     com.amazonaws.util.EC2MetadataUtils: ERROR
