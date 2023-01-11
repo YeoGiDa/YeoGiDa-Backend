@@ -37,9 +37,8 @@ public class SecurityConfig {
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/members/login", "/api/v1/members/join", "/api/v1/token/validate").permitAll()
+                .antMatchers("/api/v1/members/login", "/api/v1/members/join", "/api/v1/token/validate", "/api/v1/test").permitAll()
                 .anyRequest().authenticated()
-//                .antMatchers("/**").permitAll()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, principalDetailsService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
