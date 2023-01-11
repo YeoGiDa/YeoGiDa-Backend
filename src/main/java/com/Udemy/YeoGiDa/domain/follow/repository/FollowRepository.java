@@ -28,10 +28,9 @@ public interface FollowRepository extends JpaRepository<Follow, Follow.PK>, Foll
             " where f.toMemberId = :memberId and m.nickname like %:nickname%")
     List<Member> SearchFollowerMemberByNickname(@Param(value = "memberId") Long memberId,
                                                  @Param(value = "nickname") String nickname);
-    Long countByToMemberId(Long memberId);
 
-    Long countByFromMemberId(Long memberId);
+    boolean existsByToMemberIdOrFromMemberId(Long toMemberId,Long fromMemberId);
 
 
-    boolean existsByToMemberIdAndFromMemberId(Long toMemberId,Long fromMemberId);
+    boolean existsByToMemberIdAndFromMemberId(Long toMemberId, Long fromMemberId);
 }
