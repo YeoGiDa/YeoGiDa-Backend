@@ -10,4 +10,6 @@ public interface FollowRepositoryCustom {
     int findSizeFollower(Long memberId);
 
     int findSizeFollowing(Long memberId);
+
+    List<Follow> findByMemberId(Long memberId);
 }

@@ -45,4 +45,11 @@ public class FollowRepositoryImpl implements FollowRepositoryCustom{
                 .where(follow.toMemberId.eq(memberId))
                 .fetch().size();
     }
+
+    @Override
+    public List<Follow> findByMemberId(Long memberId) {
+        return queryFactory.selectFrom(follow)
+                .where(follow.toMemberId.eq(memberId).or(follow.fromMemberId.eq(memberId)))
+                .fetch();
+    }
 }

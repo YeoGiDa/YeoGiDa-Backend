@@ -1,5 +1,7 @@
 package com.Udemy.YeoGiDa;
 
+import com.Udemy.YeoGiDa.domain.follow.entity.Follow;
+import com.Udemy.YeoGiDa.domain.follow.repository.FollowRepository;
 import com.google.api.client.testing.util.SecurityTestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,6 @@ class YeoGiDaApplicationTests {
 
 //    @Autowired
 //    StringRedisTemplate redisTemplate;
-//
 //    @Test
 //    public void testStrings(){
 //        final String key = "newKey";
@@ -83,5 +84,8 @@ class YeoGiDaApplicationTests {
 //
 //
 //    }
+
+
+
 
 }

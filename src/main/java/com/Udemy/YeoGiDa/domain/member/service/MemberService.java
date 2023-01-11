@@ -1,6 +1,7 @@
 package com.Udemy.YeoGiDa.domain.member.service;
 
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
+import com.Udemy.YeoGiDa.domain.follow.entity.Follow;
 import com.Udemy.YeoGiDa.domain.follow.repository.FollowRepository;
 import com.Udemy.YeoGiDa.domain.heart.entity.Heart;
 import com.Udemy.YeoGiDa.domain.heart.repository.HeartRepository;
@@ -169,6 +170,11 @@ public class MemberService {
             heart.getTrip().minusChangeHeartCount();
         }
 
+        if(followRepository.existsByToMemberIdOrFromMemberId(member.getId(),member.getId())){
+            List<Follow> findFollow = followRepository.findByMemberId(member.getId());
+            followRepository.deleteAll(findFollow);
+        }
+
         memberRepository.delete(member);
     }
 
@@ -236,9 +242,6 @@ public class MemberService {
                 .orElseThrow(MemberNotFoundException::new)).get();
 
         MemberDetailResponseDto memberDetailResponseDto = new MemberDetailResponseDto(memberDetail);
-
-//        memberDetailResponseDto.setFollowerCount(followRepository.findSizeFollower(member.getId()));
-//        memberDetailResponseDto.setFollowerCount(followRepository.findSizeFollower(member.getId()));
 
         memberDetailResponseDto.setFollowingCount(followRepository.findSizeFollower(member.getId()));
         memberDetailResponseDto.setFollowerCount(followRepository.findSizeFollowing(member.getId()));
