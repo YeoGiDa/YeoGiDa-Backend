@@ -26,10 +26,7 @@ import com.Udemy.YeoGiDa.domain.trip.request.TripSaveRequestDto;
 import com.Udemy.YeoGiDa.domain.trip.response.*;
 import com.Udemy.YeoGiDa.global.exception.ForbiddenException;
 import com.Udemy.YeoGiDa.global.fcm.service.FirebaseCloudMessageService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
@@ -42,7 +39,6 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @Slf4j
-
 public class TripService {
 
     //NOArgs(private)
@@ -456,6 +452,13 @@ public class TripService {
             followResponseDtos.add(new FollowResponseDto(member));
         }
         return followResponseDtos;
+    }
+
+    public List<TripBestListResponseDto> findRecentTrip() {
+        return tripRepository.findRecentTrip()
+                .stream()
+                .map(TripBestListResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     //@Scheduler에서 매달 1일마다 하트 변화량을 0으로 수정

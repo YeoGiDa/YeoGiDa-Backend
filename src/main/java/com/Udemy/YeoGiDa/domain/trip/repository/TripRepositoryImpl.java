@@ -121,6 +121,17 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
                 .fetch();
     }
 
+    @Override
+    public List<Trip> findRecentTrip() {
+        return queryFactory.selectFrom(trip)
+                .leftJoin(trip.tripImg, QTripImg.tripImg).fetchJoin()
+                .leftJoin(trip.member, member).fetchJoin()
+                .leftJoin(member.memberImg, QMemberImg.memberImg).fetchJoin()
+                .orderBy(trip.id.desc())
+                .limit(10)
+                .fetch();
+    }
+
     private BooleanExpression whereCondition(String tag) {
         if(tag.equals("nothing")){
             return null;

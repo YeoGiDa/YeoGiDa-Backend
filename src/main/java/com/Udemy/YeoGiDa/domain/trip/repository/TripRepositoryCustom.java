@@ -37,4 +37,6 @@ public interface TripRepositoryCustom {
     //친구의 최근 여행지 목록 전부
 //    List<Trip> findAllByFollowingOrderByIdMoreFetch(Member m);
 
+    //최근 여행지 10개
+    List<Trip> findRecentTrip();
 }

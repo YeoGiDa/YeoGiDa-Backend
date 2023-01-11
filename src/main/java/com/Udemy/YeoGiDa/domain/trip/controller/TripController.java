@@ -283,4 +283,14 @@ public class TripController {
         return new ResponseEntity(DefaultResult.res(StatusCode.OK,
                 "인기 검색어 목록", result), HttpStatus.OK);
     }
+
+    @GetMapping("/recent")
+    public ResponseEntity getRecentTrips() {
+        List<TripBestListResponseDto> recentTrip = tripService.findRecentTrip();
+        Map<String, Object> result = new HashMap<>();
+        result.put("tripList", recentTrip);
+
+        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
+                "최근 여행지 목록 10개", result), HttpStatus.OK);
+    }
 }
