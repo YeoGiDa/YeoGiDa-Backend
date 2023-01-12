@@ -415,6 +415,7 @@ public class TripService {
             if (!trip.isEmpty()) {
                 tripBestListResponseDtos.add(new TripBestListResponseDto(trip.get(trip.size() - 1)));
                 if (tripBestListResponseDtos.size() == 10) {
+                    Collections.reverse(tripBestListResponseDtos);
                     return tripBestListResponseDtos;
                 }
             }
@@ -422,6 +423,7 @@ public class TripService {
                 throw new TripNotFoundException();
             }
         }
+        Collections.reverse(tripBestListResponseDtos);
         return tripBestListResponseDtos;
     }
 
@@ -443,6 +445,7 @@ public class TripService {
                 throw new TripNotFoundException();
             }
         }
+        Collections.reverse(tripBestListResponseDtos);
         return tripBestListResponseDtos;
     }
 
