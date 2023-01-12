@@ -90,7 +90,7 @@ public class CommentService {
                     AlarmType.NEW_COMMENT,
                     member.getId(),
                     null,
-                    null,
+                    place.getTrip().getId(),
                     placeId,
                     comment.getId()
             ));
