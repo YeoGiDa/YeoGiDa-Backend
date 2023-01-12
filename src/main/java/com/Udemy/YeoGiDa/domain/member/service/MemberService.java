@@ -1,5 +1,7 @@
 package com.Udemy.YeoGiDa.domain.member.service;
 
+import com.Udemy.YeoGiDa.domain.alarm.entity.Alarm;
+import com.Udemy.YeoGiDa.domain.alarm.repository.AlarmRepository;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.follow.entity.Follow;
 import com.Udemy.YeoGiDa.domain.follow.repository.FollowRepository;
@@ -23,7 +25,6 @@ import com.Udemy.YeoGiDa.global.jwt.service.JwtTokenProvider;
 import com.amazonaws.util.CollectionUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +47,7 @@ public class MemberService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final FollowRepository followRepository;
     private final HeartRepository heartRepository;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final AlarmRepository alarmRepository;
 
     @Transactional(readOnly = true)
     public boolean isJoinMember(String email) {
@@ -174,6 +175,9 @@ public class MemberService {
             List<Follow> findFollow = followRepository.findByMemberId(member.getId());
             followRepository.deleteAll(findFollow);
         }
+
+        List<Alarm> followAlarmByMemberId = alarmRepository.findFollowAlarmByMemberId(member.getId());
+        alarmRepository.deleteAll(followAlarmByMemberId);
 
         memberRepository.delete(member);
     }

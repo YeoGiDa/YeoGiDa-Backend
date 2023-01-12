@@ -188,6 +188,12 @@ public class TripService {
             trip.getMember().minusHeartCount();
         }
 
+        List<Alarm> heartAlarmByTripId = alarmRepository.findHeartAlarmByTripId(tripId);
+        alarmRepository.deleteAll(heartAlarmByTripId);
+
+        List<Alarm> commentAlarmByTripId = alarmRepository.findCommentAlarmByTripId(tripId);
+        alarmRepository.deleteAll(commentAlarmByTripId);
+
         tripRepository.delete(trip);
     }
 
