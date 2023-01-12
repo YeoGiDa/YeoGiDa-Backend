@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -294,7 +295,7 @@ public class PlaceService {
             throw new MemberNotFoundException();
         }
 
-        if(place.getTrip().getMember().getNickname().equals(member.getNickname())){
+        if(!Objects.equals(place.getTrip().getMember().getId(), member.getId())){
             throw new ForbiddenException();
         }
 
