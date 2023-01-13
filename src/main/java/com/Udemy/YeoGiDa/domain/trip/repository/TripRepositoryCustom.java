@@ -31,11 +31,12 @@ public interface TripRepositoryCustom {
 
     //유저가 작성한 여행지 목록 전체, 정렬
     List<Trip> findAllByMemberIdFetch2(Long memberId,String condition);
+
     //친구의 최근 여행지 목록 기본 10개
-//    List<Trip> findAllByFollowingOrderByIdBasicFetch(Member m);
+    List<Trip> findAllByFollowingOrderByIdBasicFetch(Member m);
 
     //친구의 최근 여행지 목록 전부
-//    List<Trip> findAllByFollowingOrderByIdMoreFetch(Member m);
+    List<Trip> findAllByFollowingOrderByIdMoreFetch(Member m);
 
     //최근 여행지 10개
     List<Trip> findRecentTrip();
