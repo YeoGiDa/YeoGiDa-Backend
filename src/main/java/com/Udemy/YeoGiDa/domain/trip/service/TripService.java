@@ -471,6 +471,7 @@ public class TripService {
     }
 
     //@Scheduler에서 매달 1일마다 하트 변화량을 0으로 수정
+    //추가로 월간 베스트 여행지에 빈 리스트를 보내지 않도록 샘플데이터 3개 추가
     @Transactional
     public void initTripChangeHeartCount() {
         List<Trip> tripList = tripRepository.findAll();
@@ -478,6 +479,14 @@ public class TripService {
             //reset
             trip.initChangeHeartCount();
         }
+
+        //샘플 데이터 3개 하트 추가해놓기
+        Optional<Trip> tripOptional1 = tripRepository.findById(25L);
+        tripOptional1.ifPresent(Trip::plusChangeHeartCount);
+        Optional<Trip> tripOptional2 = tripRepository.findById(32L);
+        tripOptional2.ifPresent(Trip::plusChangeHeartCount);
+        Optional<Trip> tripOptional3 = tripRepository.findById(37L);
+        tripOptional3.ifPresent(Trip::plusChangeHeartCount);
     }
 
     @Transactional
