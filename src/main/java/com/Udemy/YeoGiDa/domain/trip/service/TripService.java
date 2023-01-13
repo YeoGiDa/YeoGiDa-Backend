@@ -6,7 +6,6 @@ import com.Udemy.YeoGiDa.domain.alarm.exception.AlarmNotFoundException;
 import com.Udemy.YeoGiDa.domain.alarm.repository.AlarmRepository;
 import com.Udemy.YeoGiDa.domain.common.exception.ImgNotFoundException;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
-import com.Udemy.YeoGiDa.domain.follow.exception.NoOneFollowException;
 import com.Udemy.YeoGiDa.domain.follow.repository.FollowRepository;
 import com.Udemy.YeoGiDa.domain.follow.response.FollowResponseDto;
 import com.Udemy.YeoGiDa.domain.heart.entity.Heart;
@@ -404,49 +403,57 @@ public class TripService {
 
     //팔로잉의 최근 여행지 10개
     public List<TripBestListResponseDto> getFollowingsTripListBasic(Member member) {
-        List<Member> followingMemberList = followRepository.findAllByFromMemberId(member.getId());
-        if (followingMemberList.isEmpty()) {
-            throw new NoOneFollowException();
-        }
-
-        List<TripBestListResponseDto> tripBestListResponseDtos = new ArrayList<>();
-        for (Member followingMember : followingMemberList) {
-            List<Trip> trip = tripRepository.findAllByMember(followingMember);
-            if (!trip.isEmpty()) {
-                tripBestListResponseDtos.add(new TripBestListResponseDto(trip.get(trip.size() - 1)));
-                if (tripBestListResponseDtos.size() == 10) {
-                    Collections.reverse(tripBestListResponseDtos);
-                    return tripBestListResponseDtos;
-                }
-            }
-            if (tripBestListResponseDtos.isEmpty()) {
-                throw new TripNotFoundException();
-            }
-        }
-        Collections.reverse(tripBestListResponseDtos);
-        return tripBestListResponseDtos;
+//        List<Member> followingMemberList = followRepository.findAllByFromMemberId(member.getId());
+//        if (followingMemberList.isEmpty()) {
+//            throw new NoOneFollowException();
+//        }
+//
+//        List<TripBestListResponseDto> tripBestListResponseDtos = new ArrayList<>();
+//        for (Member followingMember : followingMemberList) {
+//            List<Trip> trip = tripRepository.findAllByMember(followingMember);
+//            if (!trip.isEmpty()) {
+//                tripBestListResponseDtos.add(new TripBestListResponseDto(trip.get(trip.size() - 1)));
+//                if (tripBestListResponseDtos.size() == 10) {
+//                    Collections.reverse(tripBestListResponseDtos);
+//                    return tripBestListResponseDtos;
+//                }
+//            }
+//            if (tripBestListResponseDtos.isEmpty()) {
+//                throw new TripNotFoundException();
+//            }
+//        }
+//        Collections.reverse(tripBestListResponseDtos);
+//        return tripBestListResponseDtos;
+        return tripRepository.findAllByFollowingOrderByIdBasicFetch(member)
+                .stream()
+                .map(TripBestListResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     //팔로잉의 최근 여행지 모두
     public List<TripBestListResponseDto> getFollwingsTripListMore(Member member) {
-        List<Member> followingMemberList = followRepository.findAllByFromMemberId(member.getId());
-        if (followingMemberList.isEmpty()) {
-            throw new NoOneFollowException();
-        }
-
-        List<TripBestListResponseDto> tripBestListResponseDtos = new ArrayList<>();
-        for (Member followingMember : followingMemberList) {
-            List<Trip> trip = tripRepository.findAllByMember(followingMember);
-            if (!trip.isEmpty()) {
-                tripBestListResponseDtos.add(new TripBestListResponseDto(trip.get(trip.size() - 1)));
-            }
-            //CollectionUtils.isNullOrEmpty
-            if (tripBestListResponseDtos.isEmpty()) {
-                throw new TripNotFoundException();
-            }
-        }
-        Collections.reverse(tripBestListResponseDtos);
-        return tripBestListResponseDtos;
+//        List<Member> followingMemberList = followRepository.findAllByFromMemberId(member.getId());
+//        if (followingMemberList.isEmpty()) {
+//            throw new NoOneFollowException();
+//        }
+//
+//        List<TripBestListResponseDto> tripBestListResponseDtos = new ArrayList<>();
+//        for (Member followingMember : followingMemberList) {
+//            List<Trip> trip = tripRepository.findAllByMember(followingMember);
+//            if (!trip.isEmpty()) {
+//                tripBestListResponseDtos.add(new TripBestListResponseDto(trip.get(trip.size() - 1)));
+//            }
+//            //CollectionUtils.isNullOrEmpty
+//            if (tripBestListResponseDtos.isEmpty()) {
+//                throw new TripNotFoundException();
+//            }
+//        }
+//        Collections.reverse(tripBestListResponseDtos);
+//        return tripBestListResponseDtos;
+        return tripRepository.findAllByFollowingOrderByIdMoreFetch(member)
+                .stream()
+                .map(TripBestListResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     //여행지에 좋아요한 유저들 목록 반환

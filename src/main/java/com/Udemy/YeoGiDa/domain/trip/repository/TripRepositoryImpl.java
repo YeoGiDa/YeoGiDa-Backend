@@ -1,5 +1,6 @@
 package com.Udemy.YeoGiDa.domain.trip.repository;
 
+import com.Udemy.YeoGiDa.domain.follow.repository.FollowRepository;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.entity.QMemberImg;
 import com.Udemy.YeoGiDa.domain.trip.entity.QTripImg;
@@ -19,6 +20,7 @@ import static com.Udemy.YeoGiDa.domain.trip.entity.QTrip.trip;
 public class TripRepositoryImpl implements TripRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+    private final FollowRepository followRepository;
 
     @Override
     public List<Trip> findAllByConditionFetch(String condition) {
@@ -118,6 +120,27 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
                 .leftJoin(member.memberImg, QMemberImg.memberImg).fetchJoin()
                 .where(trip.title.contains(keyword).or(trip.subTitle.contains(keyword)))
                 .orderBy(conditionParam(condition))
+                .fetch();
+    }
+
+    @Override
+    public List<Trip> findAllByFollowingOrderByIdBasicFetch(Member m) {
+        List<Long> memberIdsByFromMemberId = followRepository.findMemberIdsByFromMemberId(m.getId());
+
+        return queryFactory.selectFrom(trip)
+                .where(trip.member.id.in(memberIdsByFromMemberId))
+                .orderBy(trip.id.desc())
+                .limit(10)
+                .fetch();
+    }
+
+    @Override
+    public List<Trip> findAllByFollowingOrderByIdMoreFetch(Member m) {
+        List<Long> memberIdsByFromMemberId = followRepository.findMemberIdsByFromMemberId(m.getId());
+
+        return queryFactory.selectFrom(trip)
+                .where(trip.member.id.in(memberIdsByFromMemberId))
+                .orderBy(trip.id.desc())
                 .fetch();
     }
 
