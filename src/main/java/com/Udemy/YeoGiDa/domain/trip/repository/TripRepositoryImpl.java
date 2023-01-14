@@ -159,7 +159,7 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
                 .leftJoin(trip.member, member).fetchJoin()
                 .leftJoin(member.memberImg, QMemberImg.memberImg).fetchJoin()
                 .orderBy(trip.id.desc())
-                .limit(10)
+                .limit(20)
                 .fetch();
     }
 
