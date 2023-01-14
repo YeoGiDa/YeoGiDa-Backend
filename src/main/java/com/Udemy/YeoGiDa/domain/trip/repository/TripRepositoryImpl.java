@@ -1,5 +1,6 @@
 package com.Udemy.YeoGiDa.domain.trip.repository;
 
+import com.Udemy.YeoGiDa.domain.follow.exception.NoOneFollowException;
 import com.Udemy.YeoGiDa.domain.follow.repository.FollowRepository;
 import com.Udemy.YeoGiDa.domain.member.entity.Member;
 import com.Udemy.YeoGiDa.domain.member.entity.QMemberImg;
@@ -10,6 +11,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -126,6 +128,9 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
     @Override
     public List<Trip> findAllByFollowingOrderByIdBasicFetch(Member m) {
         List<Long> memberIdsByFromMemberId = followRepository.findMemberIdsByFromMemberId(m.getId());
+        if(CollectionUtils.isEmpty(memberIdsByFromMemberId)) {
+            throw new NoOneFollowException();
+        }
 
         return queryFactory.selectFrom(trip)
                 .where(trip.member.id.in(memberIdsByFromMemberId))
@@ -137,6 +142,9 @@ public class TripRepositoryImpl implements TripRepositoryCustom {
     @Override
     public List<Trip> findAllByFollowingOrderByIdMoreFetch(Member m) {
         List<Long> memberIdsByFromMemberId = followRepository.findMemberIdsByFromMemberId(m.getId());
+        if(CollectionUtils.isEmpty(memberIdsByFromMemberId)) {
+            throw new NoOneFollowException();
+        }
 
         return queryFactory.selectFrom(trip)
                 .where(trip.member.id.in(memberIdsByFromMemberId))
