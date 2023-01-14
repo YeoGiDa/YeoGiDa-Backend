@@ -30,6 +30,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -403,57 +404,28 @@ public class TripService {
 
     //팔로잉의 최근 여행지 10개
     public List<TripBestListResponseDto> getFollowingsTripListBasic(Member member) {
-//        List<Member> followingMemberList = followRepository.findAllByFromMemberId(member.getId());
-//        if (followingMemberList.isEmpty()) {
-//            throw new NoOneFollowException();
-//        }
-//
-//        List<TripBestListResponseDto> tripBestListResponseDtos = new ArrayList<>();
-//        for (Member followingMember : followingMemberList) {
-//            List<Trip> trip = tripRepository.findAllByMember(followingMember);
-//            if (!trip.isEmpty()) {
-//                tripBestListResponseDtos.add(new TripBestListResponseDto(trip.get(trip.size() - 1)));
-//                if (tripBestListResponseDtos.size() == 10) {
-//                    Collections.reverse(tripBestListResponseDtos);
-//                    return tripBestListResponseDtos;
-//                }
-//            }
-//            if (tripBestListResponseDtos.isEmpty()) {
-//                throw new TripNotFoundException();
-//            }
-//        }
-//        Collections.reverse(tripBestListResponseDtos);
-//        return tripBestListResponseDtos;
-        return tripRepository.findAllByFollowingOrderByIdBasicFetch(member)
+        List<TripBestListResponseDto> collect = tripRepository.findAllByFollowingOrderByIdBasicFetch(member)
                 .stream()
                 .map(TripBestListResponseDto::new)
                 .collect(Collectors.toList());
+
+        if(CollectionUtils.isEmpty(collect)) {
+            throw new TripNotFoundException();
+        }
+        return collect;
     }
 
     //팔로잉의 최근 여행지 모두
     public List<TripBestListResponseDto> getFollwingsTripListMore(Member member) {
-//        List<Member> followingMemberList = followRepository.findAllByFromMemberId(member.getId());
-//        if (followingMemberList.isEmpty()) {
-//            throw new NoOneFollowException();
-//        }
-//
-//        List<TripBestListResponseDto> tripBestListResponseDtos = new ArrayList<>();
-//        for (Member followingMember : followingMemberList) {
-//            List<Trip> trip = tripRepository.findAllByMember(followingMember);
-//            if (!trip.isEmpty()) {
-//                tripBestListResponseDtos.add(new TripBestListResponseDto(trip.get(trip.size() - 1)));
-//            }
-//            //CollectionUtils.isNullOrEmpty
-//            if (tripBestListResponseDtos.isEmpty()) {
-//                throw new TripNotFoundException();
-//            }
-//        }
-//        Collections.reverse(tripBestListResponseDtos);
-//        return tripBestListResponseDtos;
-        return tripRepository.findAllByFollowingOrderByIdMoreFetch(member)
+        List<TripBestListResponseDto> collect = tripRepository.findAllByFollowingOrderByIdMoreFetch(member)
                 .stream()
                 .map(TripBestListResponseDto::new)
                 .collect(Collectors.toList());
+
+        if(CollectionUtils.isEmpty(collect)) {
+            throw new TripNotFoundException();
+        }
+        return collect;
     }
 
     //여행지에 좋아요한 유저들 목록 반환
