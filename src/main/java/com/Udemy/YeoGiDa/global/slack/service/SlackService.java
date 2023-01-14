@@ -63,29 +63,29 @@ public class SlackService {
         switch (reportRequestDto.getType()) {
             case "MEMBER":
                 Member reportedMember = memberRepository.findById(reportRequestDto.getTargetId()).orElseThrow(MemberNotFoundException::new);
-                layoutBlocks.add(section(section -> section.text(markdownText("[Id] : " + reportedMember.getId()))));
-                layoutBlocks.add(section(section -> section.text(markdownText("[Nickname] : " + reportedMember.getNickname()))));
-                layoutBlocks.add(section(section -> section.text(markdownText("[ImgUrl] : " + reportedMember.getMemberImg().getImgUrl()))));
+                layoutBlocks.add(section(section -> section.text(markdownText("[회원 Id] : " + reportedMember.getId()))));
+                layoutBlocks.add(section(section -> section.text(markdownText("[회원 닉네임] : " + reportedMember.getNickname()))));
+                layoutBlocks.add(section(section -> section.text(markdownText("[회원 ImgUrl] : " + reportedMember.getMemberImg().getImgUrl()))));
                 break;
             case "TRIP":
                 Trip reportedTrip = tripRepository.findById(reportRequestDto.getTargetId()).orElseThrow(TripNotFoundException::new);
-                layoutBlocks.add(section(section -> section.text(markdownText("[Id] : " + reportedTrip.getId()))));
-                layoutBlocks.add(section(section -> section.text(markdownText("[Title] : " + reportedTrip.getTitle()))));
-                layoutBlocks.add(section(section -> section.text(markdownText("[SubTitle] : " + reportedTrip.getSubTitle()))));
-                layoutBlocks.add(section(section -> section.text(markdownText("[ImgUrl] : " + reportedTrip.getTripImg().getImgUrl()))));
+                layoutBlocks.add(section(section -> section.text(markdownText("[여행지 Id] : " + reportedTrip.getId()))));
+                layoutBlocks.add(section(section -> section.text(markdownText("[여행지 제목] : " + reportedTrip.getTitle()))));
+                layoutBlocks.add(section(section -> section.text(markdownText("[여행지 소제목] : " + reportedTrip.getSubTitle()))));
+                layoutBlocks.add(section(section -> section.text(markdownText("[여행지 ImgUrl] : " + reportedTrip.getTripImg().getImgUrl()))));
                 break;
             case "PLACE":
                 Place reportedPlace = placeRepository.findById(reportRequestDto.getTargetId()).orElseThrow(PlaceNotFoundException::new);
-                layoutBlocks.add(section(section -> section.text(markdownText("[Id] : " + reportedPlace.getId()))));
-                layoutBlocks.add(section(section -> section.text(markdownText("[Title] : " + reportedPlace.getTitle()))));
-                layoutBlocks.add(section(section -> section.text(markdownText("[Content] : " + reportedPlace.getContent()))));
+                layoutBlocks.add(section(section -> section.text(markdownText("[장소 Id] : " + reportedPlace.getId()))));
+                layoutBlocks.add(section(section -> section.text(markdownText("[장소 제목] : " + reportedPlace.getTitle()))));
+                layoutBlocks.add(section(section -> section.text(markdownText("[장소 리뷰] : " + reportedPlace.getContent()))));
                 //TODO: 리스트 처리 해야함 지금은 맨 처음 사진만
-                layoutBlocks.add(section(section -> section.text(markdownText("[ImgUrl] : " + reportedPlace.getPlaceImgs().get(0).getImgUrl()))));
+                layoutBlocks.add(section(section -> section.text(markdownText("[장소 ImgUrl] : " + reportedPlace.getPlaceImgs().get(0).getImgUrl()))));
                 break;
             case "COMMENT":
                 Comment reportedComment = commentRepository.findById(reportRequestDto.getTargetId()).orElseThrow(CommentNotFoundException::new);
-                layoutBlocks.add(section(section -> section.text(markdownText("[Id] : " + reportedComment.getId()))));
-                layoutBlocks.add(section(section -> section.text(markdownText("[Content] : " + reportedComment.getContent()))));
+                layoutBlocks.add(section(section -> section.text(markdownText("[댓글 Id] : " + reportedComment.getId()))));
+                layoutBlocks.add(section(section -> section.text(markdownText("[댓글 내용] : " + reportedComment.getContent()))));
                 break;
         }
         layoutBlocks.add(divider());
