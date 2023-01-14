@@ -97,8 +97,8 @@ public class ReportController {
                 switch (type) {
                     case "MEMBER":
                         Member reportedMember = memberRepository.findById(targetId).orElseThrow(MemberNotFoundException::new);
-                        memberService.setDefaultNicknameAndImage(reportedMember);
-//                    memberRepository.delete(reportedMember);
+//                        memberService.setDefaultNicknameAndImage(reportedMember);
+                        memberRepository.delete(reportedMember);
                         break;
                     case "TRIP":
                         Trip reportedTrip = tripRepository.findById(targetId).orElseThrow(TripNotFoundException::new);
