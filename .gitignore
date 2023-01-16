@@ -222,9 +222,6 @@ gradle-app.setting
 .idea
 *.imi
 
-application-SECRET.yml
 META-INF/*
-
-yeogida_fcm_api_key.json
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,gradle,git,java,macos,windows
