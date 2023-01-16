@@ -69,7 +69,7 @@ public class ReportController {
 
     @RequestMapping(value = "/test", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity delete(@RequestParam String payload) throws IOException {
+    public void delete(@RequestParam String payload) throws IOException {
         // Json String -> BlockActionPayload 변경
         BlockActionPayload blockActionPayload =
                 GsonFactory.createSnakeCase()
@@ -94,19 +94,24 @@ public class ReportController {
                                 section.text(markdownText("해당 신고물을 *삭제* 하였습니다."))
                         )
                 );
-                if (type.equals("MEMBER")) {
-                    Member reportedMember = memberRepository.findById(targetId).orElseThrow(MemberNotFoundException::new);
-                    memberService.setDefaultNicknameAndImage(reportedMember);
-//                    memberRepository.delete(reportedMember);
-                } else if (type.equals("TRIP")) {
-                    Trip reportedTrip = tripRepository.findById(targetId).orElseThrow(TripNotFoundException::new);
-                    tripRepository.delete(reportedTrip);
-                } else if (type.equals("PLACE")) {
-                    Place reportedPlace = placeRepository.findById(targetId).orElseThrow(PlaceNotFoundException::new);
-                    placeRepository.delete(reportedPlace);
-                } else if (type.equals("COMMENT")) {
-                    Comment reportedComment = commentRepository.findById(targetId).orElseThrow(CommentNotFoundException::new);
-                    commentRepository.delete(reportedComment);
+                switch (type) {
+                    case "MEMBER":
+                        Member reportedMember = memberRepository.findById(targetId).orElseThrow(MemberNotFoundException::new);
+//                        memberService.setDefaultNicknameAndImage(reportedMember);
+                        memberRepository.delete(reportedMember);
+                        break;
+                    case "TRIP":
+                        Trip reportedTrip = tripRepository.findById(targetId).orElseThrow(TripNotFoundException::new);
+                        tripRepository.delete(reportedTrip);
+                        break;
+                    case "PLACE":
+                        Place reportedPlace = placeRepository.findById(targetId).orElseThrow(PlaceNotFoundException::new);
+                        placeRepository.delete(reportedPlace);
+                        break;
+                    case "COMMENT":
+                        Comment reportedComment = commentRepository.findById(targetId).orElseThrow(CommentNotFoundException::new);
+                        commentRepository.delete(reportedComment);
+                        break;
                 }
             }
         });
@@ -122,8 +127,7 @@ public class ReportController {
         ActionResponseSender sender = new ActionResponseSender(slack);
         sender.send(blockActionPayload.getResponseUrl(), response);
 
-        return new ResponseEntity(DefaultResult.res(StatusCode.OK,
-                "삭제까지 성공 "), HttpStatus.OK);
+        log.info("slack 버튼 api 성공");
     }
 
 }

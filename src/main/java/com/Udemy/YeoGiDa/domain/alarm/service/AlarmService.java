@@ -42,12 +42,18 @@ public class AlarmService {
         return alarmListResponseDtos;
     }
 
+    @Transactional
     public void deleteAlarmsAfterOneWeek() {
         List<Alarm> all = alarmRepository.findAll();
         LocalDateTime now = LocalDateTime.now();
         for (Alarm alarm : all) {
             LocalDateTime createdTime = alarm.getCreatedTime();
-            if(createdTime.plusDays(7).isBefore(now)) {
+            LocalDateTime plusDays = createdTime.plusDays(7);
+            log.info("plusDays={}", plusDays);
+            log.info("plusDays.isBeforeNow={}", plusDays.isBefore(now));
+            if(plusDays.isBefore(now)) {
+                log.info("plusDays={}", plusDays);
+                log.info("###들어옴");
                 alarmRepository.delete(alarm);
             }
         }

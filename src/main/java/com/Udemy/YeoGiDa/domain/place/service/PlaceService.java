@@ -1,6 +1,8 @@
 package com.Udemy.YeoGiDa.domain.place.service;
 
 
+import com.Udemy.YeoGiDa.domain.alarm.entity.Alarm;
+import com.Udemy.YeoGiDa.domain.alarm.repository.AlarmRepository;
 import com.Udemy.YeoGiDa.domain.comment.repository.CommentRepository;
 import com.Udemy.YeoGiDa.domain.common.service.S3Service;
 import com.Udemy.YeoGiDa.domain.heart.repository.HeartRepository;
@@ -25,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,6 +43,7 @@ public class PlaceService {
     private final TripRepository tripRepository;
     private final HeartRepository heartRepository;
     private final CommentRepository commentRepository;
+    private final AlarmRepository alarmRepository;
 
     /**
      * 장소 전체 조회 (tag(지역),condition(정렬조건))
@@ -285,16 +289,18 @@ public class PlaceService {
 
     public void delete(Long placeId, Member member) {
 
-        Place place = Optional.ofNullable(placeRepository.findById(placeId)
-                .orElseThrow(PlaceNotFoundException::new)).get();
+        Place place = placeRepository.findById(placeId).orElseThrow(PlaceNotFoundException::new);
 
         if(member == null){
             throw new MemberNotFoundException();
         }
 
-        if(place.getTrip().getMember().getId() != member.getId()){
+        if(!Objects.equals(place.getTrip().getMember().getId(), member.getId())){
             throw new ForbiddenException();
         }
+
+        List<Alarm> commentAlarmByPlaceId = alarmRepository.findCommentAlarmByPlaceId(placeId);
+        alarmRepository.deleteAll(commentAlarmByPlaceId);
 
         placeRepository.delete(place);
     }

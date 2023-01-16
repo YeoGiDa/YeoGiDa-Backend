@@ -19,6 +19,9 @@ public interface FollowRepository extends JpaRepository<Follow, Follow.PK>, Foll
     @Query(value ="select m from Follow f INNER JOIN Member m ON f.fromMemberId = m.id where f.toMemberId = :memberId")
     List<Member> findAllByToMemberId(@Param(value = "memberId") Long memberId);
 
+    @Query(value ="select m.id from Follow f INNER JOIN Member m ON f.toMemberId = m.id where f.fromMemberId = :memberId")
+    List<Long> findMemberIdsByFromMemberId(@Param(value = "memberId") Long memberId);
+
     @Query(value ="select m from Follow f INNER JOIN Member m ON f.toMemberId = m.id " +
             " where f.fromMemberId = :memberId and m.nickname like %:nickname%")
     List<Member> SearchFollowingMemberByNickname(@Param(value = "memberId") Long memberId,
