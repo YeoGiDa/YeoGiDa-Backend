@@ -227,6 +227,4 @@ META-INF/*
 
 yeogida_fcm_api_key.json
 
-logback-spring.xml
-
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,gradle,git,java,macos,windows
