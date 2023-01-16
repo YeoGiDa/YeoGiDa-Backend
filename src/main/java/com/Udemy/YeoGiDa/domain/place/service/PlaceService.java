@@ -63,7 +63,6 @@ public class PlaceService {
     /**
      * 내가 댓글 쓴 장소 조회
      * @param member
-     * @return
      */
    @Transactional(readOnly = true)
     public List<PlaceListResponseDto> getPlaceByComment(Member member){
