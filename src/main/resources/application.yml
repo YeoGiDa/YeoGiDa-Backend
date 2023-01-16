@@ -1,7 +1,7 @@
 spring:
   profiles:
     active: prod
-    include: db, secret
+    include: db, SECRET
 
   servlet:
     multipart:
